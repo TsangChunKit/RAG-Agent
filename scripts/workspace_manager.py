@@ -2,6 +2,8 @@
 
 负责 workspace 的创建、切换、配置加载、验证等。支持向后兼容（旧路径自动视为 _legacy workspace）。
 """
+from typing import Optional
+
 import json
 import os
 from datetime import datetime

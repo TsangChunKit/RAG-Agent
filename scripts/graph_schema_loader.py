@@ -5,6 +5,8 @@ system instruction 模板等。
 
 降级路径：custom → generic → 硬编码（graph_utils.NODE_TYPES）
 """
+from typing import Optional
+
 import json
 from pathlib import Path
 from typing import Dict, Optional

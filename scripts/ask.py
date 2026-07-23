@@ -600,8 +600,8 @@ def _format_full_transcripts(blocks: list[dict]) -> str:
 def answer(question: str, history: Optional[list[dict]] = None, k: Optional[int] = None,
            use_full_history: bool = False, max_context: int = 450_000, max_turns: int = 60) -> dict:
     """UI 与 CLI 共用的核心入口。
-    history: [{"role": "user"/"assistant", "content": str, "api_content": str|None,
-               "history_content": str|None, "compressed": bool|None}, ...]（可选）。
+    history: [{"role": "user"/"assistant", "content": str, "api_content": Optional[str],
+               "history_content": Optional[str], "compressed": Optional[bool]}, ...]（可选）。
     - "content" 是给人看的原始短问句/回答
     - "api_content" 是完整内容（含记忆/检索片段），仅供显示/调试
     - "history_content" 是精简版（检索片段+问题），供历史回放（省 token）
@@ -615,7 +615,7 @@ def answer(question: str, history: Optional[list[dict]] = None, k: Optional[int]
     而不是只给检索到的片段；检索片段里属于同一天的会被去重排除，避免重复。
 
     返回 {"answer": str, "sources": list[dict], "token_usage": dict, "api_content": str,
-            "history_content": str, "compression_info": dict|None, ...}。
+            "history_content": str, "compression_info": Optional[dict], ...}。
     """
     # 历史轮数硬截断：超过 max_turns 时丢弃最旧的对话（避免助手回答累积超限）
     if history and len(history) > max_turns * 2:  # 每轮 = 2 条消息（user + assistant）

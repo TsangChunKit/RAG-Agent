@@ -3,8 +3,9 @@
 保持精炼（目标 < 3k token），每次问答都全量携带。头部的更新时间/次数/日期范围由代码直接
 计算写入（不问 LLM，避免它编错数字/日期）；LLM 只负责提炼正文板块。
 """
-from typing import Optional
 
+
+from typing import Optional
 import datetime
 import json
 

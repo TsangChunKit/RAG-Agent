@@ -31,7 +31,7 @@ class TestStreamlitApp:
 
         这是本次错误的根源：
         - config.py 中的路径从常量改为函数
-        - 但 app.py 中仍然用 `CHAT_MEMORY_PATH.exists()` 而不是 `CHAT_MEMORY_PATH().exists()`
+        - 但 app.py 中仍然用 `CHAT_MEMORY_PATH().exists()` 而不是 `CHAT_MEMORY_PATH().exists()`
 
         这个测试会捕获所有类似错误。
         """
@@ -98,7 +98,7 @@ class TestAppCodePatterns:
         """检查 app.py 中没有直接使用路径常量的 Path 方法。
 
         常见错误模式：
-        - CHAT_MEMORY_PATH.exists()  # 错误：CHAT_MEMORY_PATH 是函数
+        - CHAT_MEMORY_PATH().exists()  # 错误：CHAT_MEMORY_PATH 是函数
         - 正确：CHAT_MEMORY_PATH().exists()
         """
         app_path = Path(__file__).parent.parent.parent / "app.py"
@@ -106,11 +106,11 @@ class TestAppCodePatterns:
 
         # 检查可能的错误模式
         error_patterns = [
-            ("CHAT_MEMORY_PATH.exists", "应该使用 CHAT_MEMORY_PATH().exists()"),
-            ("CHAT_MEMORY_PATH.read_text", "应该使用 CHAT_MEMORY_PATH().read_text()"),
-            ("LONG_TERM_MEMORY_PATH.exists", "应该使用 LONG_TERM_MEMORY_PATH().exists()"),
-            ("GRAPH_JSON_PATH.exists", "应该使用 GRAPH_JSON_PATH().exists()"),
-            ("CHAT_GRAPH_JSON_PATH.parent", "应该使用 CHAT_GRAPH_JSON_PATH().parent"),
+            ("CHAT_MEMORY_PATH().exists", "应该使用 CHAT_MEMORY_PATH().exists()"),
+            ("CHAT_MEMORY_PATH().read_text", "应该使用 CHAT_MEMORY_PATH().read_text()"),
+            ("LONG_TERM_MEMORY_PATH().exists", "应该使用 LONG_TERM_MEMORY_PATH().exists()"),
+            ("GRAPH_JSON_PATH().exists", "应该使用 GRAPH_JSON_PATH().exists()"),
+            ("CHAT_GRAPH_JSON_PATH().parent", "应该使用 CHAT_GRAPH_JSON_PATH().parent"),
         ]
 
         errors = []

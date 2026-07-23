@@ -12,8 +12,8 @@
 - solution_arch: 架构设计（requirement/component/technology/pattern/risk/decision）
 - generic: 通用兜底（concept/entity/event/process）
 """
-import json
 from typing import Optional
+import json
 
 from tqdm import tqdm
 
@@ -27,6 +27,7 @@ from scripts.workspace_manager import get_current_workspace
 
 def _build_session_graph_schema(node_types: dict, relation_types: dict, schema_domains: Optional[list] = None) -> dict:
     """
+
 动态构建 SESSION_GRAPH_SCHEMA，支持不同 workspace 的节点/关系类型。
 
     Args:

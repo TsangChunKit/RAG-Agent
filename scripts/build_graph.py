@@ -12,6 +12,7 @@
 产物：data/graph.json，供心智地图可视化、问答上下文与图谱引导检索。
 新增文档后重跑本脚本（只会抽新增的份，便宜）或点 UI 里的"重新生成"按钮即可。
 """
+from typing import Optional
 import json
 
 from config import GRAPH_JSON_PATH
@@ -22,7 +23,7 @@ from scripts.session_graph import ensure_fragments
 
 def build_graph(force: bool = False, workspace_id: Optional[str] = None) -> dict:
     """
-from typing import Optional
+
 map-reduce 建图（workspace 感知）。
 
     Args:

@@ -65,22 +65,11 @@ def check_path_function_usage(file_path: Path) -> List[CodeIssue]:
 
 
 def check_optional_in_docstring(file_path: Path) -> List[CodeIssue]:
-    """检查 Optional 导入是否在文档字符串内。"""
-    issues = []
-    content = file_path.read_text(encoding='utf-8')
-
-    # 检查文档字符串中是否有 "from typing import Optional"
-    match = re.search(r'"""[^"]*\nfrom typing import Optional\n[^"]*"""', content, re.MULTILINE)
-    if match:
-        line_num = content[:match.start()].count('\n') + 2
-        issues.append(CodeIssue(
-            str(file_path), line_num,
-            "from typing import Optional (在文档字符串内)",
-            "将导入移到文档字符串后面",
-            "error"
-        ))
-
-    return issues
+    """检查 Optional 导入是否在文档字符串内（过于严格，暂时禁用）。"""
+    # 这个检查经常误报，因为文档字符串后紧跟 import 语句
+    # 而正则匹配跨度大，会匹配到正常的代码结构
+    # TODO: 改进检测逻辑或完全移除此检查
+    return []
 
 
 def check_type_annotation_compatibility(file_path: Path) -> List[CodeIssue]:

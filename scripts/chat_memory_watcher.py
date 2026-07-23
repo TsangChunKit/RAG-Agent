@@ -11,6 +11,7 @@
 
 支持 workspace：通过命令行参数指定 workspace。
 """
+from typing import Optional
 import json
 import sys
 import time
@@ -27,7 +28,7 @@ CHECK_INTERVAL_SECONDS = 120  # 每 2 分钟检查一次，足够及时又不空
 
 def _marker_path(workspace_id: Optional[str] = None):
     """
-from typing import Optional
+
 获取 marker 文件路径（workspace 感知）。"""
     return CHAT_SESSIONS_DIR(workspace_id) / ".last_memory_run"
 

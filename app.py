@@ -5,6 +5,8 @@
 多会话历史（scripts/chat_store.py）：每个对话持久化成本地 JSON 文件，侧边栏可以切换/新建/删除，
 刷新页面或重启服务不会丢失历史。
 """
+from typing import Optional
+
 import logging
 
 import streamlit as st
@@ -485,7 +487,7 @@ with st.sidebar:
             chat_graph = build_chat_graph(workspace_id=ws_choice)
             chat_graph_path = CHAT_GRAPH_JSON_PATH(ws_choice)
             chat_graph_path.parent.mkdir(parents=True, exist_ok=True)
-            CHAT_GRAPH_JSON_PATH.write_text(json.dumps(chat_graph, ensure_ascii=False, indent=2), encoding="utf-8")
+            CHAT_GRAPH_JSON_PATH().write_text(json.dumps(chat_graph, ensure_ascii=False, indent=2), encoding="utf-8")
         st.success("已更新")
         st.rerun()
 
@@ -493,7 +495,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []  # [{role, content, sources?, token_usage?}]
 
 
-def _render_meta(sources: list[dict], token_usage: dict | None, matched_graph_nodes: list[dict] | None = None):
+def _render_meta(sources: list[dict], token_usage: Optional[dict], matched_graph_nodes: list[dict] | None = None):
     if not (show_sources or show_tokens):
         return
 

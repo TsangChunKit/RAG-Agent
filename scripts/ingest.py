@@ -2,8 +2,9 @@
 写入 LanceDB 表，并在 text 列建 FTS 索引（关键词侧，jieba/default 中文分词，见 config.py 里的说明）。
 规模小时暴力搜索即可，不建 ANN 向量索引（数据量大了再加 vector 列的 create_index()）。
 """
-from typing import Optional
 
+
+from typing import Optional
 import json
 
 import lancedb

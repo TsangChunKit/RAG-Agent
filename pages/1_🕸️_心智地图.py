@@ -152,7 +152,7 @@ with st.sidebar:
             from scripts.build_graph import build_graph
 
             new_graph = build_graph()
-            GRAPH_JSON_PATH.write_text(json.dumps(new_graph, ensure_ascii=False, indent=2), encoding="utf-8")
+            GRAPH_JSON_PATH().write_text(json.dumps(new_graph, ensure_ascii=False, indent=2), encoding="utf-8")
         st.success(f"已更新：{len(new_graph['nodes'])} 个节点，{len(new_graph['edges'])} 条关系")
         st.rerun()
 
@@ -161,8 +161,8 @@ with st.sidebar:
             from scripts.build_chat_graph import build_chat_graph
 
             new_chat_graph = build_chat_graph()
-            CHAT_GRAPH_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
-            CHAT_GRAPH_JSON_PATH.write_text(json.dumps(new_chat_graph, ensure_ascii=False, indent=2), encoding="utf-8")
+            CHAT_GRAPH_JSON_PATH().parent.mkdir(parents=True, exist_ok=True)
+            CHAT_GRAPH_JSON_PATH().write_text(json.dumps(new_chat_graph, ensure_ascii=False, indent=2), encoding="utf-8")
         st.success(f"已更新：{len(new_chat_graph['nodes'])} 个新节点，{len(new_chat_graph['edges'])} 条关系")
         st.rerun()
 
