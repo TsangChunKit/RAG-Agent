@@ -1,10 +1,11 @@
 """检索 + 组装上下文 + 问答。retrieve() 做混合检索 + 父块/窗口扩展；
-answer() 组装"长期记忆 + 检索片段 + 问题"喂给 Gemini，含心理学流派路由。
-CLI 与未来的 Streamlit 前端共用 answer() 这一个入口，不重复实现检索/问答逻辑（见 §M7）。
+answer() 组装"长期记忆 + 检索片段 + 问题"喂给 LLM，支持多 workspace。
+CLI 与 Streamlit 前端共用 answer() 这一个入口，不重复实现检索/问答逻辑（见 §M7）。
 """
 import json
 import re
 from collections import Counter, defaultdict
+from typing import Optional
 
 import lancedb
 import numpy as np
@@ -28,6 +29,7 @@ from scripts.reranker import rerank_candidates
 from scripts.llm import ask_llm
 from scripts.parse import find_files_for_date, parse_transcript, render_full_text
 from scripts.summarize import summary_path
+from scripts.workspace_manager import get_current_workspace, get_workspace_dir, load_workspace_config
 
 # 心智地图（scripts/build_graph.py 的产物）里，节点相关度高于这个阈值才触发"图谱引导检索"
 GRAPH_NODE_MATCH_THRESHOLD = 0.45
@@ -107,16 +109,64 @@ DEFAULT_SYSTEM_INSTRUCTION = """\
 """
 
 
-def load_system_instruction() -> str:
-    """从 system_instruction.md 读取；文件不存在时用默认值创建它，方便之后直接编辑该文件。"""
-    if not SYSTEM_INSTRUCTION_PATH.exists():
-        SYSTEM_INSTRUCTION_PATH.write_text(DEFAULT_SYSTEM_INSTRUCTION, encoding="utf-8")
-        return DEFAULT_SYSTEM_INSTRUCTION
-    return SYSTEM_INSTRUCTION_PATH.read_text(encoding="utf-8")
+def load_system_instruction(workspace_id: Optional[str] = None) -> str:
+    """从 system_instruction 文件读取（workspace 感知）。
+
+    优先级：
+    1. workspace 的 system_instruction.md（如果 persona.system_instruction_file 指定）
+    2. 根目录的 SYSTEM_INSTRUCTION_PATH
+    3. DEFAULT_SYSTEM_INSTRUCTION（硬编码默认值）
+
+    Args:
+        workspace_id: workspace ID（None = 当前 workspace）
+
+    Returns:
+        system instruction 文本
+    """
+    # 尝试从 workspace config 读取
+    config = load_workspace_config(workspace_id)
+    persona = config.get("persona", {})
+    si_file = persona.get("system_instruction_file")
+
+    if si_file:
+        # workspace 专用 system instruction
+        ws_dir = get_workspace_dir(workspace_id)
+        si_path = ws_dir / si_file
+        if si_path.exists():
+            content = si_path.read_text(encoding="utf-8")
+            # 替换 persona 变量（如"海特" → config 中的 context_role）
+            context_role = persona.get("context_role", "助手")
+            content = content.replace("海特", context_role)
+            return content
+
+    # 降级：根目录的 system_instruction.md
+    if SYSTEM_INSTRUCTION_PATH.exists():
+        return SYSTEM_INSTRUCTION_PATH.read_text(encoding="utf-8")
+
+    # 最终降级：使用默认值并创建文件
+    SYSTEM_INSTRUCTION_PATH.write_text(DEFAULT_SYSTEM_INSTRUCTION, encoding="utf-8")
+    return DEFAULT_SYSTEM_INSTRUCTION
 
 
-def save_system_instruction(text: str) -> None:
-    SYSTEM_INSTRUCTION_PATH.write_text(text, encoding="utf-8")
+def save_system_instruction(text: str, workspace_id: Optional[str] = None) -> None:
+    """保存 system instruction（workspace 感知）。"""
+    config = load_workspace_config(workspace_id)
+    persona = config.get("persona", {})
+    si_file = persona.get("system_instruction_file")
+
+    if si_file:
+        # 保存到 workspace 专用文件
+        ws_dir = get_workspace_dir(workspace_id)
+        si_path = ws_dir / si_file
+        si_path.write_text(text, encoding="utf-8")
+    else:
+        # 保存到根目录
+        SYSTEM_INSTRUCTION_PATH.write_text(text, encoding="utf-8")
+
+
+def reset_system_instruction(workspace_id: Optional[str] = None) -> None:
+    """重置 system instruction 为默认值（workspace 感知）。"""
+    save_system_instruction(DEFAULT_SYSTEM_INSTRUCTION, workspace_id)
 
 
 def reset_system_instruction() -> str:
@@ -128,10 +178,11 @@ _table = None
 _all_chunks_cache: pd.DataFrame | None = None
 
 
-def _get_table():
+def _get_table(workspace_id: Optional[str] = None):
+    """获取 LanceDB 表（workspace 感知）。"""
     global _table
     if _table is None:
-        db = lancedb.connect(str(DB_DIR))
+        db = lancedb.connect(str(DB_DIR(workspace_id)))
         _table = db.open_table(LANCEDB_TABLE_NAME)
     return _table
 
@@ -299,30 +350,38 @@ def _load_session_summary(date: str) -> str | None:
     return None
 
 
-def _load_long_term_memory() -> str:
-    if LONG_TERM_MEMORY_PATH.exists():
-        return LONG_TERM_MEMORY_PATH.read_text(encoding="utf-8")
-    return "（尚未生成长期记忆总结——见 M4。）"
+def _load_long_term_memory(workspace_id: Optional[str] = None) -> str:
+    """加载长期记忆（workspace 感知）。"""
+    ltm_path = LONG_TERM_MEMORY_PATH(workspace_id)
+    if ltm_path.exists():
+        return ltm_path.read_text(encoding="utf-8")
+    return "（尚未生成长期记忆总结。）"
 
 
-def _load_chat_memory() -> str:
-    if CHAT_MEMORY_PATH.exists():
-        return CHAT_MEMORY_PATH.read_text(encoding="utf-8")
-    return "（还没有生成 AI 对话记忆——运行 `python -m scripts.update_chat_memory` 或在设置里点击更新。）"
+def _load_chat_memory(workspace_id: Optional[str] = None) -> str:
+    """加载 AI 对话记忆（workspace 感知）。"""
+    cm_path = CHAT_MEMORY_PATH(workspace_id)
+    if cm_path.exists():
+        return cm_path.read_text(encoding="utf-8")
+    return "（还没有生成 AI 对话记忆。）"
 
 
 _graph_cache: dict | None = None
 _graph_node_embeddings: dict[str, np.ndarray] | None = None
 
 
-def _load_graph() -> dict | None:
-    """加载并合并真实咨询心智地图（build_graph.py）+ AI 对话记忆心智地图（build_chat_graph.py）。
-    合并是纯 Python 操作（见 scripts/graph_utils.py），不产生额外 Gemini 调用。任一份不存在
-    就优雅降级；都不存在返回 None，answer() 会跳过图谱相关的上下文。"""
+def _load_graph(workspace_id: Optional[str] = None) -> dict | None:
+    """加载并合并图谱（workspace 感知）。
+
+    合并真实图谱 + AI 对话图谱。合并是纯 Python 操作，不产生额外 LLM 调用。
+    任一份不存在就优雅降级；都不存在返回 None。
+    """
     global _graph_cache
     if _graph_cache is None:
-        therapy_graph = json.loads(GRAPH_JSON_PATH.read_text(encoding="utf-8")) if GRAPH_JSON_PATH.exists() else None
-        chat_graph = json.loads(CHAT_GRAPH_JSON_PATH.read_text(encoding="utf-8")) if CHAT_GRAPH_JSON_PATH.exists() else None
+        graph_path = GRAPH_JSON_PATH(workspace_id)
+        chat_graph_path = CHAT_GRAPH_JSON_PATH(workspace_id)
+        therapy_graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.exists() else None
+        chat_graph = json.loads(chat_graph_path.read_text(encoding="utf-8")) if chat_graph_path.exists() else None
         _graph_cache = merge_graphs(therapy_graph, chat_graph)
     return _graph_cache
 
