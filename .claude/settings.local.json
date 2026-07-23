@@ -35,7 +35,9 @@
       "Bash(git diff*)",
       "Bash(git log*)",
       "Bash(gh repo *)",
-      "Bash(gh *)"
+      "Bash(gh *)",
+      "Bash(python3 *)",
+      "Bash(python *)"
     ]
   },
   "hooks": {
