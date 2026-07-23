@@ -59,3 +59,98 @@
    - 然後執行 `git push`
 
 5. 除非使用者明確說不要 push，否則 task 完成後都要 push。
+
+## 測試開發規則（必須遵守）
+
+### 為什麼測試通過但 UI 還有錯誤？
+
+**核心問題**：測試覆蓋率不足 + 沒有測試實際執行路徑
+
+**教訓總結**：
+
+1. **導入測試（Smoke Test）是第一道防線**
+   - **必須優先寫**：在寫任何功能測試前，先寫導入測試
+   - 導入測試能捕獲：
+     * 語法錯誤
+     * 導入錯誤（NameError, ImportError）
+     * 類型注解兼容性問題（Python 3.9 vs 3.10+）
+     * 模塊級別的執行錯誤（import-time errors）
+   
+   ```python
+   # tests/unit/test_imports.py - 最基本但最重要
+   def test_import_all_modules():
+       """確保所有模塊都能成功導入"""
+       from scripts import (
+           workspace_manager,
+           chunk,
+           parse,
+           settings,
+           # ... 列出所有核心模塊
+       )
+       assert True  # 能到這裡就說明導入成功
+   ```
+
+2. **測試實際執行路徑，不只是理想情況**
+   - ❌ 錯誤：只測試 `parse_filename_date("valid_file.txt")`
+   - ✅ 正確：測試 `from scripts import parse`（實際導入路徑）
+   - **Import-time errors vs Runtime errors**：
+     * Import-time: 導入時執行的代碼（模塊級別，如類型注解）
+     * Runtime: 調用函數時執行的代碼
+     * 很多錯誤是 import-time，但只測試函數調用無法捕獲
+
+3. **代碼覆蓋率是測試質量的關鍵指標**
+   - 目標：至少 80% 覆蓋率
+   - 低覆蓋率 = 大量未測試代碼 = 潛在錯誤
+   - **案例**：我們的覆蓋率只有 2%，所以測試通過但 UI 有 11 個導入錯誤
+   
+   ```bash
+   # 每次提交前檢查覆蓋率
+   pytest --cov=scripts --cov-report=term-missing
+   ```
+
+4. **測試金字塔要完整**
+   ```
+   ╱───────────────╲
+   │  E2E/集成測試   │  ← 慢，少量，測試完整流程
+   ├───────────────┤
+   │   功能測試      │  ← 中速，中量，測試業務邏輯
+   ├───────────────┤
+   │  導入/單元測試  │  ← 快速，大量，測試基本可用性
+   ╲───────────────╱
+   ```
+   
+   **底層必須穩固**：如果導入測試都不通過，功能測試通過也沒意義。
+
+5. **測試開發的優先順序**
+   ```
+   第一步：導入測試（test_imports.py）
+      ↓
+   第二步：核心模塊單元測試（workspace_manager, chunk, parse）
+      ↓
+   第三步：集成測試（完整流程：parse → chunk → ingest → ask）
+      ↓
+   第四步：UI 測試（Streamlit 應用測試）
+   ```
+
+6. **具體實施要求**
+   - 每個新模塊必須先有導入測試
+   - 每次提交前運行 `pytest tests/unit/test_imports.py`
+   - 目標覆蓋率：導入測試 100%，單元測試 80%，整體 70%
+   - CI 必須包含覆蓋率檢查，低於閾值拒絕合併
+
+7. **常見陷阱**
+   - ❌ 只測試"理想路徑"（happy path）
+   - ❌ 測試通過就以為代碼沒問題
+   - ❌ 忽略代碼覆蓋率報告
+   - ❌ 沒有測試邊緣情況和錯誤處理
+   - ❌ Import-time 錯誤沒有被測試覆蓋
+
+### 測試 Checklist（每次提交前）
+
+- [ ] 運行導入測試：`pytest tests/unit/test_imports.py -v`
+- [ ] 檢查覆蓋率：`pytest --cov=scripts --cov-report=term-missing`
+- [ ] 覆蓋率 ≥ 70%？
+- [ ] 所有新增模塊都有導入測試？
+- [ ] 實際啟動 UI 驗證：`streamlit run app.py`
+
+**記住**：測試不只是為了通過 CI，而是為了確保代碼在實際環境中能正常運行。
