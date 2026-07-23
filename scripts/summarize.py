@@ -1,8 +1,10 @@
-"""每份逐字稿生成一个结构化摘要 JSON（调 Gemini，一次性 53 次，之后每周只加 1 次）。
+"""每份文档生成一个结构化摘要 JSON（调 LLM），支持多 workspace。
+
 产物 schema 见 PROJECT_SPEC.md §5.5。session_date/source_file 等元数据直接取自文件名解析结果，
-不问 Gemini（避免它编造日期）；只让 Gemini 提炼 topics/情绪基调/事件/心理议题/决定/金句。
+不问 LLM（避免它编造日期）；只让 LLM 提炼核心内容。
 """
 import json
+from typing import Optional
 
 from tqdm import tqdm
 
@@ -45,9 +47,10 @@ SYSTEM_INSTRUCTION = """\
 严格要求：只根据给定的逐字稿内容提炼，不要编造逐字稿中没有出现的信息。"""
 
 
-def summary_path(source_file: str):
+def summary_path(source_file: str, workspace_id: Optional[str] = None):
+    """获取摘要文件路径（workspace 感知）。"""
     stem = source_file.rsplit(".", 1)[0]
-    return SUMMARIES_DIR / f"{stem}.json"
+    return SUMMARIES_DIR(workspace_id) / f"{stem}.json"
 
 
 def summarize_session(session: ParsedSession) -> dict:
@@ -68,11 +71,13 @@ def summarize_session(session: ParsedSession) -> dict:
     }
 
 
-def summarize_all(force: bool = False) -> list[dict]:
-    SUMMARIES_DIR.mkdir(parents=True, exist_ok=True)
+def summarize_all(force: bool = False, workspace_id: Optional[str] = None) -> list[dict]:
+    """生成所有文档的摘要（workspace 感知）。"""
+    summaries_dir = SUMMARIES_DIR(workspace_id)
+    summaries_dir.mkdir(parents=True, exist_ok=True)
     summaries = []
-    for f in tqdm(iter_raw_files(), desc="summarizing"):
-        out_path = summary_path(f.name)
+    for f in tqdm(iter_raw_files(workspace_id), desc="summarizing"):
+        out_path = summary_path(f.name, workspace_id)
         if out_path.exists() and not force:
             summaries.append(json.loads(out_path.read_text(encoding="utf-8")))
             continue
