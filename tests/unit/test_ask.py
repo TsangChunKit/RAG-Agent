@@ -253,6 +253,10 @@ class TestGraphLoading:
     def test_load_graph_missing(self, tmp_path):
         """测试图谱文件不存在"""
         from scripts.ask import _load_graph
+        import scripts.ask
+
+        # 清空 cache（避免之前测试的缓存）
+        scripts.ask._graph_cache = None
 
         missing_file = tmp_path / "graph.json"
 
@@ -379,10 +383,11 @@ class TestRetrieve:
         assert result == []
 
     @patch("scripts.ask._get_table")
+    @patch("scripts.ask._load_all_chunks")
     @patch("scripts.ask.embed_one")
     @patch("scripts.ask.index_settings.retrieval_params")
     @patch("scripts.ask.index_settings.reranker_params")
-    def test_retrieve_basic(self, mock_reranker_params, mock_retrieval_params, mock_embed, mock_table):
+    def test_retrieve_basic(self, mock_reranker_params, mock_retrieval_params, mock_embed, mock_load_all, mock_table):
         """测试基本检索"""
         from scripts.ask import retrieve
 
@@ -416,6 +421,9 @@ class TestRetrieve:
             }
         )
         mock_table_instance.to_pandas.return_value = sample_df
+
+        # Mock _load_all_chunks() 返回完整数据（用于 _merge_windows）
+        mock_load_all.return_value = sample_df
 
         # Mock search results
         mock_search_result = MagicMock()
