@@ -37,7 +37,8 @@
       "Bash(gh repo *)",
       "Bash(gh *)",
       "Bash(python3 *)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(awk '{print $NF}')"
     ]
   },
   "hooks": {
