@@ -1,12 +1,14 @@
-"""M7 扩展 v3：核心图式 / 应对模式 / 关键事件 / 人物的多层可交互关系图（mindmap）。
+“””知识图谱可视化：多层可交互关系图（mindmap），支持多 workspace。
 
-理论依据见 scripts/build_graph.py 顶部注释（Schema Therapy 图式领域、Beck 认知概念化图、
-精神病理网络理论的中心性、CCRT 核心冲突关系主题）。这里负责可视化 + 合并两张图：
-- data/graph.json：真实咨询心智地图（贵，build_graph.py 生成，只有手动点按钮才重新跑）；
-- data/chat_graph.json：AI 对话记忆心智地图（便宜，随聊天自动更新，见 chat_memory_watcher.py）。
-两者的合并是纯 Python 操作（scripts/graph_utils.py），不产生额外 Gemini 调用；AI 对话记忆
-的节点带虚线边框，和真实咨询的节点区分开，避免把"随口聊的"和"真实咨询的"混为一谈。
-"""
+这里负责可视化 + 合并两张图：
+- data/graph.json：主图谱（build_graph.py 生成，手动重新生成）；
+- data/chat_graph.json：AI 对话记忆图谱（随聊天自动更新）。
+
+两者的合并是纯 Python 操作（scripts/graph_utils.py），不产生额外 LLM 调用；
+AI 对话记忆的节点带虚线边框，和主图谱区分开。
+
+支持 workspace：自动读取当前 workspace 的图谱文件。
+“””
 import json
 
 import streamlit as st
@@ -15,23 +17,39 @@ from pyvis.network import Network
 
 from config import CHAT_GRAPH_JSON_PATH, GRAPH_JSON_PATH
 from scripts.graph_utils import NODE_TYPES, RELATION_TYPES, merge_graphs
+from scripts.workspace_manager import get_current_workspace, load_workspace_config
+from scripts.graph_schema_loader import load_schema, get_node_types, get_relation_types
 
-st.set_page_config(page_title="心智地图", page_icon="🕸️", layout="wide")
-st.title("🕸️ 核心图式 / 应对模式 / 事件 关系图")
+st.set_page_config(page_title=”知识图谱”, page_icon=”🕸️”, layout=”wide”)
+
+# 获取当前 workspace 信息
+current_workspace = get_current_workspace()
+workspace_config = load_workspace_config(current_workspace)
+workspace_name = workspace_config.get(“display_name”, current_workspace)
+
+st.title(f”🕸️ {workspace_name} - 知识图谱”)
 st.caption(
-    "基于 Schema Therapy 图式领域 + Beck 认知概念化图 + 精神病理网络理论提炼；"
-    "节点大小 = 中心性（越大越像“根源驱动”），可拖拽/缩放/悬停查看依据日期。"
-    "虚线边框 = 来自 AI 对话记忆（非真实咨询）。"
+    f”Workspace: {workspace_name} | “
+    “节点大小 = 中心性（越大说明连接越多），可拖拽/缩放/悬停查看详情。”
+    “虚线边框 = 来自 AI 对话记忆。”
 )
 
 
 def _load(path):
-    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+    “””加载 JSON 文件（workspace 感知）。”””
+    if callable(path):
+        path = path(current_workspace)
+    return json.loads(path.read_text(encoding=”utf-8”)) if path.exists() else None
 
 
 therapy_graph = _load(GRAPH_JSON_PATH)
 chat_graph = _load(CHAT_GRAPH_JSON_PATH)
 graph = merge_graphs(therapy_graph, chat_graph)
+
+# 加载 workspace schema（用于获取节点/关系类型）
+schema = load_schema(current_workspace)
+schema_node_types = get_node_types(schema)
+schema_relation_types = get_relation_types(schema)
 
 if graph is None:
     st.warning("还没有生成图谱数据。请先在终端运行：`python -m scripts.build_graph`")
@@ -39,8 +57,8 @@ if graph is None:
 
 nodes_by_id = {n["id"]: n for n in graph["nodes"]}
 
-# 颜色/大小/层级：类型标签与层级取自单一真相源 NODE_TYPES；颜色和基础大小是纯可视化选择，
-# 按理论层级配色（根源需要/图式=紫蓝，信念/模式=洋红，应对/触发=橙红，当下体验/事件=绿）。
+# 颜色/大小/层级：类型标签与层级取自 schema；颜色和基础大小是纯可视化选择。
+# 按层级配色（layer 0=紫蓝，layer 1=洋红，layer 2-3=橙红，layer 4+=绿）。
 _TYPE_VIS = {
     "need":              {"color": "#16A085", "base_size": 24},
     "person":            {"color": "#4C86C6", "base_size": 18},
@@ -52,11 +70,32 @@ _TYPE_VIS = {
     "automatic_thought": {"color": "#B7791F", "base_size": 12},
     "emotion":           {"color": "#EB5C8A", "base_size": 14},
     "event":             {"color": "#4CAF6D", "base_size": 13},
+    # 通用类型（generic schema）
+    "concept":           {"color": "#8E44AD", "base_size": 20},
+    "entity":            {"color": "#4C86C6", "base_size": 18},
+    "process":           {"color": "#E67E22", "base_size": 16},
+    # 阿含经类型
+    "teaching":          {"color": "#8E44AD", "base_size": 22},
+    "practice":          {"color": "#E0574B", "base_size": 18},
+    "text":              {"color": "#4CAF6D", "base_size": 14},
+    # 架构类型
+    "requirement":       {"color": "#16A085", "base_size": 20},
+    "component":         {"color": "#4C86C6", "base_size": 22},
+    "technology":        {"color": "#6C5CE7", "base_size": 16},
+    "pattern":           {"color": "#C0399B", "base_size": 20},
+    "risk":              {"color": "#E0574B", "base_size": 16},
+    "decision":          {"color": "#E67E22", "base_size": 18},
 }
 _FALLBACK_VIS = {"color": "#95a5a6", "base_size": 14}
-TYPE_STYLE = {t: {**_TYPE_VIS.get(t, _FALLBACK_VIS), "level": meta["layer"]} for t, meta in NODE_TYPES.items()}
-TYPE_LABEL = {t: meta["label"] for t, meta in NODE_TYPES.items()}
-SOURCE_LABEL = {"therapy": "真实咨询", "chat": "AI 对话记忆"}
+
+# 使用 schema 中的节点类型（优先），回退到硬编码 NODE_TYPES
+TYPE_STYLE = {}
+TYPE_LABEL = {}
+for t, meta in schema_node_types.items():
+    TYPE_STYLE[t] = {**_TYPE_VIS.get(t, _FALLBACK_VIS), "level": meta.get("layer", 0)}
+    TYPE_LABEL[t] = meta.get("label", t)
+
+SOURCE_LABEL = {"therapy": "主图谱", "chat": "AI 对话记忆"}
 
 RELATION_STYLE = {
     "derives": {"color": "#8E44AD", "dashes": False, "width": 2},
