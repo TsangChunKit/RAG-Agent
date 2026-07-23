@@ -1,5 +1,10 @@
-"""集中管理所有可调参数。其余脚本一律从这里 import，不要在各处硬编码路径/参数。"""
+"""集中管理所有可调参数。其余脚本一律从这里 import，不要在各处硬编码路径/参数。
+
+多 Workspace 支持：所有数据路径现在是函数（支持 workspace_id 参数），全局共享的配置
+（API key / LLM 参数 / 索引参数）仍在 private.nosync/ 根目录。
+"""
 from pathlib import Path
+from typing import Optional
 
 # ---- 目录 ----
 BASE_DIR = Path(__file__).resolve().parent
@@ -9,41 +14,103 @@ BASE_DIR = Path(__file__).resolve().parent
 # 完全本地、不出机器」的硬约束（见 PROJECT_SPEC.md §0.5）。代码/配置（*.py、系统提示词、
 # eval）不含个人内容，留在项目根目录，可以正常同步/进 git。
 PRIVATE_DIR = BASE_DIR / "private.nosync"
+
+# ---- Workspace 感知的路径函数 ----
+# 这些函数返回当前 workspace 的路径，支持向后兼容（_legacy workspace 指向旧路径）。
+# workspace_id=None 表示使用当前 workspace（从环境变量/Streamlit session_state 读取）。
+
+def get_workspace_dir(workspace_id: Optional[str] = None) -> Path:
+    """获取 workspace 根目录（延迟导入避免循环依赖）。"""
+    from scripts.workspace_manager import get_workspace_dir as _get_workspace_dir
+    return _get_workspace_dir(workspace_id)
+
+
+def RAW_DIR(workspace_id: Optional[str] = None) -> Path:
+    """原始逐字稿目录（workspace 独立）。"""
+    return get_workspace_dir(workspace_id) / "data" / "raw"
+
+
+def PROCESSED_DIR(workspace_id: Optional[str] = None) -> Path:
+    """处理后的数据目录（workspace 独立）。"""
+    return get_workspace_dir(workspace_id) / "data" / "processed"
+
+
+def SUMMARIES_DIR(workspace_id: Optional[str] = None) -> Path:
+    """咨询摘要目录（workspace 独立）。"""
+    return get_workspace_dir(workspace_id) / "data" / "summaries"
+
+
+def DB_DIR(workspace_id: Optional[str] = None) -> Path:
+    """LanceDB 向量库目录（workspace 独立）。"""
+    return get_workspace_dir(workspace_id) / "db"
+
+
+def LONG_TERM_MEMORY_PATH(workspace_id: Optional[str] = None) -> Path:
+    """长期记忆文件路径（workspace 独立）。"""
+    return get_workspace_dir(workspace_id) / "LONG_TERM_MEMORY.md"
+
+
+def CHAT_MEMORY_PATH(workspace_id: Optional[str] = None) -> Path:
+    """AI 对话记忆文件路径（workspace 独立）。
+
+    来自使用者与本 AI 助手的聊天历史，不是与真人咨询师的真实咨询记录，
+    刻意和 LONG_TERM_MEMORY_PATH（临床数据）分开存放，避免两者被混为一谈。
+    """
+    return get_workspace_dir(workspace_id) / "CHAT_MEMORY.md"
+
+
+def GRAPH_JSON_PATH(workspace_id: Optional[str] = None) -> Path:
+    """真实咨询心智地图路径（workspace 独立）。"""
+    return get_workspace_dir(workspace_id) / "data" / "graph.json"
+
+
+def GRAPH_FRAGMENTS_DIR(workspace_id: Optional[str] = None) -> Path:
+    """图谱片段缓存目录（workspace 独立）。
+
+    逐次抽取（map-reduce 建图）的每份咨询子图片段缓存目录——和 summaries 一样，每份逐字稿
+    抽一次、缓存一份，重跑只处理没缓存的新逐字稿，避免每次全量重抽 57+ 次 LLM 调用。
+    """
+    return get_workspace_dir(workspace_id) / "data" / "graph_fragments"
+
+
+def CHAT_GRAPH_JSON_PATH(workspace_id: Optional[str] = None) -> Path:
+    """AI 对话记忆心智地图路径（workspace 独立）。
+
+    和上面真实咨询的图谱分开存放，生成时便宜得多（只喂 graph.json 当参考 + 聊天记录，
+    不重新处理全部咨询摘要），随 update_chat_memory 一起自动更新。
+    """
+    return get_workspace_dir(workspace_id) / "data" / "chat_graph.json"
+
+
+def CHAT_SESSIONS_DIR(workspace_id: Optional[str] = None) -> Path:
+    """多会话聊天历史持久化目录（workspace 独立）。"""
+    return get_workspace_dir(workspace_id) / "data" / "chat_sessions"
+
+
+def EXPLICIT_CACHE_STATE_PATH(workspace_id: Optional[str] = None) -> Path:
+    """Explicit Caching 状态记录（workspace 独立）。
+
+    记录 system instruction + 长期记忆 + 心智地图这类固定内容的缓存资源名 + 内容指纹，
+    内容一变就检测出来自动重建。
+    """
+    return get_workspace_dir(workspace_id) / "data" / ".explicit_cache_state.json"
+
+
+def INDEX_CHANGELOG_PATH(workspace_id: Optional[str] = None) -> Path:
+    """索引变更记录（workspace 独立）。
+
+    append-only JSONL：每次新增/重建/跳过入库都追加一行（时间、动作、文件、片段数），
+    供 Streamlit「📚 已索引的咨询记录」展示审计轨迹。属运行产物、含逐字稿文件名。
+    """
+    return get_workspace_dir(workspace_id) / "data" / "index_changelog.jsonl"
+
+
+# ---- 全局共享的路径（不随 workspace 变化）----
 ENV_PATH = PRIVATE_DIR / ".env"          # GEMINI_API_KEY（由 scripts/llm.py 加载）
-RAW_DIR = PRIVATE_DIR / "data" / "raw"
-PROCESSED_DIR = PRIVATE_DIR / "data" / "processed"
-SUMMARIES_DIR = PRIVATE_DIR / "data" / "summaries"
-DB_DIR = PRIVATE_DIR / "db"
-LONG_TERM_MEMORY_PATH = PRIVATE_DIR / "LONG_TERM_MEMORY.md"
-# AI 对话记忆——来自使用者与本 AI 助手的聊天历史，不是与真人咨询师"海特"的真实咨询记录，
-# 刻意和 LONG_TERM_MEMORY_PATH（临床数据）分开存放，避免两者被混为一谈。
-CHAT_MEMORY_PATH = PRIVATE_DIR / "CHAT_MEMORY.md"
 EVAL_QUESTIONS_PATH = BASE_DIR / "eval" / "eval_questions.yaml"
-GRAPH_JSON_PATH = PRIVATE_DIR / "data" / "graph.json"
-# 逐次抽取（map-reduce 建图）的每份咨询子图片段缓存目录——和 summaries 一样，每份逐字稿
-# 抽一次、缓存一份，重跑只处理没缓存的新逐字稿，避免每次全量重抽 57+ 次 LLM 调用。
-GRAPH_FRAGMENTS_DIR = PRIVATE_DIR / "data" / "graph_fragments"
-# AI 对话记忆的心智地图——和上面真实咨询的图谱分开存放，生成时便宜得多（只喂 graph.json
-# 当参考 + 聊天记录，不重新处理全部咨询摘要），随 update_chat_memory 一起自动更新。
-CHAT_GRAPH_JSON_PATH = PRIVATE_DIR / "data" / "chat_graph.json"
-# 可在 Streamlit 设置弹窗里编辑的 system instruction；不含个人逐字稿内容，留在根目录（可同步）。
-SYSTEM_INSTRUCTION_PATH = BASE_DIR / "system_instruction.md"
-# 多会话聊天历史持久化目录（app.py 用），每个会话一个 JSON 文件。
-CHAT_SESSIONS_DIR = PRIVATE_DIR / "data" / "chat_sessions"
-# Explicit Caching 状态记录（system instruction + 长期记忆 + 心智地图这类固定内容），
-# 记录当前生效的缓存资源名 + 内容指纹，内容一变就检测出来自动重建。
-EXPLICIT_CACHE_STATE_PATH = PRIVATE_DIR / "data" / ".explicit_cache_state.json"
-# Gemini 运行时可调参数 + API key（可在 Streamlit「⚙️ Gemini 设置」里改）。含 API key，放隐私目录。
-# 不存在或缺字段时，scripts/settings.py 回退到下面 §Gemini 里的默认值——删掉这个文件 = 恢复默认。
-GEMINI_SETTINGS_PATH = PRIVATE_DIR / "gemini_settings.json"
-# 索引运行时可调参数（检索 top_k/窗口、分块大小/重叠、本地 embedding、FTS 分词），可在 Streamlit
-# 「⚙️ 索引设置」里改。和 gemini_settings.json 一样：不存在或缺字段时，scripts/index_settings.py
-# 回退到下面 §分块 / §Embedding / §LanceDB / §检索 里的默认常量——删掉这个文件 = 恢复默认。
-# 不含个人内容，但为与其它运行时设置放一起、复用「删文件=恢复默认」的心智模型，同样放隐私目录。
-INDEX_SETTINGS_PATH = PRIVATE_DIR / "index_settings.json"
-# 索引变更记录（append-only JSONL）：每次新增/重建/跳过入库都追加一行（时间、动作、文件、片段数），
-# 供 Streamlit「📚 已索引的咨询记录」展示审计轨迹。属运行产物、含逐字稿文件名，放隐私目录。
-INDEX_CHANGELOG_PATH = PRIVATE_DIR / "data" / "index_changelog.jsonl"
+SYSTEM_INSTRUCTION_PATH = BASE_DIR / "system_instruction.md"  # 根目录的默认 system instruction
+GEMINI_SETTINGS_PATH = PRIVATE_DIR / "gemini_settings.json"   # 全局 LLM 参数 + API key
+INDEX_SETTINGS_PATH = PRIVATE_DIR / "index_settings.json"     # 全局索引参数
 
 # ---- Hermes Agent Gateway（本地 OpenAI 兼容代理，转发到 xAI grok，自己夹使用者的 OAuth）----
 # 这些是"默认值"，可在 Streamlit「⚙️ Gemini 设置」里覆盖（存进 gemini_settings.json）。
