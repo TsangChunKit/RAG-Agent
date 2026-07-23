@@ -25,7 +25,28 @@
       "Bash(gh auth *)",
       "Bash(git config *)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git check-ignore *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(gh repo *)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && if ! git diff-index --quiet HEAD -- 2>/dev/null; then git add -A && git commit -m \"chore: auto checkpoint after session\" && git push 2>/dev/null || true; fi"
+          }
+        ]
+      }
     ]
   }
 }
