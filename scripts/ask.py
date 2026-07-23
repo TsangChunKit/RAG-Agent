@@ -768,15 +768,16 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
         # 超过阈值时迭代压缩，直到低于上限
         if estimated_size > max_context:
             compressed_count = 0
+            llm_compressed_count = 0
             original_size = estimated_size
 
-            # 每次压缩 1/3 最旧的未压缩历史，重复直到低于阈值
+            # 阶段 1：压缩 User 消息（丢弃检索片段，免费快速）
             while estimated_size > max_context:
                 # 找出所有未压缩的用户消息
                 uncompressed = [i for i, turn in enumerate(history)
                                if turn.get("role") == "user" and not turn.get("compressed")]
                 if not uncompressed:
-                    break  # 全部已压缩，无法再降
+                    break  # User 消息全部已压缩，进入阶段 2
 
                 # 压缩最旧的 1/3（至少 1 条）
                 batch_size = max(1, len(uncompressed) // 3)
@@ -790,12 +791,62 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
                     if turn.get("role") == "user":
                         estimated_size += len(turn.get("content", "")) if turn.get("compressed") else len(turn.get("history_content", turn.get("content", "")))
                     else:
-                        estimated_size += len(turn.get("content", ""))
+                        # Assistant 回答：优先用压缩版（如果已压缩），否则用完整版
+                        estimated_size += len(turn.get("compressed_content", turn.get("content", "")))
 
-            if compressed_count > 0:
+            # 阶段 2：如果 User 消息全部压缩后仍超限，压缩 Assistant 回答（调用 LLM）
+            if estimated_size > max_context:
+                from scripts.llm import ask_llm
+
+                # 找出所有未压缩的 assistant 消息（优先压缩最旧的长回答）
+                uncompressed_assistant = [
+                    (i, len(turn.get("content", "")))
+                    for i, turn in enumerate(history)
+                    if turn.get("role") == "assistant" and not turn.get("compressed")
+                ]
+                # 按长度降序排序（先压缩最长的）
+                uncompressed_assistant.sort(key=lambda x: -x[1])
+
+                # 逐个压缩直到低于阈值
+                for i, original_len in uncompressed_assistant:
+                    if estimated_size <= max_context:
+                        break  # 已达标，停止压缩
+
+                    original_answer = history[i]["content"]
+                    # 只压缩 > 3K 的回答（短回答保留完整）
+                    if original_len > 3000:
+                        try:
+                            # 调用 LLM 压缩（目标：压缩到原长度的 40%）
+                            target_chars = max(1000, int(original_len * 0.4))
+                            compressed = ask_llm(
+                                [{"role": "user", "parts": [{"text":
+                                    f"请将以下 AI 助手的回答压缩成约 {target_chars} 字符，保留关键信息和结论：\n\n{original_answer}"
+                                }]}],
+                                system_instruction="你是一个文本压缩助手，擅长提炼要点。只输出压缩后的文本，不要额外解释。",
+                            ).text
+
+                            history[i]["compressed_content"] = compressed
+                            history[i]["compressed"] = True
+                            llm_compressed_count += 1
+
+                            # 重新估算
+                            estimated_size = len(current_turn)
+                            for turn in history:
+                                if turn.get("role") == "user":
+                                    estimated_size += len(turn.get("content", "")) if turn.get("compressed") else len(turn.get("history_content", turn.get("content", "")))
+                                else:
+                                    estimated_size += len(turn.get("compressed_content", turn.get("content", "")))
+
+                        except Exception as e:
+                            # LLM 压缩失败，跳过这条（保留原文）
+                            print(f"警告：压缩失败 {e}")
+                            continue
+
+            if compressed_count > 0 or llm_compressed_count > 0:
                 compression_info = {
                     "triggered": True,
                     "compressed_turns": compressed_count,
+                    "llm_compressed_turns": llm_compressed_count,
                     "before": original_size,
                     "after": estimated_size,
                 }
@@ -816,7 +867,11 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
                 # 正常：检索片段 + 问题
                 text = turn.get("history_content", turn.get("content", ""))
         else:
-            text = turn.get("content", "")
+            # Assistant 回答：优先使用 LLM 压缩版（如果存在），否则用完整版
+            if turn.get("compressed") and turn.get("compressed_content"):
+                text = turn.get("compressed_content", "")
+            else:
+                text = turn.get("content", "")
 
         contents.append({"role": role, "parts": [{"text": text}]})
     contents.append({"role": "user", "parts": [{"text": current_turn}]})

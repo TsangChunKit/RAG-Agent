@@ -506,19 +506,29 @@ if prompt := st.chat_input("说说你在想什么…"):
         # 显示压缩提示
         if result.get("compression_info") and result["compression_info"]["triggered"]:
             info = result["compression_info"]
+            msg_parts = []
+            if info.get("compressed_turns", 0) > 0:
+                msg_parts.append(f"用户消息 {info['compressed_turns']} 轮（检索片段 → 纯问题）")
+            if info.get("llm_compressed_turns", 0) > 0:
+                msg_parts.append(f"AI 回答 {info['llm_compressed_turns']} 轮（LLM 智能压缩）")
+
             st.info(
-                f"📦 自动压缩：为保持在 500K context 以内，已将最旧的 {info['compressed_turns']} 轮对话压缩\n"
+                f"📦 自动压缩：为保持在 500K context 以内\n"
+                f"已压缩：{' + '.join(msg_parts)}\n"
                 f"（{info['before']/1000:.0f}K → {info['after']/1000:.0f}K，节省 {(info['before']-info['after'])/1000:.0f}K）"
             )
 
         st.markdown(result["answer"])
         _render_meta(result["sources"], result.get("token_usage"), result.get("matched_graph_nodes"))
 
-    # 同步压缩标记的变化回 session_state
+    # 同步压缩标记和压缩内容的变化回 session_state
     if result.get("compression_info"):
         for i, h in enumerate(history):
-            if i < len(st.session_state.messages) and h.get("compressed"):
-                st.session_state.messages[i]["compressed"] = True
+            if i < len(st.session_state.messages):
+                if h.get("compressed"):
+                    st.session_state.messages[i]["compressed"] = True
+                if h.get("compressed_content"):
+                    st.session_state.messages[i]["compressed_content"] = h["compressed_content"]
 
     st.session_state.messages.append({
         "role": "user",
