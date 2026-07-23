@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "domain": "generic",
+  "node_types": {
+    "concept": {
+      "label": "概念",
+      "layer": 0,
+      "has_domain": false
+    },
+    "entity": {
+      "label": "实体",
+      "layer": 0,
+      "has_domain": false
+    },
+    "event": {
+      "label": "事件",
+      "layer": 1,
+      "has_domain": false
+    },
+    "process": {
+      "label": "过程",
+      "layer": 1,
+      "has_domain": false
+    }
+  },
+  "relation_types": {
+    "relates_to": "关联",
+    "causes": "导致",
+    "is_part_of": "属于",
+    "precedes": "先于",
+    "co_occurs": "共现",
+    "contradicts": "矛盾"
+  },
+  "system_instruction_template": "你是知识图谱构建专家，擅长从文档中抽取概念、实体、事件及其关系。你会收到一份文档（可能是逐字稿、文章、对话记录等）。请从中抽取一张知识图谱。\n\n## 节点类型\n- **concept（概念）**：抽象的想法、理论、原则，如\"民主\"\"正义\"\"可持续发展\"。\n- **entity（实体）**：具体的人、组织、地点、物体，如\"联合国\"\"乔布斯\"\"旧金山\"。\n- **event（事件）**：发生的具体事件，有明确的时间点，如\"2023年地震\"\"产品发布会\"。\n- **process（过程）**：持续的过程、活动、方法论，如\"全球化\"\"敏捷开发\"\"气候变化\"。\n\n## 关系类型\n- relates_to：概念/实体之间的一般关联\n- causes：因果关系（A 导致 B）\n- is_part_of：包含关系（A 是 B 的一部分）\n- precedes：时间顺序（A 先于 B）\n- co_occurs：共现（A 和 B 常一起出现）\n- contradicts：矛盾（A 与 B 相矛盾）\n\n## 要求\n- 只根据文档内容抽取，不编造；\n- id 用 \"类型:简称\" 格式，如 concept:民主 / entity:联合国；\n- label 用简洁的名称，description 写 1-2 句具体说明；\n- 边的 source/target 必须引用已定义的节点 id。",
+  "merge_threshold": 0.80
+}

@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "domain": "solution_architecture",
+  "node_types": {
+    "requirement": {
+      "label": "需求",
+      "layer": 0,
+      "has_domain": false
+    },
+    "component": {
+      "label": "组件",
+      "layer": 1,
+      "has_domain": false
+    },
+    "technology": {
+      "label": "技术",
+      "layer": 2,
+      "has_domain": false
+    },
+    "pattern": {
+      "label": "架构模式",
+      "layer": 1,
+      "has_domain": false
+    },
+    "risk": {
+      "label": "风险",
+      "layer": 3,
+      "has_domain": false
+    },
+    "decision": {
+      "label": "决策",
+      "layer": 2,
+      "has_domain": false
+    }
+  },
+  "relation_types": {
+    "requires": "需要",
+    "implements": "实现",
+    "uses": "使用",
+    "conflicts_with": "冲突",
+    "mitigates": "缓解",
+    "relates_to": "关联"
+  },
+  "system_instruction_template": "你是云架构专家，熟悉 GCP / AWS / Azure 的服务组合与最佳实践，以及微服务、事件驱动、Serverless 等现代架构模式。你会收到一份架构文档、设计讨论或技术方案。请从中抽取架构知识图谱。\n\n## 节点类型\n- **requirement（需求）**：功能需求、非功能需求（性能/可用性/安全性等），如\"支持 100K TPS\"\"99.99% 可用性\"\"GDPR 合规\"。\n- **component（组件）**：系统组件、服务、模块，如\"API Gateway\"\"认证服务\"\"数据库集群\"\"CDN\"。\n- **technology（技术）**：具体技术栈、云服务、工具，如\"GCP Cloud Run\"\"PostgreSQL\"\"Kafka\"\"Terraform\"。\n- **pattern（架构模式）**：设计模式、架构风格，如\"微服务\"\"Event Sourcing\"\"CQRS\"\"Saga 模式\"。\n- **risk（风险）**：技术风险、运维风险、业务风险，如\"单点故障\"\"供应商锁定\"\"数据一致性风险\"。\n- **decision（决策）**：架构决策记录（ADR），如\"选用 Cloud Run 而非 GKE\"\"采用异步解耦\"。\n\n## 关系类型\n- requires：需求 A 需要组件 B（如\"高可用性\"需要\"多区域部署\"）\n- implements：组件 A 实现需求 B（如\"API Gateway\"实现\"认证需求\"）\n- uses：组件/模式 A 使用技术 B（如\"认证服务\"使用\"Firebase Auth\"）\n- conflicts_with：决策/组件 A 与 B 冲突（如\"强一致性\"vs\"高可用性\"）\n- mitigates：决策/组件 A 缓解风险 B（如\"多活部署\"缓解\"单点故障\"）\n- relates_to：一般关联\n\n## 要求\n- 只根据文档内容抽取，不编造；\n- id 用 \"类型:简称\" 格式，如 component:api-gateway / technology:cloud-run；\n- label 用简洁的名称，description 写具体说明（性能指标、选型理由等）；\n- 边的 source/target 必须引用已定义的节点 id；\n- 决策节点应包含为什么做这个决策（trade-off、约束条件）。",
+  "merge_threshold": 0.85
+}

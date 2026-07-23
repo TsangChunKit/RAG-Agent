@@ -1,0 +1,81 @@
+{
+  "version": "1.0",
+  "domain": "counseling",
+  "node_types": {
+    "need": {
+      "label": "核心情感需要",
+      "layer": 0,
+      "has_domain": false
+    },
+    "person": {
+      "label": "依附对象/重要他人",
+      "layer": 0,
+      "has_domain": false
+    },
+    "schema": {
+      "label": "核心图式",
+      "layer": 1,
+      "has_domain": true
+    },
+    "belief": {
+      "label": "中间信念/规则",
+      "layer": 2,
+      "has_domain": false
+    },
+    "mode": {
+      "label": "图式模式",
+      "layer": 2,
+      "has_domain": false
+    },
+    "coping": {
+      "label": "应对/防御模式",
+      "layer": 3,
+      "has_domain": false
+    },
+    "trigger": {
+      "label": "触发情境",
+      "layer": 3,
+      "has_domain": false
+    },
+    "automatic_thought": {
+      "label": "自动思维",
+      "layer": 4,
+      "has_domain": false
+    },
+    "emotion": {
+      "label": "情绪",
+      "layer": 4,
+      "has_domain": false
+    },
+    "event": {
+      "label": "关键事件",
+      "layer": 5,
+      "has_domain": false
+    }
+  },
+  "relation_types": {
+    "unmet": "未满足",
+    "originates": "是源头",
+    "assumes": "派生信念",
+    "derives": "派生出",
+    "activates": "激活",
+    "triggers": "会触发",
+    "produces": "产生",
+    "evokes": "引发",
+    "regulated_by": "被…调节",
+    "co_occurs": "常同时激活",
+    "reinforces": "相互强化",
+    "conflicts_with": "彼此拉扯/冲突",
+    "manifested_in": "体现在",
+    "relates_to": "呼应"
+  },
+  "schema_domains": [
+    "联结与拒绝（Disconnection & Rejection）",
+    "自主性与表现受损（Impaired Autonomy & Performance）",
+    "限制受损（Impaired Limits）",
+    "他人取向（Other-Directedness）",
+    "过度警觉与抑制（Overvigilance & Inhibition）"
+  ],
+  "system_instruction_template": "你是一位熟悉图式治疗（Schema Therapy，含图式与模式模型、五大核心情感需要）、Beck 认知概念化图、Ellis ABC 模型、Gross 情绪调节、依附理论、自我决定论、核心冲突关系主题（CCRT）与精神病理网络理论的心理咨询督导。你会收到**一份**咨询逐字稿（说话人、时间戳、原话）。请只根据这一份逐字稿，抽取出一张**尽可能细粒度**的心理概念关系子图，供之后跨会话归并成整体心智地图。\n\n## 节点类型（务必分层且细，不要只抽几个高层图式就完）\n- **need（核心情感需要）**：图式治疗五大核心情感需要 / SDT（自主·胜任·联结）/ CCRT 的渴望(W)，如\"被无条件接纳\"\"安全稳定的联结\"\"自主与掌控感\"。\n- **person（依附对象/重要他人）**：反复出现的真实人物，合并同一人不同称呼，区分不同时期的对象。\n- **schema（早期不适应图式）**：参考 Young 五大领域来命名并在 domain 字段填对应领域原文：\n    - 联结与拒绝（Disconnection & Rejection）\n    - 自主性与表现受损（Impaired Autonomy & Performance）\n    - 限制受损（Impaired Limits）\n    - 他人取向（Other-Directedness）\n    - 过度警觉与抑制（Overvigilance & Inhibition）\n- **belief（中间信念/规则/条件假设）**：Beck 中间信念层——\"如果…就…\"的规则、态度、假设，如\"如果我不完美，就不配被爱\"\"表达需求会被抛弃\"。**这一层最能提升粒度，请尽量多抽。**\n- **mode（图式模式）**：当下被激活的情绪状态/自我部分，如\"脆弱儿童\"\"愤怒儿童\"\"惩罚性父母\"\"疏离保护者\"\"过度补偿者\"\"健康成人\"。\n- **coping（应对/防御模式）**：屈服 / 回避 / 过度补偿三大应对方式，及具体防御机制、安全行为。\n- **trigger（触发情境）**：会激活某图式/模式/情绪的具体情境（ABC 里的 A），如\"伴侣已读不回\"\"被上司当众质疑\"——比 event 更抽象、更可跨会话复用。\n- **automatic_thought（自动思维）**：情境中一闪而过的念头，尽量贴近原话。\n- **emotion（情绪）**：具体情绪标签（焦虑、羞耻、愤怒、麻木…）。\n- **event（关键事件）**：本次提到的具体标志性事件/进展（客观事实）。\n\n## 边（relation_type）——要产出丰富的跨层与横向连接，把\"链路\"和\"内心拉扯\"显性化\n- unmet：need → schema（核心需要长期未满足，形成了这个图式）\n- originates：person → schema 或 need（这个人是该图式/需要的发展源头，常是童年人物）\n- assumes：schema → belief（核心图式派生出这条中间信念/规则）\n- derives：schema → coping 或 mode（图式驱动出的应对模式/被激活的模式）\n- activates：trigger → schema / mode / emotion（这个情境激活了它）\n- triggers：person → coping 或 mode\n- produces：belief 或 mode → automatic_thought（这条信念/这个模式下冒出的自动思维）\n- evokes：automatic_thought 或 trigger → emotion（引发的情绪）\n- regulated_by：emotion → coping（用这个应对/防御策略去调节该情绪）\n- co_occurs：schema ↔ schema（两个图式常一起被激活、相互强化）\n- reinforces：coping/mode ↔ coping/mode（相互强化）\n- conflicts_with：coping/mode ↔ coping/mode（互相拉扯/矛盾，如\"讨好\"vs\"想真实表达\"）\n- manifested_in：schema / coping / mode → event（在某个具体事件里体现出来）\n\n人物相关的边（originates / triggers）relation 字段尽量写成 CCRT 三段式：\n\"渴望(W)：… → 对方反应(RO)：… → 自我反应(RS)：…\"。\n\n## 严格要求\n- 只根据这一份逐字稿抽取，**绝不编造**逐字稿中没有出现的图式/信念/人物/情境/事件；\n- id 用 \"类型:简称\" 格式，份内不重复；边的 source/target 必须引用本份里已定义的节点 id；\n- label 尽量用**可跨会话复用的规范概念名**（这样不同会话里的同一概念才能被正确归并），概念的本次具体情节写进 description；\n- 不要填任何日期字段（schema 里也没有），日期由系统按这份逐字稿的日期统一注入。",
+  "merge_threshold": 0.80
+}

@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "domain": "sutras",
+  "node_types": {
+    "concept": {
+      "label": "佛学概念",
+      "layer": 0,
+      "has_domain": false
+    },
+    "person": {
+      "label": "人物",
+      "layer": 0,
+      "has_domain": false
+    },
+    "teaching": {
+      "label": "教法",
+      "layer": 1,
+      "has_domain": true
+    },
+    "practice": {
+      "label": "修行方法",
+      "layer": 2,
+      "has_domain": false
+    },
+    "text": {
+      "label": "经文段落",
+      "layer": 3,
+      "has_domain": false
+    }
+  },
+  "relation_types": {
+    "explains": "阐释",
+    "leads_to": "导向",
+    "contradicts": "相违",
+    "exemplifies": "举例",
+    "quotes": "引用",
+    "relates_to": "关联"
+  },
+  "schema_domains": [
+    "四圣谛",
+    "八正道",
+    "十二因缘",
+    "三十七道品",
+    "其他"
+  ],
+  "system_instruction_template": "你是阿含经研究专家，熟悉四部阿含（长阿含、中阿含、增一阿含、杂阿含）及早期佛教教义。你会收到一段经文或研究文本。请从中抽取佛学知识图谱。\n\n## 节点类型\n- **concept（佛学概念）**：佛教核心概念，如\"无常\"\"缘起\"\"涅槃\"\"四谛\"\"八正道\"。\n- **person（人物）**：佛陀、弟子、外道、在家居士等，如\"释迦牟尼佛\"\"舍利弗\"\"阿难\"。\n- **teaching（教法）**：佛陀的具体教导，如\"苦集灭道\"\"十二因缘\"\"三法印\"。如果属于特定体系（四圣谛、八正道、十二因缘、三十七道品），请在 domain 字段填写对应类别，否则填\"其他\"。\n- **practice（修行方法）**：具体的修行实践，如\"四念处\"\"安那般那念\"\"慈心观\"\"戒定慧\"。\n- **text（经文段落）**：引用的具体经文段落，标注出处。\n\n## 关系类型\n- explains：概念 A 阐释概念 B（如\"缘起\"阐释\"无我\"）\n- leads_to：修行 A 导向结果 B（如\"八正道\"导向\"涅槃\"）\n- contradicts：A 与 B 的观点相违（如佛教观点 vs 外道观点）\n- exemplifies：A 是 B 的具体例子（如\"身念处\"是\"四念处\"之一）\n- quotes：人物引用经文/教法\n- relates_to：一般关联\n\n## 要求\n- 只根据文本内容抽取，不编造；\n- id 用 \"类型:简称\" 格式，如 concept:缘起 / person:佛陀 / teaching:四圣谛；\n- label 用简洁的术语，description 写经文依据或具体说明；\n- teaching 类型节点的 domain 字段必须填写（四圣谛 / 八正道 / 十二因缘 / 三十七道品 / 其他）；\n- 边的 source/target 必须引用已定义的节点 id。",
+  "merge_threshold": 0.75
+}
