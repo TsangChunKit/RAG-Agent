@@ -1,9 +1,11 @@
-"""汇总所有结构化摘要 → 滚动生成 LONG_TERM_MEMORY.md。保持精炼（目标 < 3k token），
-每次问答都全量携带。头部的更新时间/咨询次数/日期范围由代码直接计算写入（不问 Gemini，
-避免它编错数字/日期）；Gemini 只负责提炼四个正文板块。
+"""汇总所有结构化摘要 → 滚动生成 LONG_TERM_MEMORY.md，支持多 workspace。
+
+保持精炼（目标 < 3k token），每次问答都全量携带。头部的更新时间/次数/日期范围由代码直接
+计算写入（不问 LLM，避免它编错数字/日期）；LLM 只负责提炼正文板块。
 """
 import datetime
 import json
+from typing import Optional
 
 from config import LONG_TERM_MEMORY_PATH, SUMMARIES_DIR
 from scripts.llm import ask_llm
@@ -45,8 +47,10 @@ SYSTEM_INSTRUCTION = """\
 严格要求：只根据给定的摘要内容提炼，不要编造摘要中没有出现的信息；不要自己编造日期或咨询次数。"""
 
 
-def load_summaries() -> list[dict]:
-    files = sorted(SUMMARIES_DIR.glob("*.json"))
+def load_summaries(workspace_id: Optional[str] = None) -> list[dict]:
+    """加载所有摘要（workspace 感知）。"""
+    summaries_dir = SUMMARIES_DIR(workspace_id)
+    files = sorted(summaries_dir.glob("*.json"))
     summaries = [json.loads(f.read_text(encoding="utf-8")) for f in files]
     summaries.sort(key=lambda s: s["session_date"])
     return summaries
@@ -81,23 +85,26 @@ def generate_memory_body(summaries: list[dict]) -> str:
     return resp.text.strip()
 
 
-def update_memory(summaries: list[dict] | None = None) -> str:
-    summaries = summaries if summaries is not None else load_summaries()
+def update_memory(summaries: list[dict] | None = None, workspace_id: Optional[str] = None) -> str:
+    """更新长期记忆（workspace 感知）。"""
+    summaries = summaries if summaries is not None else load_summaries(workspace_id)
     body = generate_memory_body(summaries)
 
     dates = [s["session_date"] for s in summaries]
     header = (
         f"# 长期记忆（自动维护，请勿手动编辑主体）\n"
         f"更新时间：{datetime.date.today().isoformat()} | "
-        f"已纳入咨询：{len(summaries)} 次（{min(dates)} ~ {max(dates)}）\n\n"
+        f"已纳入：{len(summaries)} 次（{min(dates)} ~ {max(dates)}）\n\n"
     )
 
     content = header + body + "\n"
-    LONG_TERM_MEMORY_PATH.write_text(content, encoding="utf-8")
+    ltm_path = LONG_TERM_MEMORY_PATH(workspace_id)
+    ltm_path.write_text(content, encoding="utf-8")
     return content
 
 
 if __name__ == "__main__":
     content = update_memory()
     print(content)
-    print(f"\n已写入 {LONG_TERM_MEMORY_PATH}")
+    ltm_path = LONG_TERM_MEMORY_PATH()
+    print(f"\n已写入 {ltm_path}")
