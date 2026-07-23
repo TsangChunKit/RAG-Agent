@@ -351,6 +351,64 @@ if "active_session_id" not in st.session_state:
         st.session_state.messages = []
 
 with st.sidebar:
+    # ============ Workspace 选择器 ============
+    st.subheader("🗂️ Workspace")
+
+    from scripts.workspace_manager import (
+        list_workspaces,
+        get_current_workspace,
+        set_current_workspace,
+        get_workspace_stat,
+        load_workspace_config
+    )
+
+    workspaces = list_workspaces()
+    current_ws = get_current_workspace()
+
+    # 找到当前 workspace 的索引
+    ws_names = [w["name"] for w in workspaces]
+    try:
+        current_index = ws_names.index(current_ws)
+    except ValueError:
+        current_index = 0
+
+    ws_choice = st.selectbox(
+        "当前工作空间",
+        options=ws_names,
+        index=current_index,
+        format_func=lambda name: next((w["display_name"] for w in workspaces if w["name"] == name), name),
+        key="workspace_selector",
+    )
+
+    # 检测切换
+    if ws_choice != current_ws:
+        set_current_workspace(ws_choice)
+        # 清空聊天会话状态（避免跨 workspace 污染）
+        st.session_state.active_session_id = new_session_id()
+        st.session_state.messages = []
+        st.rerun()
+
+    # 显示当前 workspace 状态
+    config = load_workspace_config(ws_choice)
+    stat = get_workspace_stat(ws_choice)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("文档", stat["doc_count"])
+    col2.metric("图谱", "✓" if stat["graph_exists"] else "✗")
+    col3.metric("对话图", "✓" if stat["chat_graph_exists"] else "✗")
+
+    st.caption(f"📝 {config.get('description', '')}")
+
+    # TODO: 新建/删除 workspace 按钮（Phase 3）
+    # col1, col2 = st.columns(2)
+    # if col1.button("➕ 新建", use_container_width=True):
+    #     create_workspace_dialog()
+    # if col2.button("🗑️ 删除", disabled=(ws_choice == "_legacy"), use_container_width=True):
+    #     delete_workspace_dialog(ws_choice)
+
+    st.divider()
+
+    # ============ 原有对话历史 ============
     st.subheader("对话历史")
     if st.button("＋ 新对话", use_container_width=True):
         st.session_state.active_session_id = new_session_id()
