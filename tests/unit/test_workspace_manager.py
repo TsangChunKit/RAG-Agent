@@ -54,6 +54,11 @@ class TestWorkspaceBasics:
 
         # 空目录
         (isolated_workspace / "workspaces").mkdir()
+        # 确保没有旧 data 目录
+        old_data = isolated_workspace / "data"
+        if old_data.exists():
+            import shutil
+            shutil.rmtree(old_data)
 
         workspaces = list_workspaces()
         # 应该没有 workspace（没有旧数据，也没有新 workspace）
@@ -66,8 +71,8 @@ class TestWorkspaceBasics:
                            isolated_workspace / "workspaces")
 
         # 创建旧数据目录
-        (isolated_workspace / "data").mkdir()
-        (isolated_workspace / "workspaces").mkdir()
+        (isolated_workspace / "data").mkdir(parents=True, exist_ok=True)
+        (isolated_workspace / "workspaces").mkdir(parents=True, exist_ok=True)
 
         workspaces = list_workspaces()
         assert len(workspaces) == 1

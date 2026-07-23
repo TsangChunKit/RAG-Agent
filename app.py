@@ -474,7 +474,9 @@ with st.sidebar:
     st.caption("从所有聊天历史提炼的记忆，与真实咨询的长期记忆分开存放。")
     chat_memory_path = CHAT_MEMORY_PATH(ws_choice)
     if chat_memory_path.exists():
-        st.caption(chat_memory_path.read_text(encoding="utf-8").splitlines()[1])
+        lines = chat_memory_path.read_text(encoding="utf-8").splitlines()
+        if len(lines) > 1:
+            st.caption(lines[1])
     if st.button("🔄 更新 AI 对话记忆"):
         with st.spinner("正在汇总聊天历史 + 更新对话记忆心智地图…"):
             import json
@@ -495,7 +497,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []  # [{role, content, sources?, token_usage?}]
 
 
-def _render_meta(sources: list[dict], token_usage: Optional[dict], matched_graph_nodes: list[dict] | None = None):
+def _render_meta(sources: list, token_usage: Optional[dict], matched_graph_nodes: Optional[list] = None):
     if not (show_sources or show_tokens):
         return
 
