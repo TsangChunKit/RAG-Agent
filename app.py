@@ -365,12 +365,21 @@ with st.sidebar:
     workspaces = list_workspaces()
     current_ws = get_current_workspace()
 
+    # 处理空 workspace 列表（全新安装）
+    if not workspaces:
+        st.warning("⚠️ 未找到任何 workspace。请先创建一个 workspace。")
+        st.info("创建方法：\n```python\nfrom scripts.workspace_manager import create_workspace\n\ncreate_workspace(\n    name='my-workspace',\n    display_name='我的工作空间',\n    domain='generic'\n)\n```")
+        st.stop()
+
     # 找到当前 workspace 的索引
     ws_names = [w["name"] for w in workspaces]
     try:
         current_index = ws_names.index(current_ws)
     except ValueError:
         current_index = 0
+        # 当前 workspace 不在列表中，切换到第一个
+        set_current_workspace(ws_names[0])
+        st.rerun()
 
     ws_choice = st.selectbox(
         "当前工作空间",

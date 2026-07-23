@@ -174,27 +174,29 @@ def list_workspaces() -> List[Dict]:
     """
     workspaces = []
 
-    # 1. _legacy workspace（如果存在旧路径数据）
-    old_data_dir = PRIVATE_DIR / "data"
-    if old_data_dir.exists() and not WORKSPACES_ROOT.exists():
-        workspaces.append({
-            "name": "_legacy",
-            "display_name": "默认工作空间（兼容模式）",
-            "created_at": None,
-        })
-
-    # 2. 新路径 workspaces
+    # 1. 新路径 workspaces
+    has_new_workspaces = False
     if WORKSPACES_ROOT.exists():
         for ws_dir in WORKSPACES_ROOT.iterdir():
             if not ws_dir.is_dir():
                 continue
 
+            has_new_workspaces = True
             config = load_workspace_config(ws_dir.name)
             workspaces.append({
                 "name": ws_dir.name,
                 "display_name": config.get("display_name", ws_dir.name),
                 "created_at": config.get("created_at"),
             })
+
+    # 2. _legacy workspace（如果存在旧路径数据且没有新 workspaces）
+    old_data_dir = PRIVATE_DIR / "data"
+    if old_data_dir.exists() and not has_new_workspaces:
+        workspaces.append({
+            "name": "_legacy",
+            "display_name": "默认工作空间（兼容模式）",
+            "created_at": None,
+        })
 
     return sorted(workspaces, key=lambda x: x["name"])
 
