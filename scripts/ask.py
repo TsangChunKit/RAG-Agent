@@ -796,8 +796,6 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
 
             # 阶段 2：如果 User 消息全部压缩后仍超限，压缩 Assistant 回答（调用 LLM）
             if estimated_size > max_context:
-                from scripts.llm import ask_llm
-
                 # 找出所有未压缩的 assistant 消息（优先压缩最旧的长回答）
                 uncompressed_assistant = [
                     (i, len(turn.get("content", "")))
