@@ -21,7 +21,6 @@ import json
 import sys
 import time
 from pathlib import Path
-from typing import Optional
 
 from config import RAW_DIR
 from scripts.chunk import CHUNKS_JSONL_PATH
@@ -35,7 +34,9 @@ _failed: set[str] = set()
 
 
 def _indexed_source_files(workspace_id: Optional[str] = None) -> set[str]:
-    """获取已入库的文件列表（workspace 感知）。"""
+    """
+from typing import Optional
+获取已入库的文件列表（workspace 感知）。"""
     chunks_path = CHUNKS_JSONL_PATH(workspace_id)
     if not chunks_path.exists():
         return set()

@@ -1,11 +1,12 @@
 """图谱通用工具：节点/关系分类（单一真相源）+ 中心性计算 + 逐份子图归并（reduce）+
-from typing import Optional
 合并"真实咨询图谱"与"AI 对话记忆图谱"。
 
 两张图分开维护、分开生成（各自的生成脚本见 build_graph.py / build_chat_graph.py），
 只在被消费的地方（可视化页面、ask.py 的问答上下文/图谱引导检索）按需合并——合并本身是
 纯 Python 操作，不调用任何 LLM，零额外成本。
 """
+from typing import Optional
+
 import networkx as nx
 
 # ── 节点/关系分类：单一真相源 ──────────────────────────────────────────────

@@ -10,12 +10,13 @@
 
 支持 workspace：所有函数支持 workspace_id 参数。
 """
+from typing import Optional
+
 import json
 import shutil
 import sys
 from dataclasses import asdict
 from pathlib import Path
-from typing import Optional
 
 from config import RAW_DIR
 from scripts.chunk import CHUNKS_JSONL_PATH, chunk_session

@@ -3,10 +3,11 @@
 
 支持 workspace 隔离：每个 workspace 有独立的 chat_sessions/ 目录。
 """
+from typing import Optional
+
 import json
 import uuid
 from datetime import datetime, timezone
-from typing import Optional
 
 from config import CHAT_SESSIONS_DIR
 

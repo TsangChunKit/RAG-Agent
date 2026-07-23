@@ -9,13 +9,14 @@
 """
 import datetime
 import json
-from typing import Optional
 
 from config import CHAT_MEMORY_PATH, CHAT_SESSIONS_DIR
 from scripts.llm import ask_llm
 from scripts.settings import summary_max_tokens
 
-SYSTEM_INSTRUCTION = """\
+SYSTEM_INSTRUCTION = """
+from typing import Optional
+\
 你是使用者与一个 AI 心理咨询助手的聊天历史整理助手。这些对话不是使用者与真人咨询师的真实\
 咨询记录，而是使用者平时主动找这个 AI 助手聊天时留下的提问、反思和探讨。请提炼滚动更新的\
 "AI 对话记忆"，只输出以下板块的内容（不要输出板块之外的开场白或结语），保持精炼：

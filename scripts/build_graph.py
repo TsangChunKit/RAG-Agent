@@ -13,7 +13,6 @@
 新增文档后重跑本脚本（只会抽新增的份，便宜）或点 UI 里的"重新生成"按钮即可。
 """
 import json
-from typing import Optional
 
 from config import GRAPH_JSON_PATH
 from scripts.graph_schema_loader import load_schema
@@ -22,7 +21,9 @@ from scripts.session_graph import ensure_fragments
 
 
 def build_graph(force: bool = False, workspace_id: Optional[str] = None) -> dict:
-    """map-reduce 建图（workspace 感知）。
+    """
+from typing import Optional
+map-reduce 建图（workspace 感知）。
 
     Args:
         force: True = 全量重抽每一份（贵）；False = 只抽没缓存的新文档

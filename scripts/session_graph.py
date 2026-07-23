@@ -26,7 +26,8 @@ from scripts.settings import summary_max_tokens
 from scripts.workspace_manager import get_current_workspace
 
 def _build_session_graph_schema(node_types: dict, relation_types: dict, schema_domains: Optional[list] = None) -> dict:
-    """动态构建 SESSION_GRAPH_SCHEMA，支持不同 workspace 的节点/关系类型。
+    """
+动态构建 SESSION_GRAPH_SCHEMA，支持不同 workspace 的节点/关系类型。
 
     Args:
         node_types: 节点类型定义（从 schema 加载）
