@@ -75,15 +75,28 @@ def _cluster_key(node: dict) -> str:
     return f"{node['label']} {domain}".strip()
 
 
-def resolve_graph(fragments: list[dict], threshold: float = MERGE_SIM_THRESHOLD) -> dict:
+def resolve_graph(fragments: list[dict], threshold: float = MERGE_SIM_THRESHOLD, schema: dict | None = None) -> dict:
     """reduce 步：把逐份咨询抽出的子图（fragments）归并成一张全局图。
 
     每份 fragment 是 {"nodes", "edges", "session_date", ...}；不同份里"同一个概念"（如都提到
     被抛弃图式）会各出一个节点，这里按 (类型内) 语义相似度贪心聚类归并成一个规范节点，
     合并 related_dates，并把所有边重映射到规范 id、按 (源,目标,关系) 去重合并 evidence_dates。
-    纯 Python + 一次本地 BGE 批量向量化，不调用 LLM。"""
+    纯 Python + 一次本地 BGE 批量向量化，不调用 LLM。
+
+    Args:
+        fragments: 逐份子图列表
+        threshold: 归并相似度阈值（默认使用 schema 中的值或 MERGE_SIM_THRESHOLD）
+        schema: graph schema 定义（可选，为 None 时使用硬编码的 NODE_TYPES/RELATION_TYPES）
+
+    Returns:
+        合并后的全局图
+    """
     import numpy as np
     from scripts.embedder import embed
+
+    # 如果提供了 schema，使用 schema 中的 merge_threshold
+    if schema is not None:
+        threshold = schema.get("merge_threshold", threshold)
 
     # 1) 收集所有原始节点，给每个一个全局唯一临时 id（份内 id 会跨份撞车）。
     raw_nodes = []  # (global_tmp_id, node_dict, session_date)
