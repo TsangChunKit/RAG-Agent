@@ -42,7 +42,8 @@
       "Bash(grep -E \"\\\\.\\(py|sh\\)$\")",
       "Bash(xargs -I {} basename {})",
       "Read(//Users/andytsang/Documents/Project/**)",
-      "Bash(cp -r \"心理咨詢agent\" \"RAG-Agent\")"
+      "Bash(cp -r \"心理咨詢agent\" \"RAG-Agent\")",
+      "Bash(*)"
     ]
   },
   "hooks": {
