@@ -1,5 +1,4 @@
 """Gemini 运行时可调参数 + API key 的持久化，供 Streamlit「⚙️ Gemini 设置」UI 读写。
-from typing import Optional
 
 设计要点：
 - 分成 dialogue（问答）和 summary（摘要/长期记忆/心智地图/对话记忆）两组，互不影响。
@@ -13,6 +12,7 @@ from typing import Optional
 """
 import json
 import os
+from typing import Optional
 
 from dotenv import load_dotenv
 
