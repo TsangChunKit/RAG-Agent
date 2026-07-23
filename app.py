@@ -470,8 +470,9 @@ with st.sidebar:
     st.divider()
     st.subheader("AI 对话记忆")
     st.caption("从所有聊天历史提炼的记忆，与真实咨询的长期记忆分开存放。")
-    if CHAT_MEMORY_PATH.exists():
-        st.caption(CHAT_MEMORY_PATH.read_text(encoding="utf-8").splitlines()[1])
+    chat_memory_path = CHAT_MEMORY_PATH(ws_choice)
+    if chat_memory_path.exists():
+        st.caption(chat_memory_path.read_text(encoding="utf-8").splitlines()[1])
     if st.button("🔄 更新 AI 对话记忆"):
         with st.spinner("正在汇总聊天历史 + 更新对话记忆心智地图…"):
             import json
@@ -480,9 +481,10 @@ with st.sidebar:
             from scripts.build_chat_graph import build_chat_graph
             from scripts.update_chat_memory import update_chat_memory
 
-            update_chat_memory()
-            chat_graph = build_chat_graph()
-            CHAT_GRAPH_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
+            update_chat_memory(workspace_id=ws_choice)
+            chat_graph = build_chat_graph(workspace_id=ws_choice)
+            chat_graph_path = CHAT_GRAPH_JSON_PATH(ws_choice)
+            chat_graph_path.parent.mkdir(parents=True, exist_ok=True)
             CHAT_GRAPH_JSON_PATH.write_text(json.dumps(chat_graph, ensure_ascii=False, indent=2), encoding="utf-8")
         st.success("已更新")
         st.rerun()
