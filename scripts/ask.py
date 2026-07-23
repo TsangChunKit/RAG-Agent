@@ -539,7 +539,7 @@ def _format_full_transcripts(blocks: list[dict]) -> str:
 
 
 def answer(question: str, history: list[dict] | None = None, k: int | None = None,
-           use_full_history: bool = False, max_context: int = 450_000) -> dict:
+           use_full_history: bool = False, max_context: int = 450_000, max_turns: int = 60) -> dict:
     """UI 与 CLI 共用的核心入口。
     history: [{"role": "user"/"assistant", "content": str, "api_content": str|None,
                "history_content": str|None, "compressed": bool|None}, ...]（可选）。
@@ -550,6 +550,7 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
 
     use_full_history: 深度模式，历史使用完整 api_content（通常不需要）
     max_context: context 上限（字符数），超过时自动压缩最旧的历史（默认 450K）
+    max_turns: 历史轮数硬上限（默认 60），超过时丢弃最旧的对话（避免助手回答累积超限）
 
     如果问题里提到具体日期（如"2026年7月4日"），会把当天的完整逐字稿整份塞进上下文，
     而不是只给检索到的片段；检索片段里属于同一天的会被去重排除，避免重复。
@@ -557,6 +558,10 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
     返回 {"answer": str, "sources": list[dict], "token_usage": dict, "api_content": str,
             "history_content": str, "compression_info": dict|None, ...}。
     """
+    # 历史轮数硬截断：超过 max_turns 时丢弃最旧的对话（避免助手回答累积超限）
+    if history and len(history) > max_turns * 2:  # 每轮 = 2 条消息（user + assistant）
+        history = history[-(max_turns * 2):]
+
     # 相对/序数会话引用（「上一次咨询」「最近3次对话」「第2次」）：解析成具体会话。
     # 真实咨询直接并进下面的「日期→整份逐字稿」通路；AI 聊天会话是另一套数据源，单独渲染。
     ref = session_resolver.resolve(question)
@@ -760,29 +765,39 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
             else:
                 estimated_size += len(turn.get("content", ""))
 
-        # 超过阈值时压缩最旧的一半历史
+        # 超过阈值时迭代压缩，直到低于上限
         if estimated_size > max_context:
-            mid = len(history) // 2
             compressed_count = 0
-            for i in range(mid):
-                if history[i].get("role") == "user" and not history[i].get("compressed"):
+            original_size = estimated_size
+
+            # 每次压缩 1/3 最旧的未压缩历史，重复直到低于阈值
+            while estimated_size > max_context:
+                # 找出所有未压缩的用户消息
+                uncompressed = [i for i, turn in enumerate(history)
+                               if turn.get("role") == "user" and not turn.get("compressed")]
+                if not uncompressed:
+                    break  # 全部已压缩，无法再降
+
+                # 压缩最旧的 1/3（至少 1 条）
+                batch_size = max(1, len(uncompressed) // 3)
+                for i in uncompressed[:batch_size]:
                     history[i]["compressed"] = True
                     compressed_count += 1
 
-            if compressed_count > 0:
-                # 压缩后重新估算
-                new_estimated = len(current_turn)
+                # 重新估算
+                estimated_size = len(current_turn)
                 for turn in history:
                     if turn.get("role") == "user":
-                        new_estimated += len(turn.get("content", "")) if turn.get("compressed") else len(turn.get("history_content", turn.get("content", "")))
+                        estimated_size += len(turn.get("content", "")) if turn.get("compressed") else len(turn.get("history_content", turn.get("content", "")))
                     else:
-                        new_estimated += len(turn.get("content", ""))
+                        estimated_size += len(turn.get("content", ""))
 
+            if compressed_count > 0:
                 compression_info = {
                     "triggered": True,
                     "compressed_turns": compressed_count,
-                    "before": estimated_size,
-                    "after": new_estimated,
+                    "before": original_size,
+                    "after": estimated_size,
                 }
 
     # 组装历史对话
