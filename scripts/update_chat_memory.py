@@ -4,9 +4,12 @@
 这里的素材是聊天记录，不是与真人咨询师"海特"的真实咨询，两者的可信度/性质不同，
 不应该被混在同一份记忆里，也不应该互相污染。ask.py 的 answer() 会把两份记忆分别
 标注清楚喂给 Gemini。
+
+支持 workspace：所有函数支持 workspace_id 参数。
 """
 import datetime
 import json
+from typing import Optional
 
 from config import CHAT_MEMORY_PATH, CHAT_SESSIONS_DIR
 from scripts.llm import ask_llm
@@ -30,11 +33,13 @@ SYSTEM_INSTRUCTION = """\
 去描述（比如不要说"在咨询中提到"，应该说"在和 AI 聊天时提到"）。"""
 
 
-def load_chat_sessions() -> list[dict]:
-    if not CHAT_SESSIONS_DIR.exists():
+def load_chat_sessions(workspace_id: Optional[str] = None) -> list[dict]:
+    """加载所有聊天会话（workspace 感知）。"""
+    chat_sessions_dir = CHAT_SESSIONS_DIR(workspace_id)
+    if not chat_sessions_dir.exists():
         return []
     sessions = []
-    for f in sorted(CHAT_SESSIONS_DIR.glob("*.json")):
+    for f in sorted(chat_sessions_dir.glob("*.json")):
         try:
             sessions.append(json.loads(f.read_text(encoding="utf-8")))
         except json.JSONDecodeError:
@@ -67,15 +72,19 @@ def generate_chat_memory_body(sessions: list[dict]) -> str:
     return resp.text.strip()
 
 
-def update_chat_memory(sessions: list[dict] | None = None) -> str:
-    sessions = sessions if sessions is not None else load_chat_sessions()
+def update_chat_memory(sessions: list[dict] | None = None, workspace_id: Optional[str] = None) -> str:
+    """更新 AI 对话记忆（workspace 感知）。"""
+    sessions = sessions if sessions is not None else load_chat_sessions(workspace_id)
+    chat_memory_path = CHAT_MEMORY_PATH(workspace_id)
+    chat_memory_path.parent.mkdir(parents=True, exist_ok=True)
+
     if not sessions:
         content = (
             "# AI 对话记忆（自动维护，来自与 AI 助手的聊天历史，非真实咨询记录）\n"
             "更新时间：" + datetime.date.today().isoformat() + " | 已纳入对话：0 次\n\n"
             "（还没有聊天记录。）\n"
         )
-        CHAT_MEMORY_PATH.write_text(content, encoding="utf-8")
+        chat_memory_path.write_text(content, encoding="utf-8")
         return content
 
     body = generate_chat_memory_body(sessions)
@@ -84,11 +93,12 @@ def update_chat_memory(sessions: list[dict] | None = None) -> str:
         f"更新时间：{datetime.date.today().isoformat()} | 已纳入对话：{len(sessions)} 次\n\n"
     )
     content = header + body + "\n"
-    CHAT_MEMORY_PATH.write_text(content, encoding="utf-8")
+    chat_memory_path.write_text(content, encoding="utf-8")
     return content
 
 
 if __name__ == "__main__":
     content = update_chat_memory()
     print(content)
-    print(f"\n已写入 {CHAT_MEMORY_PATH}")
+    chat_memory_path = CHAT_MEMORY_PATH()
+    print(f"\n已写入 {chat_memory_path}")

@@ -12,9 +12,12 @@
 用一个内容指纹（hash）+ 本地状态文件判断要不要重建缓存：内容没变就复用，变了就
 创建新的并删掉旧的（避免旧缓存继续计费）。如果静态内容总长度不够 4096 token 门槛，
 或创建失败（网络问题/配额等），get_cache_name() 返回 None，调用方应退回旧的内联方式。
+
+支持 workspace：每个 workspace 有独立的缓存状态文件。
 """
 import hashlib
 import json
+from typing import Optional
 
 from google.genai import types
 
@@ -30,33 +33,40 @@ def _fingerprint(model: str, system_instruction: str, static_content: str) -> st
     return hashlib.sha256(f"{model}\n{system_instruction}\n{static_content}".encode("utf-8")).hexdigest()
 
 
-def _load_state() -> dict | None:
-    if not EXPLICIT_CACHE_STATE_PATH.exists():
+def _load_state(workspace_id: Optional[str] = None) -> dict | None:
+    """加载缓存状态（workspace 感知）。"""
+    cache_state_path = EXPLICIT_CACHE_STATE_PATH(workspace_id)
+    if not cache_state_path.exists():
         return None
     try:
-        return json.loads(EXPLICIT_CACHE_STATE_PATH.read_text(encoding="utf-8"))
+        return json.loads(cache_state_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return None
 
 
-def _save_state(fingerprint: str, cache_name: str) -> None:
-    EXPLICIT_CACHE_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    EXPLICIT_CACHE_STATE_PATH.write_text(
+def _save_state(fingerprint: str, cache_name: str, workspace_id: Optional[str] = None) -> None:
+    """保存缓存状态（workspace 感知）。"""
+    cache_state_path = EXPLICIT_CACHE_STATE_PATH(workspace_id)
+    cache_state_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_state_path.write_text(
         json.dumps({"fingerprint": fingerprint, "cache_name": cache_name}, ensure_ascii=False), encoding="utf-8"
     )
 
 
-def get_cache_name(system_instruction: str, static_content: str, model: str | None = None) -> str | None:
+def get_cache_name(system_instruction: str, static_content: str, model: str | None = None, workspace_id: Optional[str] = None) -> str | None:
     """返回可用的显式缓存资源名；静态内容不够门槛，或创建失败时返回 None（调用方应退回内联方式）。
     model 默认用当前"对话"模型——缓存必须和 generate_content 用的模型一致；模型进了指纹，
-    所以在 UI 里改了对话模型，指纹会变、缓存会用新模型自动重建。"""
+    所以在 UI 里改了对话模型，指纹会变、缓存会用新模型自动重建。
+
+    workspace_id: workspace ID（None = 当前 workspace），每个 workspace 有独立的缓存状态。
+    """
     # Explicit Caching 是 Gemini 专有能力；用 Grok 时没有对应资源，直接退回内联方式。
     if get_provider() != "gemini":
         return None
     model = model or dialogue_params()["model"]
     client = _get_client()
     fingerprint = _fingerprint(model, system_instruction, static_content)
-    state = _load_state()
+    state = _load_state(workspace_id)
 
     if state and state.get("fingerprint") == fingerprint:
         try:
@@ -89,5 +99,5 @@ def get_cache_name(system_instruction: str, static_content: str, model: str | No
         except Exception:  # noqa: BLE001
             pass
 
-    _save_state(fingerprint, cache.name)
+    _save_state(fingerprint, cache.name, workspace_id)
     return cache.name
