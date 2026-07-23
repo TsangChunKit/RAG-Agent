@@ -62,6 +62,10 @@
 
 ## 測試開發規則（必須遵守）
 
+### 核心原則：TDD（Test-Driven Development）
+
+**强制要求**：任何新功能 / 修改必須先有測試，否則不允許提交。
+
 ### 為什麼測試通過但 UI 還有錯誤？
 
 **核心問題**：測試覆蓋率不足 + 沒有測試實際執行路徑
@@ -145,12 +149,319 @@
    - ❌ 沒有測試邊緣情況和錯誤處理
    - ❌ Import-time 錯誤沒有被測試覆蓋
 
+### 開發新功能的強制流程（必須嚴格遵守）
+
+**絕對禁止：寫代碼 → 手動測試 → 提交** ❌
+
+**正確流程：測試先行 → 實現功能 → 自動驗證** ✅
+
+#### 流程詳細步驟
+
+1. **需求確認階段**
+   - 明確功能需求和邊界條件
+   - 確定輸入/輸出規格
+   - 識別可能的錯誤情況
+
+2. **測試設計階段**（在寫任何實現代碼前）
+   ```python
+   # tests/unit/test_new_feature.py
+   def test_new_feature_happy_path():
+       """測試正常情況"""
+       result = new_feature(valid_input)
+       assert result == expected_output
+   
+   def test_new_feature_edge_case():
+       """測試邊緣情況"""
+       result = new_feature(edge_case_input)
+       assert result.is_valid()
+   
+   def test_new_feature_error_handling():
+       """測試錯誤處理"""
+       with pytest.raises(ValueError):
+           new_feature(invalid_input)
+   ```
+
+3. **實現功能**
+   - 先實現最簡單能讓測試通過的版本
+   - 運行測試：`pytest tests/unit/test_new_feature.py -v`
+   - 測試通過 ✅ → 繼續優化
+   - 測試失敗 ❌ → 修改實現直到通過
+
+4. **覆蓋率驗證**
+   ```bash
+   # 新增代碼必須達到 80% 覆蓋率
+   pytest tests/unit/test_new_feature.py --cov=scripts.new_feature --cov-report=term-missing
+   ```
+   
+   如果覆蓋率 < 80%，補充測試直到達標
+
+5. **集成測試**
+   ```bash
+   # 確保新功能不破壞現有功能
+   pytest tests/integration/ --integration -v
+   ```
+
+6. **靜態檢查**
+   ```bash
+   python scripts/check_code_patterns.py scripts/new_feature.py
+   ```
+
+7. **提交前最終檢查**
+   ```bash
+   # 運行完整測試套件
+   pytest tests/ --integration -v
+   ```
+
+#### 覆蓋率目標（強制執行）
+
+| 模塊類型 | 最低覆蓋率 | 推薦覆蓋率 | 狀態 |
+|---------|----------|-----------|-----|
+| **核心業務邏輯** | 80% | 90% | 🔴 當前 13-35% |
+| **配置/工具類** | 60% | 80% | 🟡 當前 50-71% |
+| **UI 代碼** | 50% | 70% | 🟢 當前 N/A |
+| **批處理腳本** | 40% | 60% | 🔴 當前 0% |
+| **整體項目** | 70% | 85% | 🔴 當前 22% |
+
+**核心業務邏輯包括**：
+- `scripts/ask.py` - 問答核心（當前 13% ❌）
+- `scripts/chunk.py` - 分塊邏輯（當前 35% ❌）
+- `scripts/ingest.py` - 入庫邏輯（當前 32% ❌）
+- `scripts/build_graph.py` - 圖譜構建（當前 33% ❌）
+- `scripts/graph_utils.py` - 圖譜工具（當前 9% ❌）
+
+**當前問題**：這些文件總共 1000+ 行代碼，只有 20% 被測試覆蓋 = 80% 完全沒測試！
+
+#### 新功能開發檢查清單
+
+**在開始寫實現代碼前**：
+- [ ] 已設計測試用例（至少 3 個：正常/邊緣/錯誤）
+- [ ] 已創建測試文件 `tests/unit/test_<module>.py`
+- [ ] 測試文件已加入 git
+
+**實現功能時**：
+- [ ] 運行測試並確保通過
+- [ ] 使用 `pytest --cov` 檢查覆蓋率
+- [ ] 覆蓋率達到最低要求（見上表）
+
+**提交前**：
+- [ ] 運行導入測試：`pytest tests/unit/test_imports.py -v`
+- [ ] 運行靜態檢查：`python scripts/check_code_patterns.py`
+- [ ] 檢查整體覆蓋率：`pytest --cov=scripts --cov-report=term-missing`
+- [ ] 新增代碼覆蓋率 ≥ 80%
+- [ ] 整體覆蓋率沒有下降
+- [ ] 所有測試通過（unit + integration）
+- [ ] 實際啟動 UI 驗證：`streamlit run app.py`（如果改了 UI 相關代碼）
+
+### 為什麼覆蓋率這麼低？
+
+**歷史原因**：
+- 項目初期沒有測試文化
+- 先寫功能，後補測試（實際上從未補）
+- 複雜業務邏輯（ask.py 532 行）難以事後補測試
+
+**核心問題**：
+```
+寫代碼（1小時）→ 手動測試（10分鐘）→ 發現錯誤 → 修復 → 再測試 → 提交
+                     ↓
+                 沒有自動化
+                 下次改代碼又破壞
+                 重複手動測試
+```
+
+**正確做法**：
+```
+寫測試（20分鐘）→ 寫代碼（1小時）→ pytest（5秒）→ 全部通過 ✅ → 提交
+                     ↓
+                 自動化保護
+                 任何改動立即知道
+                 永久性防護
+```
+
+**投資回報**：
+- 前期：多花 20 分鐘寫測試
+- 後期：節省無數小時調試 + 防止線上事故
+
 ### 測試 Checklist（每次提交前）
 
+**必須全部通過，否則不允許提交**：
+
 - [ ] 運行導入測試：`pytest tests/unit/test_imports.py -v`
+- [ ] 運行靜態檢查：`python scripts/check_code_patterns.py`
 - [ ] 檢查覆蓋率：`pytest --cov=scripts --cov-report=term-missing`
-- [ ] 覆蓋率 ≥ 70%？
+- [ ] 新增代碼覆蓋率 ≥ 80%
+- [ ] 整體覆蓋率 ≥ 當前值（不允許下降）
+- [ ] 所有測試通過：`pytest tests/ --integration -v`
 - [ ] 所有新增模塊都有導入測試？
-- [ ] 實際啟動 UI 驗證：`streamlit run app.py`
+- [ ] 實際啟動 UI 驗證：`streamlit run app.py`（如果改了 UI）
 
 **記住**：測試不只是為了通過 CI，而是為了確保代碼在實際環境中能正常運行。
+
+---
+
+## Pre-commit Hook（自動化強制執行）
+
+為確保測試規則被嚴格遵守，項目已配置 pre-commit hook。
+
+### Hook 做什麼？
+
+每次 `git commit` 前自動執行：
+
+1. **靜態代碼檢查**
+   ```bash
+   python scripts/check_code_patterns.py
+   ```
+   檢查：
+   - 路徑函數使用錯誤
+   - Python 3.9 類型注解兼容性
+   - workspace_id 參數缺失
+
+2. **導入測試**
+   ```bash
+   pytest tests/unit/test_imports.py --tb=short
+   ```
+   確保所有模塊能成功導入
+
+3. **覆蓋率檢查**
+   ```bash
+   pytest --cov=scripts --cov-fail-under=70
+   ```
+   確保整體覆蓋率 ≥ 70%（當前閾值，未來提升到 80%）
+
+**任何一項失敗 → commit 被拒絕 → 必須修復後才能提交**
+
+### 如何安裝 Hook？
+
+```bash
+# 創建 hook 文件
+cat > .git/hooks/pre-commit << 'EOF'
+#!/bin/bash
+# Pre-commit hook: 運行測試和檢查
+
+echo "🔍 Running pre-commit checks..."
+
+# 1. 靜態檢查
+echo "📝 Static code check..."
+python scripts/check_code_patterns.py
+if [ $? -ne 0 ]; then
+    echo "❌ Static check failed! Fix errors before committing."
+    exit 1
+fi
+
+# 2. 導入測試
+echo "📦 Import tests..."
+source .venv/bin/activate
+pytest tests/unit/test_imports.py --tb=short -q
+if [ $? -ne 0 ]; then
+    echo "❌ Import tests failed! Fix import errors before committing."
+    exit 1
+fi
+
+# 3. 覆蓋率檢查
+echo "📊 Coverage check..."
+pytest --cov=scripts --cov-fail-under=70 --tb=no -q
+if [ $? -ne 0 ]; then
+    echo "❌ Coverage below 70%! Add more tests before committing."
+    echo "Run: pytest --cov=scripts --cov-report=html"
+    echo "Then open: htmlcov/index.html"
+    exit 1
+fi
+
+echo "✅ All checks passed!"
+exit 0
+EOF
+
+# 賦予執行權限
+chmod +x .git/hooks/pre-commit
+```
+
+### 如何臨時跳過 Hook？
+
+**僅在緊急情況下使用**（如修復線上事故）：
+```bash
+git commit --no-verify -m "emergency fix: ..."
+```
+
+**警告**：跳過 hook 後必須立即補測試！
+
+### Hook 失敗時怎麼辦？
+
+1. **查看錯誤信息**
+   ```bash
+   python scripts/check_code_patterns.py  # 查看靜態錯誤
+   pytest tests/unit/test_imports.py -v    # 查看導入錯誤
+   pytest --cov=scripts --cov-report=html  # 查看覆蓋率報告
+   ```
+
+2. **修復錯誤**
+   - 靜態錯誤：按提示修復代碼
+   - 導入錯誤：修復語法/導入問題
+   - 覆蓋率不足：補充測試
+
+3. **重新提交**
+   ```bash
+   git add -A
+   git commit -m "..."  # Hook 會再次運行
+   ```
+
+---
+
+## 提升覆蓋率行動計劃
+
+### 優先級 P0（核心業務邏輯，必須儘快達到 80%）
+
+1. **scripts/ask.py** (13% → 80%)
+   - 當前：532 行，只測試了 67 行
+   - 需要：400+ 行測試覆蓋
+   - 重點測試：
+     * `retrieve()` 函數（混合檢索邏輯）
+     * `answer()` 函數（問答主流程）
+     * GraphRAG 引導檢索
+     * 歷史壓縮邏輯
+
+2. **scripts/graph_utils.py** (9% → 80%)
+   - 當前：99 行，只測試了 9 行
+   - 需要：70+ 行測試覆蓋
+   - 重點測試：
+     * `resolve_graph()` 圖譜歸並算法
+     * 節點去重邏輯
+     * 邊合併邏輯
+
+3. **scripts/chunk.py** (35% → 80%)
+   - 當前：133 行，測試了 47 行
+   - 需要：60+ 行新測試
+   - 重點測試：
+     * 滑動窗口分塊
+     * 父塊擴展
+     * 上下文前綴生成
+
+### 優先級 P1（工具類，達到 60%）
+
+4. **scripts/ingest.py** (32% → 60%)
+5. **scripts/build_graph.py** (33% → 60%)
+6. **scripts/session_graph.py** (21% → 60%)
+
+### 如何快速提升？
+
+**方法 1：從失敗測試學習**
+```bash
+# 運行集成測試，看哪些路徑沒覆蓋
+pytest tests/integration/ --integration --cov=scripts --cov-report=html
+open htmlcov/index.html  # 紅色 = 未覆蓋
+```
+
+**方法 2：補充缺失的測試**
+```python
+# 找到覆蓋率報告中的紅色行
+# 為每個未覆蓋的代碼路徑寫測試
+
+# 示例：ask.py 的 retrieve() 函數
+def test_retrieve_with_graph_guidance():
+    """測試 GraphRAG 引導檢索"""
+    # 這個測試現在不存在，所以相關代碼沒被覆蓋
+    pass
+```
+
+**方法 3：重構 + 測試**
+- 大函數拆成小函數（更易測試）
+- 複雜邏輯抽取成純函數（無副作用，易測試）
+- 依賴注入（便於 mock）
