@@ -1,4 +1,4 @@
-"""上下文化分块：把逐字稿切成 300–500 字的块，块间重叠 50–80 字，
+"""上下文化分块：把文档切成 300–500 字的块，块间重叠 50–80 字，
 并为每块加轻量上下文前缀（日期/发言人/时间段），记录 prev/next chunk id 供父块扩展使用。
 
 分块单元是"发言"（dialogue turn），而不是任意字符位置——这样切分边界总落在语义完整的
@@ -8,18 +8,24 @@
 注意：这一步不调用任何 LLM/网络（M1 要求"先跑通"）。这里的上下文前缀只包含结构化元数据
 （日期、发言人、时间段），不含语义主题总结——语义主题来自 M4 的结构化摘要，届时
 ingest.py 可选择性地把摘要里的 topics 也拼进前缀，见 ingest.py 里的说明。
+
+上下文前缀模板支持 workspace 配置（见 workspace_config.json 的 chunk_prefix_template）。
 """
 import json
 import re
 from dataclasses import asdict, dataclass
+from typing import Optional
 
 from config import PROCESSED_DIR
 from scripts import index_settings
 from scripts.parse import ParsedSession, Utterance, iter_raw_files, parse_transcript
+from scripts.workspace_manager import load_workspace_config
 
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[。！？\n])")
 
-CHUNKS_JSONL_PATH = PROCESSED_DIR / "chunks.jsonl"
+# CHUNKS_JSONL_PATH 改为函数（workspace 感知）
+def CHUNKS_JSONL_PATH(workspace_id: Optional[str] = None):
+    return PROCESSED_DIR(workspace_id) / "chunks.jsonl"
 
 
 @dataclass
@@ -73,12 +79,44 @@ def _build_units(session: ParsedSession) -> list[tuple[str, str, str]]:
     return units
 
 
-def contextual_prefix(session: ParsedSession, speakers: list[str], start_ts: str, end_ts: str) -> str:
+def contextual_prefix(session: ParsedSession, speakers: list[str], start_ts: str, end_ts: str, workspace_id: Optional[str] = None) -> str:
+    """生成上下文前缀，支持 workspace 模板。
+
+    Args:
+        session: 解析后的 session
+        speakers: 发言人列表
+        start_ts: 起始时间戳
+        end_ts: 结束时间戳
+        workspace_id: workspace ID（None = 当前 workspace）
+
+    Returns:
+        上下文前缀字符串
+    """
+    # 加载 workspace config
+    config = load_workspace_config(workspace_id)
+
+    # 使用模板（向后兼容：模板缺失时使用默认格式）
+    template = config.get("chunk_prefix_template", "[{session_date} 咨询｜发言人：{speakers}｜时间段：{start_ts}–{end_ts}]")
+    domain_label = config.get("domain_label", "文档")
+
     speaker_str = "、".join(speakers)
-    return f"[{session.session_date} 咨询｜发言人：{speaker_str}｜时间段：{start_ts}–{end_ts}]"
+
+    # 渲染模板
+    try:
+        return template.format(
+            session_date=session.session_date,
+            domain_label=domain_label,
+            speakers=speaker_str,
+            start_ts=start_ts,
+            end_ts=end_ts
+        )
+    except KeyError as e:
+        # 模板格式错误时降级到默认格式
+        return f"[{session.session_date} {domain_label}｜发言人：{speaker_str}｜时间段：{start_ts}–{end_ts}]"
 
 
-def chunk_session(session: ParsedSession) -> list[Chunk]:
+def chunk_session(session: ParsedSession, workspace_id: Optional[str] = None) -> list[Chunk]:
+    """分块单个 session（workspace 感知）。"""
     # 分块大小/重叠取「⚙️ 索引设置」当前值（可在 UI 改；只影响之后新入库的记录）。
     cfg = index_settings.chunking_params()
     chunk_size = cfg["chunk_size"]
@@ -113,7 +151,7 @@ def chunk_session(session: ParsedSession) -> list[Chunk]:
             j += 1
 
         raw_text = "\n".join(cur_lines)
-        prefix = contextual_prefix(session, cur_speakers, start_ts, end_ts)
+        prefix = contextual_prefix(session, cur_speakers, start_ts, end_ts, workspace_id)
         chunk_id = f"{session.source_file}::chunk{chunk_idx:04d}"
         chunks.append(
             Chunk(
@@ -148,16 +186,20 @@ def chunk_session(session: ParsedSession) -> list[Chunk]:
     return chunks
 
 
-def chunk_all(files=None) -> list[Chunk]:
-    files = files or iter_raw_files()
+def chunk_all(files=None, workspace_id: Optional[str] = None) -> list[Chunk]:
+    """分块所有文件（workspace 感知）。"""
+    files = files or iter_raw_files(workspace_id)
     all_chunks: list[Chunk] = []
     for f in files:
         session = parse_transcript(f)
-        all_chunks.extend(chunk_session(session))
+        all_chunks.extend(chunk_session(session, workspace_id))
     return all_chunks
 
 
-def write_chunks_jsonl(chunks: list[Chunk], path=CHUNKS_JSONL_PATH):
+def write_chunks_jsonl(chunks: list[Chunk], path=None, workspace_id: Optional[str] = None):
+    """写入 chunks.jsonl（workspace 感知）。"""
+    if path is None:
+        path = PROCESSED_DIR(workspace_id) / "chunks.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         for c in chunks:
