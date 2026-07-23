@@ -72,7 +72,7 @@ def generate_chat_memory_body(sessions: list[dict]) -> str:
     return resp.text.strip()
 
 
-def update_chat_memory(sessions: list[dict] | None = None, workspace_id: Optional[str] = None) -> str:
+def update_chat_memory(sessions: Optional[list[dict]] = None, workspace_id: Optional[str] = None) -> str:
     """更新 AI 对话记忆（workspace 感知）。"""
     sessions = sessions if sessions is not None else load_chat_sessions(workspace_id)
     chat_memory_path = CHAT_MEMORY_PATH(workspace_id)

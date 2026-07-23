@@ -53,7 +53,7 @@ def load_session(session_id: str, workspace_id: Optional[str] = None) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def save_session(session_id: str, title: str, messages: list[dict], created_at: str | None = None, workspace_id: Optional[str] = None) -> None:
+def save_session(session_id: str, title: str, messages: list[dict], created_at: Optional[str] = None, workspace_id: Optional[str] = None) -> None:
     """保存会话（workspace 感知）。"""
     sessions_dir = CHAT_SESSIONS_DIR(workspace_id)
     sessions_dir.mkdir(parents=True, exist_ok=True)

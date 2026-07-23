@@ -1,4 +1,5 @@
 """Gemini 运行时可调参数 + API key 的持久化，供 Streamlit「⚙️ Gemini 设置」UI 读写。
+from typing import Optional
 
 设计要点：
 - 分成 dialogue（问答）和 summary（摘要/长期记忆/心智地图/对话记忆）两组，互不影响。
@@ -67,7 +68,7 @@ def _load_raw() -> dict:
     return {}
 
 
-def _merge(default: dict, override: dict | None) -> dict:
+def _merge(default: dict, override: Optional[dict]) -> dict:
     """浅合并：override 里为 None/缺失的字段用 default 顶上。"""
     override = override or {}
     return {k: (override[k] if override.get(k) is not None else v) for k, v in default.items()}
@@ -99,15 +100,15 @@ def provider() -> str:
     return p if p in VALID_PROVIDERS else DEFAULT_PROVIDER
 
 
-def get_api_key() -> str | None:
+def get_api_key() -> Optional[str]:
     return _load_raw().get("api_key") or os.environ.get("GEMINI_API_KEY")
 
 
-def get_xai_key() -> str | None:
+def get_xai_key() -> Optional[str]:
     return _load_raw().get("xai_api_key") or os.environ.get("XAI_API_KEY")
 
 
-def get_hermes_key() -> str | None:
+def get_hermes_key() -> Optional[str]:
     # Hermes 代理自己夹 OAuth，key 任意；给个默认值，仍可被设置/.env 覆盖。
     return _load_raw().get("hermes_api_key") or os.environ.get("HERMES_API_KEY") or HERMES_API_KEY
 
@@ -133,11 +134,11 @@ def save(
     dialogue: dict,
     summary: dict,
     summary_max: dict,
-    api_key: str | None = None,
-    provider: str | None = None,
-    xai_api_key: str | None = None,
-    hermes_api_key: str | None = None,
-    hermes_base_url: str | None = None,
+    api_key: Optional[str] = None,
+    provider: Optional[str] = None,
+    xai_api_key: Optional[str] = None,
+    hermes_api_key: Optional[str] = None,
+    hermes_base_url: Optional[str] = None,
 ) -> None:
     """写回设置。api_key / xai_api_key / hermes_api_key 传空/None = 保留原有（不清空）；传非空 = 覆盖。
     hermes_base_url 传非空 = 覆盖。"""

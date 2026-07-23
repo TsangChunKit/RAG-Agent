@@ -39,8 +39,8 @@ class Chunk:
     end_ts: str
     raw_text: str  # 原始拼接文本（不含上下文前缀）
     text: str  # raw_text 前加上下文化前缀，供 embedding + FTS 使用
-    prev_chunk_id: str | None = None
-    next_chunk_id: str | None = None
+    prev_chunk_id: Optional[str] = None
+    next_chunk_id: Optional[str] = None
 
 
 def _render_unit(u: Utterance) -> str:

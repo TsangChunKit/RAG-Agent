@@ -85,7 +85,7 @@ def generate_memory_body(summaries: list[dict]) -> str:
     return resp.text.strip()
 
 
-def update_memory(summaries: list[dict] | None = None, workspace_id: Optional[str] = None) -> str:
+def update_memory(summaries: Optional[list[dict]] = None, workspace_id: Optional[str] = None) -> str:
     """更新长期记忆（workspace 感知）。"""
     summaries = summaries if summaries is not None else load_summaries(workspace_id)
     body = generate_memory_body(summaries)

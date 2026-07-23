@@ -31,7 +31,7 @@ def _marker_path(workspace_id: Optional[str] = None):
     return CHAT_SESSIONS_DIR(workspace_id) / ".last_memory_run"
 
 
-def _latest_session_update(workspace_id: Optional[str] = None) -> datetime | None:
+def _latest_session_update(workspace_id: Optional[str] = None) -> Optional[datetime]:
     """获取最新会话更新时间（workspace 感知）。"""
     sessions = list_sessions(workspace_id)
     if not sessions:
@@ -39,7 +39,7 @@ def _latest_session_update(workspace_id: Optional[str] = None) -> datetime | Non
     return datetime.fromisoformat(max(s["updated_at"] for s in sessions))
 
 
-def _last_memory_run(workspace_id: Optional[str] = None) -> datetime | None:
+def _last_memory_run(workspace_id: Optional[str] = None) -> Optional[datetime]:
     """获取上次运行时间（workspace 感知）。"""
     marker_path = _marker_path(workspace_id)
     if not marker_path.exists():

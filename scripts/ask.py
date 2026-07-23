@@ -62,7 +62,7 @@ _NUM_OR_CN = r"(?:[一二三四五六七八九十]{1,3}|\d{1,2})"
 DATE_MENTION_RE = re.compile(rf"(\d{{4}})[年\-/]({_NUM_OR_CN})[月\-/]({_NUM_OR_CN})[日號号]?")
 
 
-def _to_int(s: str) -> int | None:
+def _to_int(s: str) -> Optional[int]:
     if s.isdigit():
         return int(s)
     return _CN_NUM_TO_INT.get(s)
@@ -175,7 +175,7 @@ def reset_system_instruction() -> str:
 
 
 _table = None
-_all_chunks_cache: pd.DataFrame | None = None
+_all_chunks_cache: Optional[pd.DataFrame] = None
 
 
 def _get_table(workspace_id: Optional[str] = None):
@@ -244,7 +244,7 @@ def _merge_windows(by_file: dict, needed: set, hit_rank: dict) -> list[dict]:
     return windows
 
 
-def retrieve(query: str, k: int | None = None) -> list[dict]:
+def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
     """混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排 → 父块/窗口扩展。
     流程：hybrid 取 topN 候选 → bge-reranker-v2-m3 精排取 final_top_k → 父块扩展。
     k / 窗口扩展 / rerank 开关及数量均取「⚙️ 索引设置」当前值（可在 UI 改，下次问答即生效，无需重建）。"""
@@ -338,7 +338,7 @@ def _format_session_summary(s: dict) -> str:
     return "\n".join(parts)
 
 
-def _load_session_summary(date: str) -> str | None:
+def _load_session_summary(date: str) -> Optional[str]:
     """读该证据日对应逐字稿的预生成摘要（summarize.py 的产物），渲成一小段文本；没有就返回 None。"""
     for f in find_files_for_date(date):
         p = summary_path(f.name)
@@ -366,11 +366,11 @@ def _load_chat_memory(workspace_id: Optional[str] = None) -> str:
     return "（还没有生成 AI 对话记忆。）"
 
 
-_graph_cache: dict | None = None
-_graph_node_embeddings: dict[str, np.ndarray] | None = None
+_graph_cache: Optional[dict] = None
+_graph_node_embeddings: Optional[dict] = None
 
 
-def _load_graph(workspace_id: Optional[str] = None) -> dict | None:
+def _load_graph(workspace_id: Optional[str] = None) -> Optional[dict]:
     """加载并合并图谱（workspace 感知）。
 
     合并真实图谱 + AI 对话图谱。合并是纯 Python 操作，不产生额外 LLM 调用。
@@ -597,7 +597,7 @@ def _format_full_transcripts(blocks: list[dict]) -> str:
     return "\n\n".join(parts)
 
 
-def answer(question: str, history: list[dict] | None = None, k: int | None = None,
+def answer(question: str, history: Optional[list[dict]] = None, k: Optional[int] = None,
            use_full_history: bool = False, max_context: int = 450_000, max_turns: int = 60) -> dict:
     """UI 与 CLI 共用的核心入口。
     history: [{"role": "user"/"assistant", "content": str, "api_content": str|None,

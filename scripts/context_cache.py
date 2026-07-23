@@ -33,7 +33,7 @@ def _fingerprint(model: str, system_instruction: str, static_content: str) -> st
     return hashlib.sha256(f"{model}\n{system_instruction}\n{static_content}".encode("utf-8")).hexdigest()
 
 
-def _load_state(workspace_id: Optional[str] = None) -> dict | None:
+def _load_state(workspace_id: Optional[str] = None) -> Optional[dict]:
     """加载缓存状态（workspace 感知）。"""
     cache_state_path = EXPLICIT_CACHE_STATE_PATH(workspace_id)
     if not cache_state_path.exists():
@@ -53,7 +53,7 @@ def _save_state(fingerprint: str, cache_name: str, workspace_id: Optional[str] =
     )
 
 
-def get_cache_name(system_instruction: str, static_content: str, model: str | None = None, workspace_id: Optional[str] = None) -> str | None:
+def get_cache_name(system_instruction: str, static_content: str, model: Optional[str] = None, workspace_id: Optional[str] = None) -> Optional[str]:
     """返回可用的显式缓存资源名；静态内容不够门槛，或创建失败时返回 None（调用方应退回内联方式）。
     model 默认用当前"对话"模型——缓存必须和 generate_content 用的模型一致；模型进了指纹，
     所以在 UI 里改了对话模型，指纹会变、缓存会用新模型自动重建。

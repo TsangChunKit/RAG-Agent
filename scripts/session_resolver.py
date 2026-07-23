@@ -49,7 +49,7 @@ _PREV_PREV = re.compile(r"上上(?:一)?次")
 _LAST_ONE = re.compile(r"上一次|上次|最近一?次|最新一?次|上回|最近的?那?次")
 
 
-def _to_int(s: str) -> int | None:
+def _to_int(s: str) -> Optional[int]:
     if s.isdigit():
         return int(s)
     return _CN_NUM.get(s)

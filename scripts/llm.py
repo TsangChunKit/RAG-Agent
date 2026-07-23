@@ -1,4 +1,5 @@
 """LLM 问答封装：所有对 LLM 的调用都走这里，通过 provider 开关在 Gemini / Grok(xAI) 之间切换。
+from typing import Optional
 
 运行参数（模型/thinking level/温度/max tokens）、provider 选择、以及两个 provider 的 API key
 都从 scripts/settings.py 读取，后者从 private.nosync/gemini_settings.json 读最新值，可在 Streamlit
@@ -98,13 +99,13 @@ def ask_llm(
     contents,
     *,
     profile: str = "dialogue",
-    system_instruction: str | None = None,
-    response_schema: dict | None = None,
-    max_output_tokens: int | None = None,
-    model: str | None = None,
-    temperature: float | None = None,
-    thinking_level: str | None = None,
-    cached_content: str | None = None,
+    system_instruction: Optional[str] = None,
+    response_schema: Optional[dict] = None,
+    max_output_tokens: Optional[int] = None,
+    model: Optional[str] = None,
+    temperature: Optional[float] = None,
+    thinking_level: Optional[str] = None,
+    cached_content: Optional[str] = None,
 ):
     """contents 可以是字符串（单轮），也可以是 [{"role": "user"/"model", "parts": [{"text": ...}]}] 列表（多轮）。
 

@@ -1,4 +1,5 @@
 """图谱通用工具：节点/关系分类（单一真相源）+ 中心性计算 + 逐份子图归并（reduce）+
+from typing import Optional
 合并"真实咨询图谱"与"AI 对话记忆图谱"。
 
 两张图分开维护、分开生成（各自的生成脚本见 build_graph.py / build_chat_graph.py），
@@ -75,7 +76,7 @@ def _cluster_key(node: dict) -> str:
     return f"{node['label']} {domain}".strip()
 
 
-def resolve_graph(fragments: list[dict], threshold: float = MERGE_SIM_THRESHOLD, schema: dict | None = None) -> dict:
+def resolve_graph(fragments: list[dict], threshold: float = MERGE_SIM_THRESHOLD, schema: Optional[dict] = None) -> dict:
     """reduce 步：把逐份咨询抽出的子图（fragments）归并成一张全局图。
 
     每份 fragment 是 {"nodes", "edges", "session_date", ...}；不同份里"同一个概念"（如都提到
@@ -187,7 +188,7 @@ def resolve_graph(fragments: list[dict], threshold: float = MERGE_SIM_THRESHOLD,
     return {"nodes": merged_nodes, "edges": merged_edges}
 
 
-def merge_graphs(therapy_graph: dict | None, chat_graph: dict | None) -> dict | None:
+def merge_graphs(therapy_graph: Optional[dict], chat_graph: Optional[dict]) -> Optional[dict]:
     """合并真实咨询图谱（source=therapy）和 AI 对话记忆图谱（source=chat）。
     chat_graph 里的节点 id 已经带 "chat:" 前缀，不会跟 therapy_graph 撞车；
     chat_graph 里指向 therapy 节点的 relates_to 边，target 直接引用 therapy 的原始 id，

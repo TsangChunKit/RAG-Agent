@@ -53,7 +53,7 @@ def build_rows(chunks: list[dict]) -> list[dict]:
     return rows
 
 
-def ingest(chunks: list[dict] | None = None, mode: str = "overwrite", workspace_id: Optional[str] = None):
+def ingest(chunks: Optional[list[dict]] = None, mode: str = "overwrite", workspace_id: Optional[str] = None):
     """向量化并写入 LanceDB（workspace 感知）。
 
     Args:

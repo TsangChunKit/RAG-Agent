@@ -1,4 +1,5 @@
 """BGE-M3 加载与编码：输出稠密（语义）向量。
+from typing import Optional
 本地运行，不出网。use_fp16=True 已验证速度快、质量损失极小；切勿用 Q4 权重。
 注：hybrid 检索的关键词侧走 LanceDB FTS，不用 BGE-M3 的稀疏向量，所以这里 return_sparse=False，
 省掉多余的稀疏计算（ingest 更快、更省内存）。
@@ -7,7 +8,7 @@ from FlagEmbedding import BGEM3FlagModel
 
 from scripts import index_settings
 
-_model: BGEM3FlagModel | None = None
+_model: Optional[BGEM3FlagModel] = None
 
 
 def _get_model() -> BGEM3FlagModel:

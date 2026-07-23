@@ -21,6 +21,7 @@
 建索引/检索都不出网；唯一出网的是问答/摘要时调 Gemini。这些参数都不涉及任何云端调用。
 """
 import json
+from typing import Optional
 
 from config import (
     CHUNK_OVERLAP_CHARS,
@@ -91,7 +92,7 @@ def _load_raw() -> dict:
     return {}
 
 
-def _merge(default: dict, override: dict | None) -> dict:
+def _merge(default: dict, override: Optional[dict]) -> dict:
     """浅合并：override 里为 None/缺失的字段用 default 顶上（布尔 False 会保留，不当作缺失）。"""
     override = override or {}
     return {k: (override[k] if override.get(k) is not None else v) for k, v in default.items()}
