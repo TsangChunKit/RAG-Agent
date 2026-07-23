@@ -1,0 +1,306 @@
+{
+  "source_file": "20260117150604-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2026-01-17",
+  "nodes": [
+    {
+      "id": "need:approval",
+      "type": "need",
+      "label": "被认可与接纳",
+      "domain": "",
+      "description": "渴望在关系中被肯定，通过满足他人需求来获得安全感。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "need:emotional_safety",
+      "type": "need",
+      "label": "情感安全感",
+      "domain": "",
+      "description": "渴望避免失去带来的剧烈痛苦，寻求心理上的防御机制。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "过度压抑自己的需求和情绪，以迎合他人，避免冲突或被抛弃。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "schema:emotional_inhibition",
+      "type": "schema",
+      "label": "情感抑制图式",
+      "domain": "Overvigilance & Inhibition",
+      "description": "为了避免痛苦或失控，过度控制情绪表达和投入程度。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "belief:must_guess_needs",
+      "type": "belief",
+      "label": "必须猜测并满足他人需求",
+      "domain": "",
+      "description": "如果我不猜测并满足对方的预期，我就不是一个好的伴侣/咨询者，会带来麻烦。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "belief:expectations_cause_suffering",
+      "type": "belief",
+      "label": "预期导致痛苦",
+      "domain": "",
+      "description": "只要对事物或他人抱有预期，一旦发生变故就会产生痛苦，因此应降低预期。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "顺从的屈服者",
+      "domain": "",
+      "description": "当感到被要求时，自动进入猜测对方意图并配合的角色。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者",
+      "domain": "",
+      "description": "通过理智化、降低投入来隔离情感痛苦，防止被伤害。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "coping:compliance",
+      "type": "coping",
+      "label": "顺从/讨好",
+      "domain": "",
+      "description": "在人际中表现为猜测对方意图，即使不情愿也去满足对方。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "coping:emotional_isolation",
+      "type": "coping",
+      "label": "情感隔离",
+      "domain": "",
+      "description": "通过物理或心理上的抽离，避免对事物过度投入，从而逃避失去的痛苦。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "coping:cognitive_reframing",
+      "type": "coping",
+      "label": "认知重构(佛学/降低预期)",
+      "domain": "",
+      "description": "运用佛学思想进行认知重构，通过降低对结果的预期来减少当下痛苦。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "trigger:ambiguous_demand",
+      "type": "trigger",
+      "label": "模糊的需求/提问",
+      "domain": "",
+      "description": "对方提出模糊的要求或反复询问，触发了需要猜测意图的压力。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "trigger:potential_loss",
+      "type": "trigger",
+      "label": "潜在的失去/变故",
+      "domain": "",
+      "description": "面临关系破裂、死亡或预期落空的风险。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "automatic_thought:guess_what_they_want",
+      "type": "automatic_thought",
+      "label": "我需要猜测对方想要什么",
+      "domain": "",
+      "description": "当咨询师或伴侣提出问题时，闪现的念头：必须给出一个符合预期的答案。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "emotion:relief",
+      "type": "emotion",
+      "label": "解脱感",
+      "domain": "",
+      "description": "通过降低预期成功逃避痛苦后产生的轻松感。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "在面对模糊需求或不确定性时，担心无法满足对方的紧张感。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "event:cat_death",
+      "type": "event",
+      "label": "室友猫的离世",
+      "domain": "",
+      "description": "猫咪离世这一事件，触发了对“预期”和“痛苦”的思考与应用。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "person:haite",
+      "type": "person",
+      "label": "咨询师海特",
+      "domain": "",
+      "description": "咨询关系中的权威角色。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "亲密关系中的重要他人。",
+      "related_dates": [
+        "2026-01-17"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:approval",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "因核心需要未被满足，形成通过顺从他人获得认可的图式。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:must_guess_needs",
+      "relation_type": "assumes",
+      "relation": "屈服图式派生出必须通过猜测他人意图来获得安全感的规则。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "person:haite",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：被咨询师认可与接纳 → 对方反应(RO)：反复询问与质疑 → 自我反应(RS)：猜测对方预期并给出顺从回应",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "coping:compliance",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：维持亲密联结 → 对方反应(RO)：提出具体或模糊需求 → 自我反应(RS)：压抑真实意愿并尽力满足对方以避免冲突",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "trigger:ambiguous_demand",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "activates",
+      "relation": "模糊需求激活了顺从模式。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "automatic_thought:guess_what_they_want",
+      "relation_type": "produces",
+      "relation": "顺从模式下自动产生必须猜测对方意图的思维。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "automatic_thought:guess_what_they_want",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "猜测意图的压力引发了焦虑。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "schema:emotional_inhibition",
+      "target": "coping:emotional_isolation",
+      "relation_type": "derives",
+      "relation": "情感抑制图式驱动了情感隔离的应对策略。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "trigger:potential_loss",
+      "target": "coping:emotional_isolation",
+      "relation_type": "activates",
+      "relation": "面对潜在失去时，激活情感隔离以保护自己。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "coping:emotional_isolation",
+      "target": "coping:cognitive_reframing",
+      "relation_type": "conflicts_with",
+      "relation": "旧有的情感隔离与新尝试的认知重构（降低预期）在处理痛苦时产生拉扯。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "coping:cognitive_reframing",
+      "target": "emotion:relief",
+      "relation_type": "regulated_by",
+      "relation": "通过降低预期重构认知，成功调节情绪，产生解脱感。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    },
+    {
+      "source": "event:cat_death",
+      "target": "coping:cognitive_reframing",
+      "relation_type": "manifested_in",
+      "relation": "猫咪离世事件体现了认知重构策略的应用。",
+      "evidence_dates": [
+        "2026-01-17"
+      ]
+    }
+  ]
+}

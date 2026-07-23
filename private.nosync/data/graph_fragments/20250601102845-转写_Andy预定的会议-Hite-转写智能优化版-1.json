@@ -1,0 +1,277 @@
+{
+  "source_file": "20250601102845-转写_Andy预定的会议-Hite-转写智能优化版-1.txt",
+  "session_date": "2025-06-01",
+  "nodes": [
+    {
+      "id": "need:acceptance",
+      "type": "need",
+      "label": "被无条件接纳与认可",
+      "domain": "",
+      "description": "渴望在关系中被接纳，不需要通过完美表现或讨好来换取价值。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "need:competence",
+      "type": "need",
+      "label": "胜任感与掌控感",
+      "domain": "",
+      "description": "渴望在工作和生活中感到自己是有能力的，能够处理好事物。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "内心深处认为自己是不配的、有瑕疵的，尤其是在面对权威或新挑战时。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈从图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或被抛弃，过度压抑自己的需求，去迎合他人的期待。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "苛刻标准图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为必须表现完美才能获得认可，否则就是失败或运气使然。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "belief:success_is_luck",
+      "type": "belief",
+      "label": "成功仅靠运气",
+      "domain": "",
+      "description": "认为自己的成就不是因为能力，而是运气，导致冒牌者综合征。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "belief:responsible_for_atmosphere",
+      "type": "belief",
+      "label": "必须为社交氛围负责",
+      "domain": "",
+      "description": "认为如果社交场合尴尬，是自己的责任，必须去修复或避免。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到不安、羞耻、害怕被拒绝和不被爱，渴望得到安抚。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "屈从顺应模式",
+      "domain": "",
+      "description": "在咨询或社交中通过讨好、顺从来应对压力，隐藏真实想法。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "mode:overcompensator",
+      "type": "mode",
+      "label": "过度补偿者模式",
+      "domain": "",
+      "description": "试图通过保持完美形象、过度准备来掩盖内心的不配感。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "trigger:social_ambiguity",
+      "type": "trigger",
+      "label": "社交模糊情境",
+      "domain": "",
+      "description": "在社交场合出现尴尬、沉默或禁忌话题时，感到必须做出反应。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "trigger:authority_interaction",
+      "type": "trigger",
+      "label": "与权威互动",
+      "domain": "",
+      "description": "在面对咨询师或被视为更强的人时，会自动激活顺从和讨好反应。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "coping:people_pleasing",
+      "type": "coping",
+      "label": "讨好/顺从",
+      "domain": "",
+      "description": "通过答应要求、避免冲突来维持关系，防止被拒绝。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "coping:hiding_vulnerability",
+      "type": "coping",
+      "label": "隐藏负面经历",
+      "domain": "",
+      "description": "在咨询中不展示糟糕的一面，以维持完美的形象。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对无法掌控局面或表现不完美的持续担忧。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "觉得自己不够好、不配得的深层感受。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "id": "person:therapist",
+      "type": "person",
+      "label": "咨询师",
+      "domain": "",
+      "description": "被来访者视为权威对象，触发了来访者的讨好与完美主义反应。",
+      "related_dates": [
+        "2025-06-01"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:acceptance",
+      "target": "schema:defectiveness",
+      "relation_type": "unmet",
+      "relation": "长期未被满足的接纳需求导致了缺陷感的形成。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:success_is_luck",
+      "relation_type": "assumes",
+      "relation": "因认为自己有缺陷，所以将成功归因为运气而非能力。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "mode:overcompensator",
+      "relation_type": "derives",
+      "relation": "为了达到苛刻标准，驱动了过度补偿模式。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "trigger:social_ambiguity",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "activates",
+      "relation": "在社交尴尬时激活屈从模式，试图通过讨好来缓解压力。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "trigger:authority_interaction",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "activates",
+      "relation": "面对权威时激活顺从模式，渴望(W)：被认可/安全 → 对方反应(RO)：权威/专业 → 自我反应(RS)：顺从/讨好。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "coping:people_pleasing",
+      "relation_type": "derives",
+      "relation": "屈从顺应模式驱动了具体的讨好行为。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式被激活时会产生强烈的羞耻感。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:people_pleasing",
+      "relation_type": "regulated_by",
+      "relation": "为了调节社交焦虑，采取讨好策略。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "mode:overcompensator",
+      "relation_type": "reinforces",
+      "relation": "顺从讨好与过度补偿互相强化，以维持表面完美和安全。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "coping:hiding_vulnerability",
+      "relation_type": "manifested_in",
+      "relation": "在咨询中通过隐藏负面经历来表现顺从。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    },
+    {
+      "source": "person:therapist",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：被咨询师接纳 → 对方反应(RO)：权威/专业 → 自我反应(RS)：顺从/隐藏真实自我。",
+      "evidence_dates": [
+        "2025-06-01"
+      ]
+    }
+  ]
+}

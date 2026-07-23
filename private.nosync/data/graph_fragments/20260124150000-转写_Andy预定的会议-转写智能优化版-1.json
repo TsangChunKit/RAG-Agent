@@ -1,0 +1,258 @@
+{
+  "source_file": "20260124150000-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2026-01-24",
+  "nodes": [
+    {
+      "id": "need:emotional_safety",
+      "type": "need",
+      "label": "情感安全与稳定",
+      "domain": "",
+      "description": "渴望建立稳定的联结，但因恐惧随之而来的痛苦，转而追求内部的绝对安全。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "亲密联结",
+      "domain": "",
+      "description": "渴望与他人（伴侣、父母）建立深层联结，这是Andy内心深处的原始动机。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "schema:abandonment_instability",
+      "type": "schema",
+      "label": "被抛弃/不稳定图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为重要他人终将离去，关系是不稳定的，这种恐惧贯穿始终。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "schema:emotional_inhibition",
+      "type": "schema",
+      "label": "情感抑制图式",
+      "domain": "Overvigilance & Inhibition",
+      "description": "为了避免失控和痛苦，过度压抑自发的情感表达，用理性（佛学/心理学）来监控情绪。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过抽离、理性化、预设结局来防御痛苦，表现为冷静、观察者视角。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "内心那个真正感到害怕、渴望爱、并在面对失去时感到剧烈痛苦的部分。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "belief:if_i_detach_i_am_safe",
+      "type": "belief",
+      "label": "不投入就不会受伤",
+      "domain": "",
+      "description": "如果我控制预期或不投入，我就能规避因失去而产生的剧烈痛苦。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "belief:attachment_equals_suffering",
+      "type": "belief",
+      "label": "贪爱等于痛苦",
+      "domain": "",
+      "description": "将‘贪爱’（投入）与‘痛苦’直接挂钩，认为只要有欲望就会有痛苦。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "coping:intellectualization",
+      "type": "coping",
+      "label": "理性化/佛学防御",
+      "domain": "",
+      "description": "利用佛学概念（无常、贪爱）作为防御机制，将情感体验转化为逻辑分析。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "trigger:high_joy",
+      "type": "trigger",
+      "label": "快乐阈值触发",
+      "domain": "",
+      "description": "当快乐程度过高时，会触发恐惧感，担心随之而来的失去。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "trigger:potential_loss",
+      "type": "trigger",
+      "label": "潜在失去情境",
+      "domain": "",
+      "description": "面对关系中的不确定性或潜在的分离（如猫的离去、伴侣的变数）。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_need_to_control_it",
+      "type": "automatic_thought",
+      "label": "必须控制预期",
+      "domain": "",
+      "description": "“如果我现在预设他会离开，我就不会那么痛苦。”",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对未来失去的隐秘恐惧。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "emotion:grief",
+      "type": "emotion",
+      "label": "悲伤/痛苦",
+      "domain": "",
+      "description": "面对失去时真实的、被规避的原始情绪。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "当前的亲密依附对象，触发了Andy的贪恋与防御。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "早年依附对象，可能与Andy对‘失去’的恐惧及‘独立’的需求有关。",
+      "related_dates": [
+        "2026-01-24"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:emotional_safety",
+      "target": "schema:abandonment_instability",
+      "relation_type": "unmet",
+      "relation": "核心需要长期未被满足，导致形成对关系不稳定的深刻信念。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "person:parents",
+      "target": "schema:abandonment_instability",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得稳定的爱与支持 → 对方反应(RO)：忽视或不稳定 → 自我反应(RS)：感到不安全，必须依靠自己规避风险。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "schema:abandonment_instability",
+      "target": "belief:if_i_detach_i_am_safe",
+      "relation_type": "assumes",
+      "relation": "基于被抛弃的恐惧，衍生出通过疏离来保护自己的规则。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "schema:emotional_inhibition",
+      "target": "mode:detached_protector",
+      "relation_type": "derives",
+      "relation": "图式驱动了疏离保护者模式的运作。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "trigger:potential_loss",
+      "target": "mode:detached_protector",
+      "relation_type": "activates",
+      "relation": "潜在的失去触发了保护者模式，开始进行预期管理。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "belief:attachment_equals_suffering",
+      "target": "automatic_thought:i_need_to_control_it",
+      "relation_type": "produces",
+      "relation": "信念直接导致了‘必须控制预期’的自动思维。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "emotion:grief",
+      "target": "coping:intellectualization",
+      "relation_type": "regulated_by",
+      "relation": "用理性化/佛学概念来调节和压抑悲伤情绪。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "mode:vulnerable_child",
+      "relation_type": "conflicts_with",
+      "relation": "保护者模式试图压制脆弱儿童模式对联结的渴望与痛苦。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "mode:detached_protector",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：与她深度联结 → 对方反应(RO)：不确定/可能离开 → 自我反应(RS)：触发保护者模式，通过疏离来防御。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    },
+    {
+      "source": "trigger:high_joy",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "过度的快乐触发了对失去的焦虑。",
+      "evidence_dates": [
+        "2026-01-24"
+      ]
+    }
+  ]
+}

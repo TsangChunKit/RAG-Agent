@@ -1,0 +1,336 @@
+{
+  "source_file": "20250715220234-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-07-15",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能够独当一面，不需要依赖他人，不给他人添麻烦。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望在关系中获得稳定的支持与照顾，但因过往经历而难以信任。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "童年时期缺席的抚养者，导致来访者早期独立。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "当前关系中的依附对象，引发了关于分手与责任的冲突。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "person:therapist",
+      "type": "person",
+      "label": "咨询师",
+      "domain": "",
+      "description": "当前的咨询关系，被视为安全的树洞，但来访者担心成为负担。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "schema:emotional_deprivation",
+      "type": "schema",
+      "label": "情感剥夺图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己的情感需求不会得到满足，必须独自承担一切。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或被指责，过度迎合他人的期望。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "belief:must_be_strong",
+      "type": "belief",
+      "label": "必须独立坚强",
+      "domain": "",
+      "description": "规则：我必须坚强，不能麻烦别人，否则就是软弱。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "belief:bad_person_if_leaves",
+      "type": "belief",
+      "label": "离开即是坏人",
+      "domain": "",
+      "description": "假设：如果我不爱了或者离开，我就是辜负期望的坏人。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "belief:burden_to_others",
+      "type": "belief",
+      "label": "表达需求即负担",
+      "domain": "",
+      "description": "假设：如果我表达负面情绪或额外需求，会给别人造成麻烦。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "内心感到孤立无援、恐惧被抛弃和需要被照顾的部分。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过压抑情绪、隔离内心需求来保护自己免受伤害。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "顺从屈服模式",
+      "domain": "",
+      "description": "在冲突中为了避免争端而妥协，压抑真实感受。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避应对",
+      "domain": "",
+      "description": "通过不沟通、不回应来逃避情感冲突。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "trigger:girlfriend_demand",
+      "type": "trigger",
+      "label": "对方强行要求沟通",
+      "domain": "",
+      "description": "伴侣在来访者想冷静时强行要求交流，触发控制感。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "trigger:express_negative_emotion",
+      "type": "trigger",
+      "label": "表达负面情绪",
+      "domain": "",
+      "description": "在咨询中试图展露愤怒或悲伤，担心被攻击或被视为麻烦。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "trigger:therapist_departure",
+      "type": "trigger",
+      "label": "咨询师变动",
+      "domain": "",
+      "description": "咨询师出国导致咨询设置不确定，触发分离焦虑。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "负罪感",
+      "domain": "",
+      "description": "因未能满足他人期望而产生的自我谴责。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "emotion:fear",
+      "type": "emotion",
+      "label": "恐惧",
+      "domain": "",
+      "description": "对孤独、被抛弃及未来不确定性的恐惧。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "emotion:relief",
+      "type": "emotion",
+      "label": "解脱感",
+      "domain": "",
+      "description": "在关系结束或独处时感受到的轻松。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "event:breakup",
+      "type": "event",
+      "label": "分手事件",
+      "domain": "",
+      "description": "近期与女友经历的争吵与分手过程。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "id": "event:doraemon_movie",
+      "type": "event",
+      "label": "哆啦A梦电影记忆",
+      "domain": "",
+      "description": "童年观看电影时产生的共鸣，强化了必须坚强、不能麻烦别人的信念。",
+      "related_dates": [
+        "2025-07-15"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:parents",
+      "target": "schema:emotional_deprivation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得抚养与照料 → 对方反应(RO)：缺席与忽视 → 自我反应(RS)：必须独立，不能麻烦他人",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "schema:emotional_deprivation",
+      "target": "belief:must_be_strong",
+      "relation_type": "assumes",
+      "relation": "因长期缺乏照顾，产生必须靠自己坚强生存的规则",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "belief:must_be_strong",
+      "target": "mode:detached_protector",
+      "relation_type": "derives",
+      "relation": "为了维持坚强形象，驱动疏离保护者模式，压抑真实情感",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "trigger:girlfriend_demand",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "activates",
+      "relation": "面对伴侣的强硬要求，激活了顺从屈服模式",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "顺从伴侣期望但内心痛苦，产生负罪感",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "belief:bad_person_if_leaves",
+      "target": "emotion:guilt",
+      "relation_type": "produces",
+      "relation": "认为离开就是坏人，导致强烈的负罪感",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "trigger:express_negative_emotion",
+      "target": "belief:burden_to_others",
+      "relation_type": "activates",
+      "relation": "在咨询中想表达情绪时，信念被触发，担心成为负担",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "belief:burden_to_others",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "为了不麻烦他人，采用回避策略不表达真实需求",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "trigger:therapist_departure",
+      "target": "emotion:fear",
+      "relation_type": "evokes",
+      "relation": "咨询师的变动引发了对关系断裂和孤独的恐惧",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "event:doraemon_movie",
+      "target": "belief:must_be_strong",
+      "relation_type": "reinforces",
+      "relation": "电影情节强化了必须独自变强、杀死软弱自我的认知",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "mode:vulnerable_child",
+      "relation_type": "conflicts_with",
+      "relation": "疏离保护者试图压抑脆弱儿童，导致内心拉扯",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "event:breakup",
+      "relation_type": "manifested_in",
+      "relation": "在分手过程中，因无法表达真实感受而体现出顺从图式的影响",
+      "evidence_dates": [
+        "2025-07-15"
+      ]
+    }
+  ]
+}

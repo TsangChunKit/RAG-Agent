@@ -1,0 +1,21 @@
+[server]
+# 热重载：改代码后自动被跑起来的服务读到，不用手动重启（历史上多次踩坑——Streamlit 每次 rerun
+# 只重新执行 app.py，但从 scripts/ import 进来的模块缓存在 sys.modules 里，改了它们必须整进程
+# 重启才生效）。runOnSave=true 让 Streamlit 监听「本项目内被 import 的 .py 模块」，改动即自动
+# 重跑 + 重新 import 变更的模块（含清掉模块级单例，如 embedder/_model、reranker/_reranker）。
+#
+# fileWatcherType 必须用事件驱动的 watchdog（见 requirements.txt 已固定），别用轮询：
+#   - watchdog（本机 macOS 走 FSEvents）：只监听项目里那几个 .py（site-packages/.venv 自动排除），
+#     事件触发、闲时几乎零开销、不刷屏。
+#   - 之前设成 "none" 是因为当时**没装 watchdog**，默认回退到轮询监控，会反复 stat + 尝试解析
+#     FlagEmbedding/transformers 的上千个子模块，日志被 "Examining the path...ModuleNotFoundError"
+#     刷屏、还持续吃 CPU。装上 watchdog 后这个问题不再存在，可以放心开热重载。
+# "auto" = 有 watchdog 就用它，没有才回退轮询——所以务必保证 watchdog 已安装（requirements 里有）。
+#
+# 只有这几类改动仍需手动 `bash scripts/counseling_agent_ctl.sh restart`（热重载覆盖不到）：
+# 改本文件 config.toml、给某模块新增顶层 import、或想强制重载已加载的大模型进程。
+runOnSave = true
+fileWatcherType = "auto"
+
+[browser]
+gatherUsageStats = false

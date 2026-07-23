@@ -1,0 +1,303 @@
+{
+  "source_file": "20251011110235-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-10-11",
+  "nodes": [
+    {
+      "id": "need:unconditional_love",
+      "type": "need",
+      "label": "无条件接纳与爱",
+      "domain": "",
+      "description": "渴望获得像母亲一样无私、包容的爱，在关系中寻求安全感。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "童年时期因工作离开香港，造成早期依附创伤的源头。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "遗弃/不稳定图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧重要他人会突然离开，导致在亲密关系中产生焦虑。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "schema:emotional_deprivation",
+      "type": "schema",
+      "label": "情感剥夺图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己无法得到足够的关爱与滋养，倾向于在关系中过度索取或幻想。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "belief:i_am_broken_machine",
+      "type": "belief",
+      "label": "我是坏掉的机器",
+      "domain": "",
+      "description": "认为自己内在有故障，需要通过不断维修（咨询/学习）来修复。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "belief:need_mother_substitute",
+      "type": "belief",
+      "label": "伴侣必须像母亲",
+      "domain": "",
+      "description": "如果伴侣不能提供无私的母爱，这段关系就是失败的。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感受到被遗弃、悲伤、受伤的内在自我部分。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "能够进行自我安抚、哀悼、理性认知并接纳情绪的成熟部分。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "mode:angry_child",
+      "type": "mode",
+      "label": "愤怒儿童模式",
+      "domain": "",
+      "description": "在感到被拒绝时产生的攻击性、嫉妒与愤怒情绪。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "coping:overcompensation_analysis",
+      "type": "coping",
+      "label": "过度代偿/分析",
+      "domain": "",
+      "description": "通过学习心理学、使用AI咨询来过度分析自我，试图掌控一切。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "trigger:perceived_rejection",
+      "type": "trigger",
+      "label": "察觉到被拒绝",
+      "domain": "",
+      "description": "如伴侣未回复消息、发了其他男生的照片，触发被抛弃的联想。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_am_being_replaced",
+      "type": "automatic_thought",
+      "label": "我被取代了",
+      "domain": "",
+      "description": "面对伴侣社交动态时的自动想法，认为自己不再被需要。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对关系不确定性的核心情绪反应。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "emotion:grief",
+      "type": "emotion",
+      "label": "哀伤",
+      "domain": "",
+      "description": "哀悼幻想破灭时的核心情绪。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "emotion:anger",
+      "type": "emotion",
+      "label": "愤怒",
+      "domain": "",
+      "description": "被拒绝时产生的攻击性能量。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "id": "event:mourning_ritual",
+      "type": "event",
+      "label": "哀悼幻想仪式",
+      "domain": "",
+      "description": "在AI辅助下，承认现实中无法获得理想母爱，并进行自我安抚的过程。",
+      "related_dates": [
+        "2025-10-11"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W)：希望被母亲留在身边 -> 对方反应(RO)：母亲去香港工作离开 -> 自我反应(RS)：感到被抛弃与焦虑",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "need:unconditional_love",
+      "target": "schema:emotional_deprivation",
+      "relation_type": "unmet",
+      "relation": "长期未获得无私的爱，导致情感剥夺图式的形成。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:need_mother_substitute",
+      "relation_type": "assumes",
+      "relation": "因恐惧抛弃，推导出需要寻找一个无私的母性替代者来填补空缺。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "schema:emotional_deprivation",
+      "target": "coping:overcompensation_analysis",
+      "relation_type": "derives",
+      "relation": "为了应对情感匮乏，发展出通过不断分析和学习来‘修补’自己的应对方式。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "trigger:perceived_rejection",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "触发被抛弃感，直接激活脆弱儿童模式。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式产生焦虑情绪。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:overcompensation_analysis",
+      "relation_type": "regulated_by",
+      "relation": "通过过度分析来试图调节和缓解焦虑。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "trigger:perceived_rejection",
+      "target": "automatic_thought:i_am_being_replaced",
+      "relation_type": "produces",
+      "relation": "触发情境下产生灾难化思维。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_am_being_replaced",
+      "target": "emotion:anger",
+      "relation_type": "evokes",
+      "relation": "想法引发嫉妒与愤怒。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "emotion:anger",
+      "target": "mode:angry_child",
+      "relation_type": "regulated_by",
+      "relation": "愤怒能量被愤怒儿童模式承载。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "event:mourning_ritual",
+      "relation_type": "manifested_in",
+      "relation": "健康成人模式主导了哀悼仪式的进行。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "event:mourning_ritual",
+      "target": "emotion:grief",
+      "relation_type": "evokes",
+      "relation": "仪式引发深层的哀伤，从而释放压力。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "emotion:grief",
+      "target": "mode:healthy_adult",
+      "relation_type": "regulated_by",
+      "relation": "通过哀悼仪式，健康成人模式成功转化了负面情绪。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "mode:angry_child",
+      "target": "mode:healthy_adult",
+      "relation_type": "conflicts_with",
+      "relation": "愤怒儿童的攻击性与健康成人的自我安抚在冲突中转化。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    },
+    {
+      "source": "belief:i_am_broken_machine",
+      "target": "coping:overcompensation_analysis",
+      "relation_type": "produces",
+      "relation": "信念驱动了不断寻求维修（自我分析）的行为。",
+      "evidence_dates": [
+        "2025-10-11"
+      ]
+    }
+  ]
+}

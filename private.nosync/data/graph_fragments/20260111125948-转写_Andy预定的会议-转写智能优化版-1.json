@@ -1,0 +1,325 @@
+{
+  "source_file": "20260111125948-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2026-01-11",
+  "nodes": [
+    {
+      "id": "need:自主与掌控",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能够为自己的生活做主，争取个人利益（如加薪），而不必感到羞耻。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "need:安全稳定的联结",
+      "type": "need",
+      "label": "安全联结",
+      "domain": "",
+      "description": "渴望在表达需求时不会被抛弃或伤害重要他人，寻求关系中的安全感。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "person:母亲",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "童年时期的重要他人，Andy潜意识认为过分快乐或满足自我会伤害到母亲。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "person:咨询师",
+      "type": "person",
+      "label": "咨询师",
+      "domain": "",
+      "description": "当前的咨询关系对象，Andy在沟通中表现出试图猜测其意图的顺从行为。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "schema:服从",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "他人取向（Other-Directedness）",
+      "description": "认为自己的需求不重要，必须顺从他人意愿，否则会面临惩罚或道德谴责。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "schema:缺陷感",
+      "type": "schema",
+      "label": "缺陷感图式",
+      "domain": "联结与拒绝（Disconnection & Rejection）",
+      "description": "深层恐惧自己如果追求私欲就是“坏人”，不配获得充分满足。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "belief:自我满足即伤害他人",
+      "type": "belief",
+      "label": "自我满足即伤害他人",
+      "domain": "",
+      "description": "如果我过得太好或追求个人利益，就是在伤害他人（如母亲或同事）。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "belief:必须正当才配满足",
+      "type": "belief",
+      "label": "必须正当才配满足",
+      "domain": "",
+      "description": "如果我的需求没有通过逻辑或权威认可（如佛学、咨询师），我就没有权利去满足它。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "belief:必须猜透他人意图",
+      "type": "belief",
+      "label": "必须猜透他人意图",
+      "domain": "",
+      "description": "为了安全，我必须预判对方的期待并给出正确答案，否则会出错。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感到不安、害怕被评价，担心自己做错事的自我部分。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内化的审判者，负责监督行为是否“正确”，批判Andy的私欲。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "mode:顺从者",
+      "type": "mode",
+      "label": "顺从者",
+      "domain": "",
+      "description": "为了避免冲突而讨好、猜测他人需求的防御性模式。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "mode:健康成人",
+      "type": "mode",
+      "label": "健康成人",
+      "domain": "",
+      "description": "尝试通过逻辑、佛学和咨询来论证自身需求合理性，努力整合自我的部分。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "coping:过度理性化",
+      "type": "coping",
+      "label": "过度理性化",
+      "domain": "",
+      "description": "通过构建“台阶”（逻辑、佛学、咨询建议）来为自己的需求寻找合法性证据。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "coping:猜心策略",
+      "type": "coping",
+      "label": "猜心策略",
+      "domain": "",
+      "description": "在互动中下意识猜测对方期待，以避免犯错或被拒绝。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "trigger:表达个人需求",
+      "type": "trigger",
+      "label": "表达个人需求",
+      "domain": "",
+      "description": "涉及个人利益争取（如谈加薪）的情境，容易触发愧疚和审判。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "trigger:沟通模糊情境",
+      "type": "trigger",
+      "label": "沟通模糊情境",
+      "domain": "",
+      "description": "当对方意图不明或追问时，触发顺从和猜测的冲动。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "emotion:愧疚",
+      "type": "emotion",
+      "label": "愧疚",
+      "domain": "",
+      "description": "在争取自身利益时感到的道德负罪感。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "emotion:宁静",
+      "type": "emotion",
+      "label": "宁静",
+      "domain": "",
+      "description": "近期通过整合模式和准则后感受到的平静状态。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "id": "event:谈加薪",
+      "type": "event",
+      "label": "谈加薪",
+      "domain": "",
+      "description": "Andy在咨询支持下最终向老板表达了加薪需求。",
+      "related_dates": [
+        "2026-01-11"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:自主与掌控",
+      "target": "schema:服从",
+      "relation_type": "unmet",
+      "relation": "长期的自主需要未被满足，导致形成服从图式以维持关系。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "person:母亲",
+      "target": "schema:缺陷感",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得母爱 → 对方反应(RO)：过分快乐会被打压/责备 → 自我反应(RS)：认为满足自我即是伤害母亲，产生缺陷感。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "schema:服从",
+      "target": "belief:自我满足即伤害他人",
+      "relation_type": "assumes",
+      "relation": "服从图式派生出“满足自我即伤害他人”的假设。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "schema:服从",
+      "target": "mode:顺从者",
+      "relation_type": "derives",
+      "relation": "服从图式驱动了顺从者的行为模式。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "trigger:表达个人需求",
+      "target": "mode:惩罚性父母",
+      "relation_type": "activates",
+      "relation": "表达需求的情境激活了内心的审判者。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "emotion:愧疚",
+      "relation_type": "evokes",
+      "relation": "审判者批判行为不当，引发愧疚感。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "emotion:愧疚",
+      "target": "coping:过度理性化",
+      "relation_type": "regulated_by",
+      "relation": "为了调节愧疚，Andy使用理性化（佛学/逻辑）来证明自己行为的正当性。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "mode:健康成人",
+      "target": "mode:惩罚性父母",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人试图通过“搭台阶”与惩罚性父母辩论，以获得行动许可。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "mode:顺从者",
+      "target": "event:谈加薪",
+      "relation_type": "manifested_in",
+      "relation": "顺从者模式在初期阻碍了谈加薪的行动。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "person:咨询师",
+      "target": "mode:顺从者",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：获得咨询师认可 → 对方反应(RO)：咨询师反复追问/拉回 → 自我反应(RS)：陷入猜测对方意图的顺从模式。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "trigger:沟通模糊情境",
+      "target": "coping:猜心策略",
+      "relation_type": "activates",
+      "relation": "面对模糊沟通，自动激活猜心策略。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "coping:过度理性化",
+      "target": "mode:健康成人",
+      "relation_type": "reinforces",
+      "relation": "成功运用理性准则强化了健康成人的整合能力。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    },
+    {
+      "source": "mode:健康成人",
+      "target": "emotion:宁静",
+      "relation_type": "evokes",
+      "relation": "整合后的状态带来了内心宁静。",
+      "evidence_dates": [
+        "2026-01-11"
+      ]
+    }
+  ]
+}

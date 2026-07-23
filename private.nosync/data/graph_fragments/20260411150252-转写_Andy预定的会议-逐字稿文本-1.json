@@ -1,0 +1,257 @@
+{
+  "source_file": "20260411150252-转写_Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-04-11",
+  "nodes": [
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望在充满不确定性的环境中获得安全感，避免被抛弃或遭受无法承受的后果。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能够按照自己的节奏探索世界，做出符合个人意愿的选择。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "person:guardian",
+      "type": "person",
+      "label": "权威/守门员",
+      "domain": "",
+      "description": "隐喻中的守门员，代表童年权威或社会规训，设定了“安全”与“危险”的边界。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Other-Directedness",
+      "description": "认为必须服从权威或社会规则（攻略）才能获得安全，压抑自我需求。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为自己无法独立完成任务，缺乏独立生存的信心，必须依赖外部指引。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "belief:must_be_efficient",
+      "type": "belief",
+      "label": "必须高效才能生存",
+      "domain": "",
+      "description": "如果我不按照既定高效的路径（攻略）行事，我就无法获得资源或成功，甚至会被淘汰。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感到自己还是个孩子，没有能力打赢守门员，对自主选择充满恐惧。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "mode:demanding_parent",
+      "type": "mode",
+      "label": "苛求父母",
+      "domain": "",
+      "description": "内部的声音，要求必须高效、必须按部就班，否定过程体验的价值。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "顺从者",
+      "domain": "",
+      "description": "在生活中扮演提线木偶，通过完全复刻他人的路径来规避风险。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "通过追求极致的高效、囤积资源（游戏成就/强力武器）来对抗内心的无能感。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "trigger:life_decision",
+      "type": "trigger",
+      "label": "生活决策情境",
+      "domain": "",
+      "description": "面临辞职、休息或人生方向选择时，触发对未来的不确定性恐惧。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "automatic_thought:need_walkthrough",
+      "type": "automatic_thought",
+      "label": "必须看攻略",
+      "domain": "",
+      "description": "在游戏或工作中，认为如果不看攻略/不按社会路径走，自己会失败或效率低下。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "emotion:stuckness",
+      "type": "emotion",
+      "label": "被卡住感",
+      "domain": "",
+      "description": "感到虽然看清了现状，但无法做出改变，身体与心智分离。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "emotion:exhaustion",
+      "type": "emotion",
+      "label": "疲惫",
+      "domain": "",
+      "description": "因持续的过度补偿和压抑自我需求而产生的身心俱疲。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "id": "event:game_walkthrough_choice",
+      "type": "event",
+      "label": "游戏攻略选择事件",
+      "domain": "",
+      "description": "在游戏中选择看攻略快速通关，而非自己探索，反映了现实中追求高效而忽略过程的模式。",
+      "related_dates": [
+        "2026-04-11"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:safety",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期缺乏安全感导致必须通过服从外部规则来建立虚假安全感。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "person:guardian",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：寻求安全感与指引；对方反应(RO)：权威设定标准路径或规则；自我反应(RS)：我顺从并放弃自主探索以求生存。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:must_be_efficient",
+      "relation_type": "assumes",
+      "relation": "服从图式派生出必须高效、必须按部就班的生存规则。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "derives",
+      "relation": "服从图式驱动顺从者模式在生活中运作。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "trigger:life_decision",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "面临重大决策激活了脆弱儿童模式，感到无法应对。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "mode:demanding_parent",
+      "target": "automatic_thought:need_walkthrough",
+      "relation_type": "produces",
+      "relation": "苛求父母模式产生必须寻找攻略、追求高效的自动思维。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "automatic_thought:need_walkthrough",
+      "target": "emotion:stuckness",
+      "relation_type": "evokes",
+      "relation": "必须高效的思维与想自主探索的渴望冲突，导致被卡住感。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "emotion:exhaustion",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "通过过度补偿（如熬夜打游戏、追求工作成就）来应对内心的疲惫与焦虑。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "mode:demanding_parent",
+      "relation_type": "conflicts_with",
+      "relation": "脆弱儿童想休息/自主，苛求父母要求高效，两者在内心拉扯。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "event:game_walkthrough_choice",
+      "relation_type": "manifested_in",
+      "relation": "过度补偿模式在游戏攻略选择事件中具体体现。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "person:guardian",
+      "target": "mode:demanding_parent",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：获得认可与安全；对方反应(RO)：权威要求必须高效；自我反应(RS)：内化为苛求父母模式。",
+      "evidence_dates": [
+        "2026-04-11"
+      ]
+    }
+  ]
+}

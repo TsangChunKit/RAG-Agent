@@ -1,0 +1,276 @@
+{
+  "source_file": "20250621105950-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-06-21",
+  "nodes": [
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全与稳定",
+      "domain": "",
+      "description": "对生存保障、经济稳定及未来风险防御的需求，体现为守护者模式的核心动力。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与自我实现",
+      "domain": "",
+      "description": "渴望按自己的意愿探索世界、尝试不同职业可能性的需求，体现为探索者模式。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "作为生存责任的源头，担心父母年老后的医疗开销是守护者模式的重要驱动力。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "schema:vulnerability",
+      "type": "schema",
+      "label": "脆弱或受损图式",
+      "domain": "Disconnection & Rejection",
+      "description": "对失去收入、无法应对生存危机的深层恐惧，导致总是预设最坏情况。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "不懈标准图式",
+      "domain": "Overvigilance & Inhibition",
+      "description": "对决策的完美追求，必须找到最优解，否则会产生强烈的亏损感。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "belief:income_equals_safety",
+      "type": "belief",
+      "label": "收入等同于安全",
+      "domain": "",
+      "description": "如果失去稳定收入，我就无法生存或保障家人，因此必须维持现状。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "belief:must_be_optimal",
+      "type": "belief",
+      "label": "必须追求最优解",
+      "domain": "",
+      "description": "如果我没有选到最好的那个（猫/工作/餐），我就亏了，这是一种失败。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "belief:wrong_choice_is_irreversible",
+      "type": "belief",
+      "label": "选错即覆水难收",
+      "domain": "",
+      "description": "认为一旦做出错误决定，后果是不可逆的，无法补救。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "mode:guardian",
+      "type": "mode",
+      "label": "守护者模式",
+      "domain": "",
+      "description": "负责存钱、维持现状、保障安全的自我部分，通常压抑探索冲动。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "mode:explorer",
+      "type": "mode",
+      "label": "探索者模式",
+      "domain": "",
+      "description": "渴望辞职、尝试新事物、追求生命力的自我部分。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "coping:rumination",
+      "type": "coping",
+      "label": "过度分析与纠结",
+      "domain": "",
+      "description": "在做出决策前反复收集信息、对比优劣，试图消除不确定性。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避冒险",
+      "domain": "",
+      "description": "通过待在“壳子”里（当前工作/环境）来规避未知风险。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "trigger:making_choice",
+      "type": "trigger",
+      "label": "面临决策情境",
+      "domain": "",
+      "description": "当需要面对工作变动、购买宠物、甚至点餐等涉及选项对比的情境时。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "面对未知后果时产生的强烈不安感。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "emotion:fear_of_loss",
+      "type": "emotion",
+      "label": "亏损感",
+      "domain": "",
+      "description": "担心选错导致时间、金钱或机会损失的负面情绪。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "id": "event:cat_selection",
+      "type": "event",
+      "label": "猫咪挑选事件",
+      "domain": "",
+      "description": "在最优解（品相好）与直觉选择（心动）之间纠结，映射了深层的决策困境。",
+      "related_dates": [
+        "2025-06-21"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:safety",
+      "target": "schema:vulnerability",
+      "relation_type": "unmet",
+      "relation": "长期对安全感的匮乏导致了对不可控风险的极度敏感。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "person:parents",
+      "target": "schema:vulnerability",
+      "relation_type": "originates",
+      "relation": "渴望(W):照顾父母 → 对方反应(RO):父母年老需要经济支持 → 自我反应(RS):必须维持收入以保安全，形成生存焦虑。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "schema:vulnerability",
+      "target": "mode:guardian",
+      "relation_type": "derives",
+      "relation": "脆弱图式驱动了守护者模式的产生，以防御生存威胁。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:must_be_optimal",
+      "relation_type": "assumes",
+      "relation": "不懈标准图式派生出必须追求最优解的规则。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "trigger:making_choice",
+      "target": "mode:guardian",
+      "relation_type": "activates",
+      "relation": "决策情境激活守护者模式，评估风险与收益。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "trigger:making_choice",
+      "target": "mode:explorer",
+      "relation_type": "activates",
+      "relation": "决策情境激活探索者模式，寻求可能性。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "mode:guardian",
+      "target": "mode:explorer",
+      "relation_type": "conflicts_with",
+      "relation": "守护者（存钱/安全）与探索者（换工作/冒险）在决策时产生剧烈拉扯。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "belief:must_be_optimal",
+      "target": "emotion:fear_of_loss",
+      "relation_type": "evokes",
+      "relation": "对最优解的执着引发了对潜在亏损的恐惧。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "emotion:fear_of_loss",
+      "target": "coping:rumination",
+      "relation_type": "regulated_by",
+      "relation": "为了缓解亏损感，个体采取过度分析和纠结的应对方式。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "mode:guardian",
+      "target": "coping:avoidance",
+      "relation_type": "derives",
+      "relation": "守护者模式通过回避冒险来维持安全感。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "belief:wrong_choice_is_irreversible",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "认为选错无法挽回的信念直接导致了焦虑。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    },
+    {
+      "source": "coping:rumination",
+      "target": "event:cat_selection",
+      "relation_type": "manifested_in",
+      "relation": "这种应对模式在挑选猫咪时表现为反复对比品相与直觉。",
+      "evidence_dates": [
+        "2025-06-21"
+      ]
+    }
+  ]
+}

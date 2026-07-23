@@ -1,0 +1,277 @@
+{
+  "source_file": "20251025105957-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-10-25",
+  "nodes": [
+    {
+      "id": "need:unconditional_acceptance",
+      "type": "need",
+      "label": "无条件接纳与价值感",
+      "domain": "",
+      "description": "渴望被视为有价值的个体，而非通过狩猎证明价值。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望在关系中获得安全感，无需担心被抛弃。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己是不值得被爱的，需要通过不断的成就或征服来掩盖内在的缺陷感。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "遗弃图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧重要他人会离开，导致在关系中极度敏感且试图掌控。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "schema:entitlement",
+      "type": "schema",
+      "label": "特权/夸大图式",
+      "domain": "Impaired Limits",
+      "description": "将人际关系客体化，视伴侣为“猎物”，通过征服来获得自我满足。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "belief:worth_linked_to_conquest",
+      "type": "belief",
+      "label": "价值依赖于征服",
+      "domain": "",
+      "description": "如果我不去狩猎、不去赢得对方，我就不配被爱，我的存在就没有意义。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "belief:options_prevent_abandonment",
+      "type": "belief",
+      "label": "多重选择防抛弃",
+      "domain": "",
+      "description": "只要我同时维持多段关系，我就不会真正被抛弃，因为总有备选。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感受到被抛弃的恐惧、愤怒与不值得被爱的羞耻感。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "mode:self_aggrandizing_hunter",
+      "type": "mode",
+      "label": "自我夸大的狩猎者模式",
+      "domain": "",
+      "description": "通过物化他人、不断追求征服来防御脆弱感，维持虚假的强大自我。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "coping:overcompensation_hunting",
+      "type": "coping",
+      "label": "过度补偿（狩猎行为）",
+      "domain": "",
+      "description": "通过高强度的搭讪、约会、征服来证明自我价值，一旦“狩猎成功”即失去兴趣。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "coping:avoidance_intimacy",
+      "type": "coping",
+      "label": "回避亲密",
+      "domain": "",
+      "description": "对于给予安全感的伴侣（如福建女生）感到乏味并回避，因为这无法满足征服欲。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "trigger:woman_with_others",
+      "type": "trigger",
+      "label": "伴侣与他人互动",
+      "domain": "",
+      "description": "当伴侣（重庆女生）表现出对他人兴趣或不可控时，触发被抛弃感与愤怒。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "trigger:safe_relationship",
+      "type": "trigger",
+      "label": "安全稳定的关系",
+      "domain": "",
+      "description": "当关系过于顺遂、安全时，无法激活征服欲，导致兴趣减退。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "emotion:anger",
+      "type": "emotion",
+      "label": "愤怒",
+      "domain": "",
+      "description": "对伴侣不服从控制或被他人吸引产生的愤怒。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对关系失去掌控、害怕被抛弃的深层焦虑。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "person:chongqing_girl",
+      "type": "person",
+      "label": "重庆女生",
+      "domain": "",
+      "description": "当前的主要“猎物”，不可控，引发强烈的征服欲与被抛弃焦虑。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "id": "person:fujian_girl",
+      "type": "person",
+      "label": "福建女生",
+      "domain": "",
+      "description": "提供安全感的对比组，因过于顺从导致无法激发征服欲。",
+      "related_dates": [
+        "2025-10-25"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:unconditional_acceptance",
+      "target": "schema:defectiveness",
+      "relation_type": "unmet",
+      "relation": "核心需要未被满足，导致内在缺陷感。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:worth_linked_to_conquest",
+      "relation_type": "assumes",
+      "relation": "因为觉得自己有缺陷，所以假设“必须通过征服来证明价值”。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "belief:worth_linked_to_conquest",
+      "target": "coping:overcompensation_hunting",
+      "relation_type": "derives",
+      "relation": "信念驱动了狩猎行为。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "trigger:woman_with_others",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "触发了深层的被抛弃恐惧。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "感受到被抛弃的恐惧。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:overcompensation_hunting",
+      "relation_type": "regulated_by",
+      "relation": "通过狩猎他人来缓解被抛弃的焦虑。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "person:chongqing_girl",
+      "target": "mode:self_aggrandizing_hunter",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：征服她以证明价值 → 对方反应(RO)：不可控/与他人互动 → 自我反应(RS)：愤怒与更强的控制欲。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "person:fujian_girl",
+      "target": "coping:avoidance_intimacy",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：寻找刺激 → 对方反应(RO)：顺从/提供安全感 → 自我反应(RS)：觉得乏味并回避。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "schema:entitlement",
+      "target": "mode:self_aggrandizing_hunter",
+      "relation_type": "derives",
+      "relation": "图式直接构成了狩猎者模式。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "coping:overcompensation_hunting",
+      "target": "coping:avoidance_intimacy",
+      "relation_type": "conflicts_with",
+      "relation": "在追求征服与享受真实亲密之间拉扯。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:options_prevent_abandonment",
+      "relation_type": "assumes",
+      "relation": "因为害怕抛弃，假设多重选择是安全的。",
+      "evidence_dates": [
+        "2025-10-25"
+      ]
+    }
+  ]
+}

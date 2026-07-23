@@ -1,0 +1,276 @@
+{
+  "source_file": "20250705110015-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-07-05",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望在交易中捍卫自身利益，获得公平对待，体现自我效能感。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "联结与归属感",
+      "domain": "",
+      "description": "渴望维持与外界（如猫舍、游戏厂商）的良好关系，害怕因冲突而切断联结。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或伤害他人，过度压抑自己的需求，将他人利益置于自身之上。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为自己若不完美执行责任（如支付全价），就会导致他人失败或经营倒闭。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "belief:i_am_responsible_for_others_survival",
+      "type": "belief",
+      "label": "他人命运责任假设",
+      "domain": "",
+      "description": "认为自己的消费选择（如砍价、买二手）直接决定了商家的生死存亡。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "belief:bargaining_is_selfish",
+      "type": "belief",
+      "label": "讲价即自私规则",
+      "domain": "",
+      "description": "认为在交易中争取利益是一种自私行为，会伤害对方的经营。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到羞愧、焦虑，害怕因自己的行为导致他人受损，有被抛弃的恐惧。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "mode:critical_internalizer",
+      "type": "mode",
+      "label": "惩罚性/要求性父母模式",
+      "domain": "",
+      "description": "内化的声音，指责自己如果不支付全价就是不负责任，必须赎罪。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避应对",
+      "domain": "",
+      "description": "为了避免内耗和羞愧感，选择不讲价或减少与他人协商。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿/过度责任",
+      "domain": "",
+      "description": "通过多付钱或购买正版来补偿内心的“罪恶感”，试图证明自己不是伤害者。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "trigger:bargaining_situation",
+      "type": "trigger",
+      "label": "讨价还价情境",
+      "domain": "",
+      "description": "任何涉及金钱利益分配、需要协商或争取自身权益的场景。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "automatic_thought:if_i_dont_pay_they_fail",
+      "type": "automatic_thought",
+      "label": "如果我不付全价，他们就会倒闭",
+      "domain": "",
+      "description": "在讨价还价时闪过的念头，将微小的个人行为与宏大的负面后果关联。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "愧疚感",
+      "domain": "",
+      "description": "因认为自己造成他人损失而产生的情绪。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "觉得自己不够好、不够大方，害怕被他人评价为“抠门”或“坏人”。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "event:cat_neutering_bargain",
+      "type": "event",
+      "label": "猫舍绝育砍价事件",
+      "domain": "",
+      "description": "本次咨询中提到的具体事件，因砍价500元而感到内耗。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "id": "person:vendor",
+      "type": "person",
+      "label": "商家/服务提供者",
+      "domain": "",
+      "description": "反复出现的互动对象，代表了需要被“保护”的弱势方。",
+      "related_dates": [
+        "2025-07-05"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:autonomy",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期未能满足自主表达的需求，导致形成压抑自我的屈服图式。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:bargaining_is_selfish",
+      "relation_type": "assumes",
+      "relation": "屈服图式派生出“争取利益即自私”的认知规则。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "belief:i_am_responsible_for_others_survival",
+      "relation_type": "assumes",
+      "relation": "失败图式导致认为自己必须对他人成功负责的强迫性信念。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "trigger:bargaining_situation",
+      "target": "schema:subjugation",
+      "relation_type": "activates",
+      "relation": "触发情境激活了屈服图式，引发对冲突的恐惧。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "mode:critical_internalizer",
+      "target": "automatic_thought:if_i_dont_pay_they_fail",
+      "relation_type": "produces",
+      "relation": "严苛的内在声音产生灾难化思维。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "automatic_thought:if_i_dont_pay_they_fail",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "灾难化思维引发强烈的愧疚感。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "emotion:guilt",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "为逃避愧疚感，采取回避讲价的策略。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "emotion:guilt",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "通过过度支付/购买正版来补偿愧疚感。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "mode:vulnerable_child",
+      "relation_type": "derives",
+      "relation": "图式激活导致感到脆弱、害怕被讨厌。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "person:vendor",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：希望获得服务并捍卫利益 → 对方反应(RO)：（内心预设）会因我的要求而经营不善/倒闭 → 自我反应(RS)：感到愧疚并选择屈服/补偿。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "event:cat_neutering_bargain",
+      "relation_type": "manifested_in",
+      "relation": "屈服图式在猫舍砍价事件中体现为内耗与愧疚。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "coping:avoidance",
+      "target": "coping:overcompensation",
+      "relation_type": "conflicts_with",
+      "relation": "想通过不讲价来回避冲突 vs 想通过讲价来捍卫利益，两者产生内耗。",
+      "evidence_dates": [
+        "2025-07-05"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,297 @@
+{
+  "source_file": "20251005091030-Transcription_Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-10-05",
+  "nodes": [
+    {
+      "id": "need:safety_stability",
+      "type": "need",
+      "label": "安全与稳定的联结",
+      "domain": "",
+      "description": "渴望家庭环境的安全与父亲行为的可预测性，以减少对暴力的恐惧。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "need:emotional_connection",
+      "type": "need",
+      "label": "被无条件接纳与联结",
+      "domain": "",
+      "description": "渴望与母亲建立健康的联结，但目前被扭曲为必须通过忍受抱怨来换取。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "person:father",
+      "type": "person",
+      "label": "父亲",
+      "domain": "",
+      "description": "家庭中力量最强但不可预测的破坏者，通过暴力（摔碗）和赌博带来创伤。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "压抑、依赖、经常向儿子倾诉对父亲不满的照顾者，将儿子作为情绪宣泄口。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "schema:mistrust_abuse",
+      "type": "schema",
+      "label": "不信任/受虐图式",
+      "domain": "Disconnection & Rejection",
+      "description": "基于父亲的暴力行为，认为强大的人必然会带来伤害和暴力。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从/屈服图式",
+      "domain": "Other-Directedness",
+      "description": "为了维持与母亲的联结，压抑自己的真实需求，被迫扮演“乖儿子”角色。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "belief:power_equals_violence",
+      "type": "belief",
+      "label": "强大即暴力",
+      "domain": "",
+      "description": "认为如果自己变得强大或有攻击性，就会像父亲一样伤害他人。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "belief:must_listen_to_be_loved",
+      "type": "belief",
+      "label": "必须顺从才能被爱",
+      "domain": "",
+      "description": "如果不听母亲抱怨，她会受伤、孤单，且不再喜欢我。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "面对父亲爆炸或母亲脆弱时，感到惊慌、无助、恐惧的自我部分。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "顺从的屈服者",
+      "domain": "",
+      "description": "在母亲面前压抑反抗，被迫倾听以维持表面和谐的自我部分。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "当想要表达自我或变得强大时，内心攻击自己的自我部分。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避应对",
+      "domain": "",
+      "description": "通过搬出去住、不告诉母亲生活细节、不与父亲交流来减少冲突。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "coping:surrender",
+      "type": "coping",
+      "label": "屈服应对",
+      "domain": "",
+      "description": "被动地倾听母亲的抱怨，忍受痛苦以维持“好儿子”人设。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "trigger:assertion_of_self",
+      "type": "trigger",
+      "label": "主张自我/展现强大",
+      "domain": "",
+      "description": "尝试做自己想做的事（如买东西、旅游、健身）时，触发对权力的恐惧。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "trigger:mothers_complaint",
+      "type": "trigger",
+      "label": "母亲的抱怨",
+      "domain": "",
+      "description": "母亲向自己倾诉对父亲的不满，激活了必须倾听的压力。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "automatic_thought:if_i_am_powerful_i_will_harm_others",
+      "type": "automatic_thought",
+      "label": "如果我强大，就会伤害他人",
+      "domain": "",
+      "description": "在想要掌控生活时，闪过的对自身攻击性的恐惧。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对展现力量、对未来不确定性的深层忧虑。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "内疚",
+      "domain": "",
+      "description": "因想逃离母亲抱怨或担心拒绝她而产生的负罪感。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "id": "event:bowl_breaking_incident",
+      "type": "event",
+      "label": "摔碗事件",
+      "domain": "",
+      "description": "童年时期父亲因赌博/琐事摔碗，成为恐惧强大与暴力的核心创伤。",
+      "related_dates": [
+        "2025-10-05"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:father",
+      "target": "schema:mistrust_abuse",
+      "relation_type": "originates",
+      "relation": "渴望(W)：安全稳定的家庭环境 -> 对方反应(RO)：父亲通过暴力（摔碗）破坏安全 -> 自我反应(RS)：恐惧强大，将强大等同于暴力，回避父亲",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "person:mother",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：与母亲建立联结 -> 对方反应(RO)：母亲索取情绪价值，将我作为宣泄口 -> 自我反应(RS)：必须忍耐、顺从，否则感到内疚",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "schema:mistrust_abuse",
+      "target": "belief:power_equals_violence",
+      "relation_type": "assumes",
+      "relation": "图式导致将“强大”错误归因为“暴力”",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:must_listen_to_be_loved",
+      "relation_type": "assumes",
+      "relation": "图式导致认为必须牺牲自我边界才能维持关系",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "belief:power_equals_violence",
+      "target": "automatic_thought:if_i_am_powerful_i_will_harm_others",
+      "relation_type": "produces",
+      "relation": "信念直接导致对自身力量的负面自动思维",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "trigger:assertion_of_self",
+      "target": "mode:punitive_parent",
+      "relation_type": "activates",
+      "relation": "想要做自己时，惩罚性父母模式被激活，攻击自己的欲望",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "trigger:mothers_complaint",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "activates",
+      "relation": "母亲抱怨时，被迫进入顺从模式",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "coping:surrender",
+      "relation_type": "derives",
+      "relation": "顺从模式驱动了屈服的应对行为",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "coping:surrender",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "屈服行为虽然维持了关系，但也带来了内心痛苦和内疚",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "coping:avoidance",
+      "target": "event:bowl_breaking_incident",
+      "relation_type": "manifested_in",
+      "relation": "回避应对是对过去创伤事件的防御",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "惩罚性父母的自我攻击导致焦虑",
+      "evidence_dates": [
+        "2025-10-05"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "source_file": "20260307150354-Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2026-03-07",
+  "nodes": [
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全与掌控感",
+      "domain": "",
+      "description": "渴望在充满不确定性的生活中获得安全感，通过决策的正确性来规避风险。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与自我决策",
+      "domain": "",
+      "description": "渴望摆脱依赖，成为自己生活的主人，尽管目前感到困难。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "person:mom",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "Andy内心声音的主要来源，代表了勤俭节约、量入为出的规则。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或不安，顺从母亲内化的权威标准，压抑自己的真实需求。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "担心做错决定，认为自己无法独自承担后果，必须依赖权威。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "高标准/严苛要求图式",
+      "domain": "Overvigilance & Inhibition",
+      "description": "必须做出“最对”的决定，导致过度思考和决策瘫痪。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "belief:binary_rule",
+      "type": "belief",
+      "label": "二元决策规则",
+      "domain": "",
+      "description": "如果我做出了决定，就不能回头，否则会陷入无休止的争吵与混乱。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "belief:money_guilt",
+      "type": "belief",
+      "label": "花钱即不负责任",
+      "domain": "",
+      "description": "若花钱购买非必要物品，即违背了节俭原则，是不负责任的表现。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "belief:need_authority",
+      "type": "belief",
+      "label": "权威背书需求",
+      "domain": "",
+      "description": "我太弱小了，必须拉一个大哥（AI/专家/风水）来佐证我的需求，才能说服内心的母亲声音。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到弱小、无助，在决策面前需要被保护，不敢承担责任。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "mode:demanding_parent",
+      "type": "mode",
+      "label": "要求苛刻的父母模式",
+      "domain": "",
+      "description": "内化的母亲声音，不断批评和限制消费欲望，追求绝对的正确。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过过度思考、寻求外部建议、制定二元规则来回避焦虑和真实情感。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "察觉到模式的局限性，渴望改变，想要走出舒适区。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "trigger:decision_making",
+      "type": "trigger",
+      "label": "面临选择",
+      "domain": "",
+      "description": "无论是换手机、买电脑还是拔牙，任何需要做决策的情境。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "automatic_thought:wrong_choice_fear",
+      "type": "automatic_thought",
+      "label": "害怕选错",
+      "domain": "",
+      "description": "“如果我选错了怎么办？”“这笔钱花得值吗？”",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑与不安",
+      "domain": "",
+      "description": "决策过程中产生的持续性紧张感。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "罪恶感",
+      "domain": "",
+      "description": "因未能达到节俭标准或违背权威意见而产生的负罪感。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "id": "event:phone_broken",
+      "type": "event",
+      "label": "手机摔坏事件",
+      "domain": "",
+      "description": "近期发生的具体事件，触发了关于换手机还是修手机的决策困境。",
+      "related_dates": [
+        "2026-03-07"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:safety",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期安全感缺失，导致通过顺从权威规则来寻求安全。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "person:mom",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得母亲认可与安全感 → 对方反应(RO)：要求勤俭节约、量入为出 → 自我反应(RS)：内化母亲声音，不敢自主决策，担心不负责任。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:money_guilt",
+      "relation_type": "assumes",
+      "relation": "屈服于母亲标准，派生出花钱即不负责任的信念。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "belief:need_authority",
+      "relation_type": "assumes",
+      "relation": "因认为自己无力承担决策后果，派生出必须寻找权威背书的信念。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "trigger:decision_making",
+      "target": "mode:detached_protector",
+      "relation_type": "activates",
+      "relation": "面临选择时，激活了通过过度思考和寻找外部规则来逃避焦虑的保护模式。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "automatic_thought:wrong_choice_fear",
+      "relation_type": "produces",
+      "relation": "在该模式下，不断产生关于选错和浪费的自动思维。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "automatic_thought:wrong_choice_fear",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "对选错的担忧引发了焦虑。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "mode:detached_protector",
+      "relation_type": "regulated_by",
+      "relation": "通过寻求AI建议、制定二元规则来调节焦虑。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "mode:demanding_parent",
+      "target": "belief:money_guilt",
+      "relation_type": "produces",
+      "relation": "苛刻父母模式不断重申节俭的规则，产生罪恶感。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "belief:money_guilt",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "违背节俭信念会直接引发罪恶感。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "mode:detached_protector",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人想要改变、行动，与保护者的拖延、纠结模式发生冲突。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "mode:vulnerable_child",
+      "relation_type": "reinforces",
+      "relation": "保护者模式虽然看似在解决问题，实则通过剥夺自主决策权，强化了脆弱儿童的无力感。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "event:phone_broken",
+      "relation_type": "manifested_in",
+      "relation": "在手机摔坏事件中，表现为与AI讨论、纠结修还是换的决策瘫痪。",
+      "evidence_dates": [
+        "2026-03-07"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "source_file": "20250810150807-Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-08-10",
+  "nodes": [
+    {
+      "id": "need:validation",
+      "type": "need",
+      "label": "被看见与回应的需要",
+      "domain": "",
+      "description": "渴望情感上的联结与存在感，认为如果没人回应自己的生活，所做的一切都没有意义。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "need:attachment",
+      "type": "need",
+      "label": "安全稳定的扎根感",
+      "domain": "",
+      "description": "渴望进入一段稳定的关系以获得安全感，避免像浮萍一样飘零。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "person:ex_girlfriend",
+      "type": "person",
+      "label": "前女友",
+      "domain": "",
+      "description": "前任依附对象，在关系中提供了回应，但被来访者感知为索取者。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "schema:emotional_deprivation",
+      "type": "schema",
+      "label": "情感剥夺图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己的核心情感需要（被理解、被关怀）不会得到满足。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "被抛弃图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧失去重要他人，导致在独处时产生强烈的恐慌感。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "belief:solitude_meaningless",
+      "type": "belief",
+      "label": "独处无意义假设",
+      "domain": "",
+      "description": "如果我一个人，我就没有意义/价值，没有人见证我的生活。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "belief:perfection_for_relationship",
+      "type": "belief",
+      "label": "必须完美才配进入关系",
+      "domain": "",
+      "description": "认为自己必须先成为一个完整、完美的产品，才能进入下一段关系，否则不配或会有代价。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到无助、像没有根的浮萍，恐惧独处和闲暇。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过理智化、安排日程来阻断对孤独和不安的感受。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿（填满时间）",
+      "domain": "",
+      "description": "通过过度社交、约会、安排活动来逃避孤独感和空虚感。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "trigger:idle_time",
+      "type": "trigger",
+      "label": "独处/闲暇时刻",
+      "domain": "",
+      "description": "当没有安排活动、一个人呆着的时候，会触发不安和空虚。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "automatic_thought:drifter_thought",
+      "type": "automatic_thought",
+      "label": "我是没有根的浮萍",
+      "domain": "",
+      "description": "在独处时冒出的念头，认为自己处于随波逐流的状态。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "不安/恐慌",
+      "domain": "",
+      "description": "在失去关系或独处时体验到的强烈焦虑感。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "id": "event:breakup",
+      "type": "event",
+      "label": "分手事件",
+      "domain": "",
+      "description": "近期与前任分开，触发了对独处的恐惧和对“扎根”的渴望。",
+      "related_dates": [
+        "2025-08-10"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:validation",
+      "target": "schema:emotional_deprivation",
+      "relation_type": "unmet",
+      "relation": "长期未能获得持续、稳定的情感回应，导致情感剥夺图式形成。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "person:ex_girlfriend",
+      "target": "schema:emotional_deprivation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被看见与回应 → 对方反应(RO)：索取情绪价值/回应不稳定 → 自我反应(RS)：感到空虚与依赖，形成了对关系的病态渴求。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:solitude_meaningless",
+      "relation_type": "assumes",
+      "relation": "被抛弃的恐惧派生出“独处即无意义”的信念，用以解释为何不能一个人。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "coping:overcompensation",
+      "relation_type": "derives",
+      "relation": "为了避免被抛弃的恐惧，驱动来访者不断填满时间。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "trigger:idle_time",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "闲暇时刻激活了脆弱儿童部分，感到无助和恐慌。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "automatic_thought:drifter_thought",
+      "relation_type": "produces",
+      "relation": "脆弱状态下冒出“我是浮萍”的自我贬损念头。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "automatic_thought:drifter_thought",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "浮萍的念头引发了强烈的不安。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "通过安排满满的活动来调节独处带来的不安感。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "mode:detached_protector",
+      "relation_type": "reinforces",
+      "relation": "过度补偿的行为强化了疏离保护者模式，使其继续逃避真实感受。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "belief:perfection_for_relationship",
+      "relation_type": "conflicts_with",
+      "relation": "来访者一方面想填满时间（补偿），一方面又认为必须“变完美”才能进入关系，两者产生矛盾。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "event:breakup",
+      "relation_type": "manifested_in",
+      "relation": "分手事件直接触动了被抛弃图式，导致来访者对独处产生恐慌。",
+      "evidence_dates": [
+        "2025-08-10"
+      ]
+    }
+  ]
+}

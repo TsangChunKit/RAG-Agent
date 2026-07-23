@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.andytsang.aitherapist.tailscale</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>open -a Tailscale; sleep 5; /usr/local/bin/tailscale up</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/aitherapist_tailscale.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/aitherapist_tailscale.log</string>
+</dict>
+</plist>

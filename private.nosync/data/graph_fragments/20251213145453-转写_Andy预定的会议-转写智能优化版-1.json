@@ -1,0 +1,307 @@
+{
+  "source_file": "20251213145453-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-12-13",
+  "nodes": [
+    {
+      "id": "need:competence",
+      "type": "need",
+      "label": "胜任感与认可",
+      "domain": "",
+      "description": "渴望在工作中获得被器重、有成就的感觉，这是Andy持续向上的动力。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "安全联结",
+      "domain": "",
+      "description": "渴望维持亲密关系，害怕孤独，害怕被抛弃。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "person:ex_girlfriend",
+      "type": "person",
+      "label": "前女友",
+      "domain": "",
+      "description": "过往依附对象，分手后Andy曾因恐惧孤独而试图维持联系。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "person:current_company",
+      "type": "person",
+      "label": "当前公司",
+      "domain": "",
+      "description": "当前工作环境，Andy感到不被器重，但又因公司处于生存阶段而感到愧疚。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "感到自己不被器重，认为自己没有耀眼的表现，内在深处怀疑自己的价值。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "臣服图式",
+      "domain": "Other-Directedness",
+      "description": "为了不伤害他人（前女友或公司），压抑自己的需求，被迫留在不快乐的环境中。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "遗弃图式",
+      "domain": "Disconnection & Rejection",
+      "description": "对失去联结（分手或离职）的极度恐惧，认为离开会带来难以承受的孤独。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "belief:leaving_is_betrayal",
+      "type": "belief",
+      "label": "离开即背叛",
+      "domain": "",
+      "description": "如果我离开（公司/关系），就是对对方的背叛，会给对方造成伤害。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "belief:responsible_for_others",
+      "type": "belief",
+      "label": "对他人的生存负责",
+      "domain": "",
+      "description": "认为自己若离开，公司会从生到死，将他人的困境归因为自己的离开。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到心灰意冷、恐惧、不被重视，需要被安抚。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "对工作采取被动、回避态度，不主动争取，像捏着鼻子喝药一样应付。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "尝试进行年度回顾、制定目标、寻求咨询帮助以理清现状。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避行为",
+      "domain": "",
+      "description": "不在咨询中聊工作，在工作中不主动争取机会，回避处理核心矛盾。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "coping:compliance",
+      "type": "coping",
+      "label": "屈服/忍受",
+      "domain": "",
+      "description": "维持现状，像喝臭药一样忍受不被器重的环境。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "trigger:work_dissatisfaction",
+      "type": "trigger",
+      "label": "工作不被认可",
+      "domain": "",
+      "description": "面对公司不冷不热的反馈，感到缺乏方向感。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_am_a_bomb",
+      "type": "automatic_thought",
+      "label": "我是个炸弹",
+      "domain": "",
+      "description": "如果我离开，会把公司炸毁（导致其从生到死）。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "愧疚感",
+      "domain": "",
+      "description": "因为想要离开而产生的对他人伤害的负罪感。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "emotion:disheartened",
+      "type": "emotion",
+      "label": "心灰意冷",
+      "domain": "",
+      "description": "在工作中感到无力、不被重视的情绪状态。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "event:past_breakup",
+      "type": "event",
+      "label": "过往分手事件",
+      "domain": "",
+      "description": "分手后因恐惧孤独而试图保持联系的经历。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "id": "event:annual_review",
+      "type": "event",
+      "label": "年度回顾",
+      "domain": "",
+      "description": "触发Andy反思过去两年职业状态与目标感的事件。",
+      "related_dates": [
+        "2025-12-13"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:competence",
+      "target": "schema:defectiveness",
+      "relation_type": "unmet",
+      "relation": "长期缺乏认可导致缺陷感形成",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "person:ex_girlfriend",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W)：保持联结/不孤单 → 对方反应(RO)：分手/疏离 → 自我反应(RS)：恐惧/保持联系(奶嘴行为)",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "person:current_company",
+      "target": "schema:defectiveness",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：得到认可/被器重 → 对方反应(RO)：不冷不热/无视 → 自我反应(RS)：心灰意冷/自我怀疑",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:leaving_is_betrayal",
+      "relation_type": "assumes",
+      "relation": "臣服图式派生出必须照顾他人感受、不可背叛的规则",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "coping:compliance",
+      "relation_type": "derives",
+      "relation": "臣服图式驱动了忍受不快乐工作的屈服行为",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "trigger:work_dissatisfaction",
+      "target": "mode:detached_protector",
+      "relation_type": "activates",
+      "relation": "工作不被认可激活了疏离保护者模式，导致被动应付",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "belief:leaving_is_betrayal",
+      "target": "automatic_thought:i_am_a_bomb",
+      "relation_type": "produces",
+      "relation": "信念导致产生我是炸弹的灾难化思维",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_am_a_bomb",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "认为自己是炸弹引发了强烈的愧疚感",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "event:past_breakup",
+      "relation_type": "manifested_in",
+      "relation": "在分手事件中体现为无法忍受离开，试图保持联系",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "event:annual_review",
+      "relation_type": "manifested_in",
+      "relation": "在回顾中体现为对离职的负罪感和内耗",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "mode:detached_protector",
+      "relation_type": "conflicts_with",
+      "relation": "想要规划的成人部分与回避工作的疏离部分产生拉扯",
+      "evidence_dates": [
+        "2025-12-13"
+      ]
+    }
+  ]
+}

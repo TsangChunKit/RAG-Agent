@@ -1,0 +1,285 @@
+{
+  "source_file": "20250426110618-Andy的快速会议-转写智能优化版-1.txt",
+  "session_date": "2025-04-26",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与自我实现",
+      "domain": "",
+      "description": "渴望探索世界、拥有多姿多彩的生活体验，而不是仅限于三点一线。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "need:security",
+      "type": "need",
+      "label": "安全感",
+      "domain": "",
+      "description": "渴望通过存钱和紧缩生活来获得对未来的掌控感，避免生存危机。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "其生活方式（过度节省、自我牺牲）是Andy行为模式的核心源头。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "schema:self_sacrifice",
+      "type": "schema",
+      "label": "自我牺牲图式",
+      "domain": "他人取向（Other-Directedness）",
+      "description": "因母亲的艰苦生活而产生的负罪感，认为自己若过得比母亲好就是一种背叛。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "schema:vulnerability",
+      "type": "schema",
+      "label": "脆弱与伤害图式",
+      "domain": "联结与拒绝（Disconnection & Rejection）",
+      "description": "对未来生存的不安全感，认为必须时刻警惕、存钱才能避开贫困。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "belief:better_than_mom_is_bad",
+      "type": "belief",
+      "label": "不能活得比母亲好",
+      "domain": "",
+      "description": "如果我过得比母亲好，就是辜负了她的付出，是对她的伤害。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "belief:spending_is_sin",
+      "type": "belief",
+      "label": "消费即挥霍",
+      "domain": "",
+      "description": "将个人的娱乐消费（如看电影、喝咖啡）等同于对他人的剥削或挥霍。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者（三点一线）",
+      "domain": "",
+      "description": "通过机械、低成本、重复的生活方式（三点一线、打游戏）来屏蔽现实焦虑。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内化的母亲声音，在Andy想要消费或享受时进行指责和限制。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感到生活无活力、被困住、委屈、渴望改变但无力行动的状态。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避与紧缩",
+      "domain": "",
+      "description": "通过维持狭窄的生活圈子来逃避对金钱和未知的恐惧。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "trigger:spending_money",
+      "type": "trigger",
+      "label": "产生消费行为",
+      "domain": "",
+      "description": "当产生看电影、去咖啡厅等非必要消费念头时。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "automatic_thought:guilt_for_spending",
+      "type": "automatic_thought",
+      "label": "消费产生负罪感",
+      "domain": "",
+      "description": "“我花这100块钱，就是抵消了我妈辛苦省下的钱。”",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "负罪感",
+      "domain": "",
+      "description": "因想要享受生活而产生的深层愧疚。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "emotion:boredom",
+      "type": "emotion",
+      "label": "无聊/生命力缺失",
+      "domain": "",
+      "description": "长期维持三点一线生活带来的空虚感。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "id": "event:mom_saving_behavior",
+      "type": "event",
+      "label": "母亲的节俭行为",
+      "domain": "",
+      "description": "母亲通过带饭、洗碗来省钱，成为Andy内心负罪感的具体参照物。",
+      "related_dates": [
+        "2025-04-26"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:self_sacrifice",
+      "relation_type": "originates",
+      "relation": "渴望(W)：保持家庭联结与安全 → 对方反应(RO)：母亲极端节俭、自我牺牲 → 自我反应(RS)：产生深重负罪感，认为自己不能过得比母亲好。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "schema:self_sacrifice",
+      "target": "belief:better_than_mom_is_bad",
+      "relation_type": "assumes",
+      "relation": "图式导致了“我不能活得比母亲好”的规则。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "belief:better_than_mom_is_bad",
+      "target": "belief:spending_is_sin",
+      "relation_type": "reinforces",
+      "relation": "认为消费就是挥霍母亲的血汗，强化了消费的罪恶感。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "belief:spending_is_sin",
+      "target": "mode:punitive_parent",
+      "relation_type": "produces",
+      "relation": "该信念是惩罚性父母模式的逻辑核心。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "trigger:spending_money",
+      "target": "mode:punitive_parent",
+      "relation_type": "activates",
+      "relation": "消费念头触发了内心的责备。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:guilt_for_spending",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式直接导致了关于负罪感的自动思维。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "automatic_thought:guilt_for_spending",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "自动思维引发了强烈的负罪感。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "emotion:guilt",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "为了调节负罪感，个体选择回避消费，维持现状。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "schema:vulnerability",
+      "target": "mode:detached_protector",
+      "relation_type": "derives",
+      "relation": "为了应对脆弱感，形成了三点一线的保护模式。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "emotion:boredom",
+      "relation_type": "evokes",
+      "relation": "保护模式虽然安全，但导致了缺乏生命力的无聊感。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "mode:detached_protector",
+      "relation_type": "conflicts_with",
+      "relation": "脆弱儿童想要探索世界，但被疏离保护者模式压制。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "schema:self_sacrifice",
+      "target": "event:mom_saving_behavior",
+      "relation_type": "manifested_in",
+      "relation": "母亲的节俭行为在现实中不断强化Andy的自我牺牲图式。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "need:autonomy",
+      "target": "schema:self_sacrifice",
+      "relation_type": "unmet",
+      "relation": "对自主生活的渴望因自我牺牲图式而长期无法满足。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    }
+  ]
+}

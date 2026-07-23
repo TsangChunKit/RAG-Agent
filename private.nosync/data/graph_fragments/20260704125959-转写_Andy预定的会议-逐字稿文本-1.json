@@ -1,0 +1,371 @@
+{
+  "source_file": "20260704125959-转写_Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-07-04",
+  "nodes": [
+    {
+      "id": "need:unconditional_acceptance",
+      "type": "need",
+      "label": "无条件接纳",
+      "domain": "",
+      "description": "渴望被爱和接纳，不因表现或成就而改变。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与自由",
+      "domain": "",
+      "description": "渴望摆脱外界期待，能够自由地过自己想要的生活。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "主要依附对象，代表了评价、期望和潜在的拒绝。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻感",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己内在是有缺陷的、不值得被爱的，一旦被发现就会被抛弃。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败感",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为自己在能力上是无能的，无法胜任工作或达到期望。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "被抛弃感",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧失去关系，认为如果失败就会被抛弃。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "belief:conditional_worth",
+      "type": "belief",
+      "label": "条件化价值",
+      "domain": "",
+      "description": "认为只有取得成就、赚到钱、表现完美，才配被爱或拥有价值。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "belief:catastrophic_failure",
+      "type": "belief",
+      "label": "灾难化失败",
+      "domain": "",
+      "description": "认为一旦跳槽失败或失业，就会导致连锁反应，失去所有社会关系和价值。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感受到恐惧、无助、羞耻和被抛弃的自我部分。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "服从的顺从者",
+      "domain": "",
+      "description": "为了获得认可和避免抛弃，不断努力满足外界期待的模式。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内在的严苛声音，指责自己“德不配位”、“辜负期望”。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "通过过度理性分析、查证事实（吃辣椒隐喻）来试图消除恐惧。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避",
+      "domain": "",
+      "description": "幻想如果彻底失败或被抛弃，反而能获得自由，从而逃避当下的压力。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "trigger:new_job_offer",
+      "type": "trigger",
+      "label": "获得新工作机会",
+      "domain": "",
+      "description": "面试顺利导致冒牌者综合症被激活，触发对胜任力的怀疑。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "trigger:potential_layoff",
+      "type": "trigger",
+      "label": "潜在的失业风险",
+      "domain": "",
+      "description": "看到类似岗位失业的新闻，引发对未来的灾难性预演。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "automatic_thought:imposter_syndrome",
+      "type": "automatic_thought",
+      "label": "冒牌者综合症",
+      "domain": "",
+      "description": "“我真的配得上这个岗位吗？”“我会不会很快被试用期淘汰？”",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "automatic_thought:catastrophic_prediction",
+      "type": "automatic_thought",
+      "label": "灾难性预言",
+      "domain": "",
+      "description": "“如果我被辞退，我就彻底完了，会被嘲笑，会被抛弃。”",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "emotion:fear",
+      "type": "emotion",
+      "label": "恐惧",
+      "domain": "",
+      "description": "贯穿全场的核心情绪，对失败和失去关系的恐惧。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "emotion:relief",
+      "type": "emotion",
+      "label": "解脱感",
+      "domain": "",
+      "description": "在幻想彻底被抛弃后感受到的轻松，因为不再需要满足任何期待。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "event:job_interview_process",
+      "type": "event",
+      "label": "近期面试经历",
+      "domain": "",
+      "description": "面试进展顺利，但伴随极大的心理压力。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "id": "event:past_breakup",
+      "type": "event",
+      "label": "过去失恋经历",
+      "domain": "",
+      "description": "曾因一段关系破裂导致生活全面崩塌，成为恐惧的记忆来源。",
+      "related_dates": [
+        "2026-07-04"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:unconditional_acceptance",
+      "target": "schema:defectiveness",
+      "relation_type": "unmet",
+      "relation": "长期未被满足的接纳需求导致形成了缺陷感图式。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "person:mother",
+      "target": "schema:defectiveness",
+      "relation_type": "originates",
+      "relation": "渴望(W)：得到母亲的爱与认可 → 对方反应(RO)：给予高期待或评价 → 自我反应(RS)：感到自己有缺陷、价值低。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:conditional_worth",
+      "relation_type": "assumes",
+      "relation": "因为内在有缺陷，所以必须通过外部成就来证明价值。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "trigger:new_job_offer",
+      "target": "schema:failure",
+      "relation_type": "activates",
+      "relation": "面试顺利反而激活了失败感图式，担心德不配位。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "belief:conditional_worth",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "derives",
+      "relation": "为了维持价值，必须表现出顺从和努力。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "belief:conditional_worth",
+      "target": "automatic_thought:imposter_syndrome",
+      "relation_type": "produces",
+      "relation": "由于相信价值是条件化的，产生冒牌者思维。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "automatic_thought:imposter_syndrome",
+      "target": "emotion:fear",
+      "relation_type": "evokes",
+      "relation": "冒牌者思维引发了强烈的恐惧情绪。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "emotion:fear",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "通过不停分析、查证来试图平复恐惧，但反而越陷越深。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "mode:punitive_parent",
+      "relation_type": "conflicts_with",
+      "relation": "顺从者试图满足期待，但惩罚者不断攻击其价值。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "trigger:potential_layoff",
+      "target": "schema:abandonment",
+      "relation_type": "activates",
+      "relation": "看到失业新闻激活了被抛弃感，担心失去一切。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:catastrophic_failure",
+      "relation_type": "assumes",
+      "relation": "被抛弃感导致信念：一旦失败即失去所有关系。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "belief:catastrophic_failure",
+      "target": "automatic_thought:catastrophic_prediction",
+      "relation_type": "produces",
+      "relation": "产生“如果被辞退就会被全世界抛弃”的灾难性念头。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "automatic_thought:catastrophic_prediction",
+      "target": "emotion:fear",
+      "relation_type": "evokes",
+      "relation": "灾难性念头引发极度恐惧。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "emotion:fear",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "因为恐惧过大，产生想彻底放弃、逃离期待的应对方式。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "coping:avoidance",
+      "target": "emotion:relief",
+      "relation_type": "evokes",
+      "relation": "幻想彻底失去一切反而带来了短暂的解脱感。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "event:past_breakup",
+      "relation_type": "manifested_in",
+      "relation": "过去的失恋经历强化了缺陷感和对失去关系的恐惧。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "event:job_interview_process",
+      "relation_type": "manifested_in",
+      "relation": "面试过程体现了对胜任力的过度焦虑。",
+      "evidence_dates": [
+        "2026-07-04"
+      ]
+    }
+  ]
+}

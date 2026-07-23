@@ -1,0 +1,296 @@
+{
+  "source_file": "20260404145956-转写_Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-04-04",
+  "nodes": [
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全与稳定的联结",
+      "domain": "",
+      "description": "渴望获得心理上的安全边界，避免毁灭性的灾难。这是Andy内心“守门员”试图满足的核心需要。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望按照自己的意愿去投资自己、更换工作、实现个人发展，是内心想要行动的一方。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "Andy内心“守门员”声音的投射源头，代表了限制与安全边界。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "schema:vulnerability",
+      "type": "schema",
+      "label": "脆弱与伤害图式",
+      "domain": "Disconnection & Rejection",
+      "description": "极度担心发生灾难性的事情（如生病、贫困、人生毁灭），时刻处于警觉状态。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为自己能力不足，害怕面试失败，一旦失败就证明自己不够好。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "belief:catastrophic_mistake",
+      "type": "belief",
+      "label": "灾难化假设",
+      "domain": "",
+      "description": "如果我做错了一个小决定，就会像那个踩钉子的人一样，最终导致人生的毁灭。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "belief:rejection_worth",
+      "type": "belief",
+      "label": "拒绝即否定自我",
+      "domain": "",
+      "description": "如果简历被拒或面试失败，就代表我这个人价值很低、能力不行。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "belief:internal_weakness",
+      "type": "belief",
+      "label": "自我弱小信念",
+      "domain": "",
+      "description": "即便我已经具备了技能，但我内心依然觉得自己只是个17、18岁的小孩子，无法承载压力。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内心的“守门员”声音，负责批评、限制行动，以防止犯错。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到弱小、无助、打不赢对面，需要寻求外在力量（咨询师）拉一把的自我部分。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过拖延、逃避（不投简历、不面对问题）来暂时缓解焦虑的应对状态。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "逃避/拖延",
+      "domain": "",
+      "description": "通过不行动来避免触发内心的战争，像“麻痹剂”一样处理焦虑。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "trigger:job_search",
+      "type": "trigger",
+      "label": "求职/简历投递",
+      "domain": "",
+      "description": "引发内心战争的关键情境，一旦涉及行动，就会激活图式和冲突。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_am_weak",
+      "type": "automatic_thought",
+      "label": "我很弱小",
+      "domain": "",
+      "description": "“我只是个小毛头，我打不赢对面。”",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对未来不确定性、对犯错的深层恐惧。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "emotion:powerlessness",
+      "type": "emotion",
+      "label": "无力感",
+      "domain": "",
+      "description": "感觉到即便有能力和技巧，也无法行动的挫败感。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "event:job_search_stagnation",
+      "type": "event",
+      "label": "简历准备停滞",
+      "domain": "",
+      "description": "咨询持续一年多，但简历始终没有准备好，行动卡在第一步。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "id": "event:nail_story",
+      "type": "event",
+      "label": "钉子与癌症故事",
+      "domain": "",
+      "description": "Andy看到的视频案例，成为其灾难化思维的现实证据。",
+      "related_dates": [
+        "2026-04-04"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:safety",
+      "target": "schema:vulnerability",
+      "relation_type": "unmet",
+      "relation": "核心需要长期未被满足，导致过度警觉与对灾难的恐惧。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "person:mother",
+      "target": "mode:punitive_parent",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得安全感 → 对方反应(RO)：母亲声音作为守门员限制行动 → 自我反应(RS)：内化为惩罚性父母模式，不敢行动。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "schema:vulnerability",
+      "target": "belief:catastrophic_mistake",
+      "relation_type": "assumes",
+      "relation": "脆弱图式派生出灾难化假设，认为小错误会导致彻底毁灭。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "belief:rejection_worth",
+      "relation_type": "assumes",
+      "relation": "失败图式导致将外部拒绝等同于自我价值否定。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "mode:vulnerable_child",
+      "relation_type": "conflicts_with",
+      "relation": "惩罚性父母的限制与脆弱儿童的渴望行动形成内在战争。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "trigger:job_search",
+      "target": "mode:punitive_parent",
+      "relation_type": "activates",
+      "relation": "求职情境激活了内心的守门员，引发对犯错的恐惧。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:i_am_weak",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式在求职压力下产生自我弱小的念头。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_am_weak",
+      "target": "emotion:powerlessness",
+      "relation_type": "evokes",
+      "relation": "这种念头引发了深刻的无力感。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "通过逃避行为来调节对失败和灾难的焦虑。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "coping:avoidance",
+      "target": "event:job_search_stagnation",
+      "relation_type": "manifested_in",
+      "relation": "逃避模式直接导致了简历准备工作的长期停滞。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "event:nail_story",
+      "target": "schema:vulnerability",
+      "relation_type": "reinforces",
+      "relation": "该事件强化了Andy对“生活失控导致毁灭”的图式。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "belief:internal_weakness",
+      "relation_type": "produces",
+      "relation": "脆弱儿童模式产生自己依然是小孩、无法承载压力的信念。",
+      "evidence_dates": [
+        "2026-04-04"
+      ]
+    }
+  ]
+}

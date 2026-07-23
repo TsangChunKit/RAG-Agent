@@ -1,0 +1,14 @@
+lancedb
+pylance          # 提供 `python -m lance.download jieba` 拉取中文分词词典（一次性，见 README/config.py 说明）
+FlagEmbedding
+google-genai
+openai           # xAI/Grok（OpenAI 兼容端点 api.x.ai/v1）作为 LLM 第二 provider，见 scripts/llm.py
+pandas
+pyarrow
+tantivy          # LanceDB 全文检索索引需要
+python-dotenv
+pyyaml
+tqdm
+streamlit        # M7 网页聊天界面
+watchdog         # Streamlit 事件驱动文件监控（热重载）；不装会回退到轮询监控，刷屏且吃 CPU，见 .streamlit/config.toml
+pyvis            # M7 扩展：核心人物/议题/事件关系图可视化

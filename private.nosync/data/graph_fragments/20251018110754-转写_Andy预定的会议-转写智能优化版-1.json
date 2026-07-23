@@ -1,0 +1,286 @@
+{
+  "source_file": "20251018110754-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-10-18",
+  "nodes": [
+    {
+      "id": "need:secure_attachment",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望一段高浓度、互相回应、能够确定的亲密关系。这是Andy在关系中始终追求的核心情感需要。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "need:control",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "希望通过高投入来控制关系的发展过程和结果，避免不确定性带来的焦虑。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "person:recent_partner",
+      "type": "person",
+      "label": "重庆女生",
+      "domain": "",
+      "description": "近期在酒吧认识并迅速发生关系、随后异地后表现冷淡的女性对象，是本次咨询的主要触发源。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "被遗弃/不稳定图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧对方会因为各种原因（如异地、不够爱）离开自己，导致对关系稳定性的过度担忧。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从/自我牺牲图式",
+      "domain": "Other-Directedness",
+      "description": "为了获得爱与联结，倾向于过度付出、牺牲自己的需求，并试图通过这种方式让对方也进行同等回报。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "schema:entitlement",
+      "type": "schema",
+      "label": "特权/自恋图式",
+      "domain": "Impaired Limits",
+      "description": "表现为对关系有理想化预设，认为投入了就必须有高回报，并倾向于选择容易控制（听话）的对象。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "belief:all_in_to_be_loved",
+      "type": "belief",
+      "label": "必须All-in才配被爱",
+      "domain": "",
+      "description": "认为如果我不全身心投入、不牺牲自己，就无法获得对方的高浓度回应。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "belief:sacrifice_for_control",
+      "type": "belief",
+      "label": "通过牺牲换取控制",
+      "domain": "",
+      "description": "认为通过牺牲自我（高投入）可以诱使对方也投入，从而达成对关系的掌控。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "在对方冷淡时感到焦虑、被抛弃、无助的内在状态。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "mode:controller",
+      "type": "mode",
+      "label": "控制者",
+      "domain": "",
+      "description": "试图通过高频联系、嘘寒问暖来管理对方行为，以缓解自身焦虑的自我部分。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "mode:overcompensator",
+      "type": "mode",
+      "label": "过度补偿者",
+      "domain": "",
+      "description": "表现为“All-in”的高浓度投入模式，以此掩盖内心的空虚与对被抛弃的恐惧。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿/All-in",
+      "domain": "",
+      "description": "在关系初期迅速投入极高能量，进行“下重注”式的恋爱行为。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "trigger:partner_withdrawal",
+      "type": "trigger",
+      "label": "伴侣冷淡/未及时回复",
+      "domain": "",
+      "description": "对方没有回应期待的浓度，或表现出冷淡、异地等行为，触发了Andy的焦虑。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "automatic_thought:partner_abandoning",
+      "type": "automatic_thought",
+      "label": "她可能要抛弃我了",
+      "domain": "",
+      "description": "当对方未及时回复时，一闪而过的念头：她是不是不爱我了？她是不是跟别人在一起了？",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对关系失控和被抛弃的强烈不安感。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "emotion:frustration",
+      "type": "emotion",
+      "label": "挫折感",
+      "domain": "",
+      "description": "因投入与回报不成比例（下注输了）而产生的失落与自我怀疑。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "id": "event:chongqing_girl_event",
+      "type": "event",
+      "label": "重庆女生冷淡事件",
+      "domain": "",
+      "description": "近期发生的具体事件：女生回重庆后冷淡，导致Andy感到焦虑并试图控制。",
+      "related_dates": [
+        "2025-10-18"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:secure_attachment",
+      "target": "schema:abandonment",
+      "relation_type": "unmet",
+      "relation": "对安全联结的渴望长期未满足，导致对被抛弃的极度敏感。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "person:recent_partner",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W)：建立高浓度、受控的亲密关系 → 对方反应(RO)：冷淡、距离拉大 → 自我反应(RS)：焦虑、试图通过牺牲自我来重新控制。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:all_in_to_be_loved",
+      "relation_type": "assumes",
+      "relation": "为了避免被抛弃，衍生出“必须全力投入”的生存规则。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "coping:overcompensation",
+      "relation_type": "derives",
+      "relation": "服从图式驱动了过度补偿行为，通过牺牲自己来满足对方以换取爱。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "trigger:partner_withdrawal",
+      "target": "mode:controller",
+      "relation_type": "activates",
+      "relation": "伴侣的冷淡触发了控制模式，试图通过管理对方来缓解焦虑。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "mode:controller",
+      "target": "automatic_thought:partner_abandoning",
+      "relation_type": "produces",
+      "relation": "控制模式下，会自动产生灾难化思维，推测对方要离开。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "automatic_thought:partner_abandoning",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "灾难化思维直接引发强烈的焦虑情绪。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "为了调节焦虑，Andy选择通过“All-in”的过度补偿行为来试图掌控局面。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "mode:overcompensator",
+      "target": "mode:vulnerable_child",
+      "relation_type": "conflicts_with",
+      "relation": "外在的过度补偿（强活力）与内在的脆弱儿童（恐惧被抛弃）在内心产生冲突。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "event:chongqing_girl_event",
+      "relation_type": "manifested_in",
+      "relation": "该模式在与重庆女生的互动中具体体现为高频联系和试图控制对方。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "belief:sacrifice_for_control",
+      "target": "mode:overcompensator",
+      "relation_type": "produces",
+      "relation": "信念驱动了高投入的自我牺牲模式。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "mode:overcompensator",
+      "target": "emotion:frustration",
+      "relation_type": "evokes",
+      "relation": "当过度补偿失败（对方未回应），产生强烈的挫折感和自恋破碎感。",
+      "evidence_dates": [
+        "2025-10-18"
+      ]
+    }
+  ]
+}

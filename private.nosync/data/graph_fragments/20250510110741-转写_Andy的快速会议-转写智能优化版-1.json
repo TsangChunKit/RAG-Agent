@@ -1,0 +1,228 @@
+{
+  "source_file": "20250510110741-转写_Andy的快速会议-转写智能优化版-1.txt",
+  "session_date": "2025-05-10",
+  "nodes": [
+    {
+      "id": "need:pleasure_and_vitality",
+      "type": "need",
+      "label": "快乐与生命力",
+      "domain": "",
+      "description": "渴望体验生活乐趣、满足童年未被满足的玩乐需求（如拼高达、看电影）。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "来访者节俭生活方式的源头，其生活状态构成了来访者的心理“壳子”。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Other-Directedness",
+      "description": "为了维持与母亲的安全联结，压抑自己的真实需求，过分节俭以符合母亲的生存模式。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "belief:guilt_surpassing_mother",
+      "type": "belief",
+      "label": "超越母亲即有罪",
+      "domain": "",
+      "description": "如果我过得比母亲好、比她更富足，我就会感到内疚，这是对母亲的一种背叛。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "belief:frugality_equals_safety",
+      "type": "belief",
+      "label": "节俭等于安全",
+      "domain": "",
+      "description": "如果我不存钱、不节俭，未来就会陷入生存危机，这是确保安全的核心规则。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "渴望玩乐、好奇、想要被满足的内在小孩，如想拼高达、养蚂蚁。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内化的母亲声音，当来访者花钱或过得太好时，会产生不安和自我批评。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "近期激活的模式，能够区分自我需求与母亲需求，主动尝试走出壳子。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "coping:surrender",
+      "type": "coping",
+      "label": "屈服应对",
+      "domain": "",
+      "description": "长期生活在“壳子”里，通过过度节俭来维持心理安全感。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "trigger:feeling_too_good",
+      "type": "trigger",
+      "label": "过度满足的情境",
+      "domain": "",
+      "description": "当生活体验过于美好或花钱消费时，会触发对未来的担忧和不适感。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "automatic_thought:is_this_right",
+      "type": "automatic_thought",
+      "label": "这样做对吗",
+      "domain": "",
+      "description": "在享受生活时，突然冒出的怀疑念头，担心自己是否在做正确的事。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对未来不确定性的担忧，以及对打破原有生活模式的恐惧。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "id": "event:buying_gundam",
+      "type": "event",
+      "label": "购买高达模型",
+      "domain": "",
+      "description": "近期发生的标志性事件，体现了来访者尝试满足内在需求、走出壳子的行为。",
+      "related_dates": [
+        "2025-05-10"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得母亲的认可与安全感 → 对方反应(RO)：母亲以极度节俭的模式生存，限制消费 → 自我反应(RS)：我压抑需求，形成服从图式。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:frugality_equals_safety",
+      "relation_type": "assumes",
+      "relation": "服从图式派生出“只有节俭才能保证生存安全”的防御性规则。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "coping:surrender",
+      "relation_type": "derives",
+      "relation": "图式驱动来访者以“屈服”的方式生活在最小生存壳子内。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "coping:surrender",
+      "target": "mode:punitive_parent",
+      "relation_type": "reinforces",
+      "relation": "长期的屈服应对强化了内化的惩罚性父母模式，使其对消费感到内疚。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "trigger:feeling_too_good",
+      "target": "mode:punitive_parent",
+      "relation_type": "activates",
+      "relation": "当体验到快乐时，惩罚性父母模式被激活，引发对快乐的抵触。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:is_this_right",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式产生“这样做是否会影响未来生存”的自动思维。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "automatic_thought:is_this_right",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "对正确性的怀疑引发了焦虑情绪。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "event:buying_gundam",
+      "relation_type": "manifested_in",
+      "relation": "健康成人模式通过购买高达模型这一行为，体现了对壳子的突破。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "mode:punitive_parent",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人试图走出壳子，与惩罚性父母模式维持的恐惧之间存在拉扯。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    },
+    {
+      "source": "need:pleasure_and_vitality",
+      "target": "mode:vulnerable_child",
+      "relation_type": "unmet",
+      "relation": "长期未被满足的玩乐需要，形成了脆弱儿童模式对补偿性满足的渴望。",
+      "evidence_dates": [
+        "2025-05-10"
+      ]
+    }
+  ]
+}

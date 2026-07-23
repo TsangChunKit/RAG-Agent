@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(brew --version)",
+      "Bash(pyenv versions *)",
+      "Bash(/Users/andytsang/.local/bin/python3.11 --version)",
+      "Bash(/Users/andytsang/.local/bin/python3.11 -m pip --version)",
+      "WebSearch",
+      "Bash(cat private.nosync/gemini_settings.json)",
+      "Bash(rm -f private.nosync/gemini_settings.json)",
+      "Bash(launchctl bootout *)",
+      "Bash(launchctl bootstrap *)",
+      "Bash(curl -s http://localhost:8501/_stcore/health)",
+      "Read(//private/tmp/**)",
+      "Bash(bash scripts/counseling_agent_ctl.sh status)",
+      "Bash(tailscale ip *)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(tailscale status *)",
+      "Bash(curl -s -m 5 -o /dev/null -w \"%{http_code}\\\\n\" http://100.64.84.111:8501/_stcore/health)",
+      "Bash(open -a Tailscale)",
+      "Bash(tailscale up *)",
+      "Bash(curl -s -m 5 -o /dev/null -w \"tailscale 网页: %{http_code}\\\\n\" http://100.64.84.111:8501/_stcore/health)",
+      "Bash(gh auth *)",
+      "Bash(git config *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "retrieval": {
+    "top_k": 15,
+    "window_expand": 2
+  },
+  "chunking": {
+    "chunk_size": 400,
+    "chunk_overlap": 65
+  },
+  "embedding": {
+    "model": "BAAI/bge-m3",
+    "device": "mps",
+    "batch_size": 256,
+    "use_fp16": true
+  },
+  "fts": {
+    "base_tokenizer": "jieba/default",
+    "ngram_min": 2,
+    "ngram_max": 3
+  },
+  "reranker": {
+    "use_reranker": true,
+    "rerank_top_k": 50,
+    "final_top_k": 15,
+    "model": "BAAI/bge-reranker-v2-m3",
+    "device": "mps",
+    "use_fp16": true
+  }
+}

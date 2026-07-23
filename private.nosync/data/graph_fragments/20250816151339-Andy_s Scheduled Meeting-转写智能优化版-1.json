@@ -1,0 +1,324 @@
+{
+  "source_file": "20250816151339-Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-08-16",
+  "nodes": [
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望获得父母的无条件接纳与认可，但在原生家庭中体验到的是条件化的接纳。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与真实表达",
+      "domain": "",
+      "description": "渴望能够自由表达真实欲望（如健身、跳舞、泡妞），而不需要将其包装成所谓的“正当理由”。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "Andy的核心依附对象，代表了权威与评判的标准，是其“乖孩子”形象的监视者。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或被抛弃，过度压抑自己的需求，配合他人的期望，维持“乖孩子”形象。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己真实的欲望（如为了吸引异性而健身）是羞耻的、不可告人的，害怕被他人识破。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "belief:must_be_good_kid",
+      "type": "belief",
+      "label": "必须做乖孩子",
+      "domain": "",
+      "description": "“如果我不表现得像个乖孩子，我就不配被爱/会被指责。”",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "belief:desires_are_shameful",
+      "type": "belief",
+      "label": "真实欲望是羞耻的",
+      "domain": "",
+      "description": "“我的真实动机（泡妞、为了帅）是不被社会和父母接受的，必须隐藏。”",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感到恐惧、无助，害怕被父母指责或抛弃，渴望被接纳。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "顺从的屈服者",
+      "domain": "",
+      "description": "努力维持“乖孩子”形象，通过合理化来掩盖真实欲望，以迎合外界期待。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内化的父母声音，指责Andy“不务正业”、“功利”、“心思都在女生身上”。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人",
+      "domain": "",
+      "description": "开始意识到自我欺骗，尝试承认并接纳真实欲望，寻求真实的力量感。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "coping:rationalization",
+      "type": "coping",
+      "label": "合理化防御",
+      "domain": "",
+      "description": "为真实欲望编造“冠冕堂皇”的理由（如：为了健康），以减轻羞耻感。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "coping:self_sabotage",
+      "type": "coping",
+      "label": "自我攻击/拖延",
+      "domain": "",
+      "description": "通过拖延行动（如健身）来避免面对欲望被戳穿后的羞耻感或失败的恐惧。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "trigger:pursuing_personal_goals",
+      "type": "trigger",
+      "label": "追求个人目标",
+      "domain": "",
+      "description": "当Andy试图进行跳舞、健身等个人活动时，容易触发图式。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_am_not_a_good_kid",
+      "type": "automatic_thought",
+      "label": "我不是个好孩子",
+      "domain": "",
+      "description": "“如果他们知道我真实的动机，他们会指责我，认为我不是个好孩子。”",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "对自己真实的欲望（如泡妞）感到羞耻，认为是不正当的。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对被指责、被抛弃的恐惧引发的焦虑。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "event:fitness_procrastination",
+      "type": "event",
+      "label": "健身拖延一个月",
+      "domain": "",
+      "description": "因为无法处理真实欲望带来的羞耻感，导致健身计划拖延一个月。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "id": "event:reading_book",
+      "type": "event",
+      "label": "阅读自我攻击书籍",
+      "domain": "",
+      "description": "通过阅读《你就是困住自己的那座山》，意识到自我欺骗，开始行动。",
+      "related_dates": [
+        "2025-08-16"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:parents",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被父母接纳与认可 → 对方反应(RO)：指责、评价、不理解（如：不务正业） → 自我反应(RS)：感到羞耻、恐惧被抛弃、压抑真实欲望",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "need:connection",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "因长期缺乏无条件的联结，被迫通过屈服来维持关系。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:must_be_good_kid",
+      "relation_type": "assumes",
+      "relation": "屈服图式派生出必须维持乖孩子形象的规则。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "belief:must_be_good_kid",
+      "target": "coping:rationalization",
+      "relation_type": "produces",
+      "relation": "为了维持乖孩子形象，产生必须将欲望合理化的防御机制。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "trigger:pursuing_personal_goals",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "activates",
+      "relation": "追求个人目标时，激活了顺从的屈服模式。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "coping:rationalization",
+      "relation_type": "derives",
+      "relation": "顺从模式驱动了合理化行为。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "coping:rationalization",
+      "target": "event:fitness_procrastination",
+      "relation_type": "manifested_in",
+      "relation": "合理化导致了行动的拖延，因为虚假的理由缺乏动力。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "缺陷图式直接引发对自己真实欲望的羞耻感。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "emotion:shame",
+      "target": "coping:rationalization",
+      "relation_type": "regulated_by",
+      "relation": "为了调节羞耻感，使用合理化来掩盖真相。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:i_am_not_a_good_kid",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式产生了“我不够好/不是乖孩子”的自动思维。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_am_not_a_good_kid",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "对被指责的恐惧引发了焦虑。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "event:reading_book",
+      "target": "mode:healthy_adult",
+      "relation_type": "activates",
+      "relation": "阅读书籍帮助激活了健康成人模式，意识到自我欺骗。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "need:autonomy",
+      "relation_type": "derives",
+      "relation": "健康成人模式驱动了对自主权和真实欲望的追求。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "mode:healthy_adult",
+      "relation_type": "conflicts_with",
+      "relation": "顺从模式与健康成人模式在“是否坦诚欲望”上发生冲突。",
+      "evidence_dates": [
+        "2025-08-16"
+      ]
+    }
+  ]
+}

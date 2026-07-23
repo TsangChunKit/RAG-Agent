@@ -1,0 +1,276 @@
+{
+  "source_file": "20251227150835-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-12-27",
+  "nodes": [
+    {
+      "id": "need:自主与掌控感",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "个体希望能够独立做出选择并掌控生活方向的内在需求，在面临拔牙、工作决策时尤为凸显。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "need:安全稳定的联结",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望在关系中获得安全感，无需通过完美表现来换取接纳。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "person:父母",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "童年时期的权威形象，在搬家事件中确立了“听从权威”的规则。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "schema:服从",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "过度顺从权威或外界逻辑，压抑自身的情感需求，以避免可能的负面后果。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "schema:缺陷/羞耻感",
+      "type": "schema",
+      "label": "缺陷/羞耻感图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深信自己是不完美的、无法做出正确决定的，如果不听从权威就会搞砸一切。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "belief:如果我不听从权威，就会搞砸人生",
+      "type": "belief",
+      "label": "服从权威假设",
+      "domain": "",
+      "description": "若不听从父母、专家或AI的建议，自己做出的决定必然会导致失败。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "belief:我的主观感受是不可靠的",
+      "type": "belief",
+      "label": "自我怀疑假设",
+      "domain": "",
+      "description": "认为个人的情感和直觉是幼稚的、错误的，必须用理智覆盖。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "停留在小学六年级阶段的自我部分，感到无力、灰暗、无法做决定。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母/法官",
+      "type": "mode",
+      "label": "惩罚性父母/法官模式",
+      "domain": "",
+      "description": "内化的严苛批评者，当“脆弱儿童”犯错或想按自己意愿行事时，进行自我责备。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "mode:理智化保护者",
+      "type": "mode",
+      "label": "理智化保护者模式",
+      "domain": "",
+      "description": "通过过度分析、寻求客观最优解来保护脆弱儿童免受决策失败的痛苦。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "coping:回避做决定",
+      "type": "coping",
+      "label": "回避做决定",
+      "domain": "",
+      "description": "在面临选择时拖延、寻求他人意见，以逃避承担责任带来的焦虑。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "trigger:面临重大选择",
+      "type": "trigger",
+      "label": "面临重大选择",
+      "domain": "",
+      "description": "如拔牙方案、加薪谈话、恋爱关系定义等需要承担后果的情境。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "automatic_thought:我必须找到最优解",
+      "type": "automatic_thought",
+      "label": "必须最优",
+      "domain": "",
+      "description": "在做决定时闪过的念头，认为只有找到客观最优解才是安全的。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "emotion:焦虑",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "在决策过程中因担心出错而产生的紧张感。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "event:六年级搬家至香港",
+      "type": "event",
+      "label": "六年级搬家",
+      "domain": "",
+      "description": "关键转折事件，被迫放弃原有朋友圈，失去了选择权，被迫扮演“好孩子”。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "id": "event:纠结拔牙方案",
+      "type": "event",
+      "label": "拔牙方案纠结",
+      "domain": "",
+      "description": "近期发生的具体事件，体现了理智与情感的冲突以及对承担后果的恐惧。",
+      "related_dates": [
+        "2025-12-27"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:父母",
+      "target": "schema:服从",
+      "relation_type": "originates",
+      "relation": "渴望(W)：保持自主与掌控 → 对方反应(RO)：父母要求听从权威以保证发展 → 自我反应(RS)：压抑真实感受，形成服从模式以获得安全感",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "schema:服从",
+      "target": "belief:如果我不听从权威，就会搞砸人生",
+      "relation_type": "assumes",
+      "relation": "由于深信需要服从才能生存，派生出必须听从权威以避免失败的规则",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "schema:缺陷/羞耻感",
+      "target": "belief:我的主观感受是不可靠的",
+      "relation_type": "assumes",
+      "relation": "认为自己内在是缺陷的，因此主观感受必然是错误的",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "schema:服从",
+      "target": "mode:理智化保护者",
+      "relation_type": "derives",
+      "relation": "为了执行服从规则，发展出理智化的保护模式来过滤情感",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "trigger:面临重大选择",
+      "target": "mode:理智化保护者",
+      "relation_type": "activates",
+      "relation": "决策情境激活了理智化模式，试图通过逻辑分析来掌控局面",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "mode:理智化保护者",
+      "target": "automatic_thought:我必须找到最优解",
+      "relation_type": "produces",
+      "relation": "该模式下产生的强迫性思维，旨在规避犯错风险",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "automatic_thought:我必须找到最优解",
+      "target": "emotion:焦虑",
+      "relation_type": "evokes",
+      "relation": "对“必须最优”的执着导致了无法达到完美时的焦虑",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "emotion:焦虑",
+      "target": "coping:回避做决定",
+      "relation_type": "regulated_by",
+      "relation": "通过回避决策来暂时缓解焦虑感",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "mode:理智化保护者",
+      "target": "mode:脆弱儿童",
+      "relation_type": "conflicts_with",
+      "relation": "理智化模式压制脆弱儿童的情感表达，导致内在拉扯",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母/法官",
+      "target": "mode:脆弱儿童",
+      "relation_type": "reinforces",
+      "relation": "惩罚性模式对脆弱儿童的责备，强化了其无力感",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "schema:服从",
+      "target": "event:六年级搬家至香港",
+      "relation_type": "manifested_in",
+      "relation": "搬家事件中被迫服从父母安排，无法选择，是该图式的典型体现",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    },
+    {
+      "source": "coping:回避做决定",
+      "target": "event:纠结拔牙方案",
+      "relation_type": "manifested_in",
+      "relation": "在拔牙方案选择中，因害怕承担后果而陷入反复纠结",
+      "evidence_dates": [
+        "2025-12-27"
+      ]
+    }
+  ]
+}

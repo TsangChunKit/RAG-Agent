@@ -1,0 +1,314 @@
+{
+  "source_file": "20250722220234-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-07-22",
+  "nodes": [
+    {
+      "id": "need:自主掌控感",
+      "type": "need",
+      "label": "自主掌控感",
+      "domain": "",
+      "description": "渴望通过健身、创业等行为实现对自己人生的绝对掌控，弥补内心深处的不确定感。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "need:安全稳定的联结",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望被接纳，害怕被彻底抛弃，通过维持暧昧联系来缓解关系断裂带来的恐惧。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "person:前女友",
+      "type": "person",
+      "label": "前女友",
+      "domain": "",
+      "description": "当前的依附对象，关系处于分手边缘但未彻底断联。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "schema:不懈的标准",
+      "type": "schema",
+      "label": "不懈的标准/过度批判",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为必须维持完美身材、高效生活才能获得认可，否则就是失败。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "schema:缺陷感",
+      "type": "schema",
+      "label": "缺陷感",
+      "domain": "Disconnection & Rejection",
+      "description": "深层认为自己变胖、不够优秀即是不被爱的，害怕被嫌弃。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "belief:如果我不优秀就不配被爱",
+      "type": "belief",
+      "label": "如果我不优秀就不配被爱",
+      "domain": "",
+      "description": "将自我价值与外在表现（如腹肌、身材）强绑定，认为不够好则失去吸引力。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "belief:突然断裂是残忍且不可接受的",
+      "type": "belief",
+      "label": "拒绝突然断裂",
+      "domain": "",
+      "description": "认为关系应该渐进式淡出，突然断联是残忍的，必须维持最低限度的慰问。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "在健身失败或休息时，强烈批判自己“太懒”、“对不起自己”。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感到疲惫、寂寞，渴望休息，无法维持高强度自律。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "mode:疏离保护者",
+      "type": "mode",
+      "label": "疏离保护者",
+      "domain": "",
+      "description": "通过拖延、看视频来麻痹对失败的焦虑，或者通过维持暧昧来规避分手的剧痛。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "coping:过度补偿",
+      "type": "coping",
+      "label": "过度补偿(追求完美)",
+      "domain": "",
+      "description": "试图通过高强度的健身计划来证明自己有掌控力，以对抗内心的无力感。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "coping:维持暧昧",
+      "type": "coping",
+      "label": "维持暧昧(回避断裂)",
+      "domain": "",
+      "description": "通过偶尔慰问前女友，避免面对关系彻底断裂的空窗期。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "trigger:空闲时间",
+      "type": "trigger",
+      "label": "空闲时间",
+      "domain": "",
+      "description": "当有大块空闲时，因缺乏结构化生活而感到焦虑，触发对自律的要求。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "trigger:变胖/身材走样",
+      "type": "trigger",
+      "label": "变胖/身材走样",
+      "domain": "",
+      "description": "看到镜子里的自己，触发对缺乏吸引力的担忧。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "automatic_thought:我太懒了",
+      "type": "automatic_thought",
+      "label": "我太懒了",
+      "domain": "",
+      "description": "当健身未达标时，一闪而过的自我否定念头。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "emotion:羞耻感",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "因未能达到理想的健身目标或维持自律而产生的自我厌恶。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "emotion:焦虑",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对未来、对变老、对无法掌控人生的担忧。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "id": "event:分手后保持联系",
+      "type": "event",
+      "label": "分手后保持联系",
+      "domain": "",
+      "description": "虽然决定分手但仍保持偶尔的慰问，避免老死不相往来。",
+      "related_dates": [
+        "2025-07-22"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:前女友",
+      "target": "schema:缺陷感",
+      "relation_type": "originates",
+      "relation": "渴望(W):被无条件接纳 -> 对方反应(RO):冷淡/疏远 -> 自我反应(RS):认为自己不够好/变胖更不被爱",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "need:自主掌控感",
+      "target": "schema:不懈的标准",
+      "relation_type": "unmet",
+      "relation": "长期缺乏掌控感导致形成对完美表现的病态追求",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "schema:不懈的标准",
+      "target": "belief:如果我不优秀就不配被爱",
+      "relation_type": "assumes",
+      "relation": "图式派生出条件化假设",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "belief:如果我不优秀就不配被爱",
+      "target": "automatic_thought:我太懒了",
+      "relation_type": "produces",
+      "relation": "信念在健身未达标时转化为自动思维",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "automatic_thought:我太懒了",
+      "target": "emotion:羞耻感",
+      "relation_type": "evokes",
+      "relation": "思维引发自我厌恶情绪",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "emotion:羞耻感",
+      "target": "coping:过度补偿",
+      "relation_type": "regulated_by",
+      "relation": "试图通过更激进的健身计划来调节羞耻感",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "trigger:空闲时间",
+      "target": "mode:脆弱儿童",
+      "relation_type": "activates",
+      "relation": "空闲时间激活了疲惫、想休息的脆弱自我部分",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "automatic_thought:我太懒了",
+      "relation_type": "produces",
+      "relation": "惩罚性模式直接产生自我攻击思维",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "mode:脆弱儿童",
+      "relation_type": "conflicts_with",
+      "relation": "两者在“健身/自律”与“休息/放松”之间产生强烈拉扯",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "person:前女友",
+      "target": "coping:维持暧昧",
+      "relation_type": "triggers",
+      "relation": "渴望(W):避免孤独 -> 对方反应(RO):回应慰问 -> 自我反应(RS):维持暧昧以规避断裂",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "schema:不懈的标准",
+      "target": "coping:过度补偿",
+      "relation_type": "derives",
+      "relation": "图式驱动了通过健身来证明价值的应对方式",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "trigger:变胖/身材走样",
+      "target": "schema:缺陷感",
+      "relation_type": "activates",
+      "relation": "外貌变化触发了关于缺陷感的深层图式",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "coping:维持暧昧",
+      "target": "event:分手后保持联系",
+      "relation_type": "manifested_in",
+      "relation": "该应对方式在具体的慰问行为中体现",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    },
+    {
+      "source": "mode:疏离保护者",
+      "target": "coping:维持暧昧",
+      "relation_type": "derives",
+      "relation": "保护者模式通过暧昧来保护自己免受突然断裂的伤害",
+      "evidence_dates": [
+        "2025-07-22"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "source_file": "20260131150006-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2026-01-31",
+  "nodes": [
+    {
+      "id": "need:被认可",
+      "type": "need",
+      "label": "被认可与成就感",
+      "domain": "",
+      "description": "渴望在职场中获得肯定与回报，这是Andy核心的情感需要。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "person:上司",
+      "type": "person",
+      "label": "上司/管理层",
+      "domain": "",
+      "description": "Andy职场中的依附对象，表现出批评或不信任的管理风格。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "schema:失败",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "深信自己在成就上不如人，努力也无法获得应有的回报。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "schema:疏离与拒绝",
+      "type": "schema",
+      "label": "疏离与拒绝图式",
+      "domain": "Disconnection & Rejection",
+      "description": "感到自己不被上司看重，处于被看不起的境地。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "belief:痛苦必须被解决",
+      "type": "belief",
+      "label": "痛苦必须被解决或规避",
+      "domain": "",
+      "description": "认为第一层痛苦（如失落）是不可接受的，必须通过寻找原因或外在手段来消除它。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "belief:向外归因是错误",
+      "type": "belief",
+      "label": "向外归因是错误的",
+      "domain": "",
+      "description": "受成功学或过往认知影响，认为找借口或抱怨外界是不对的，从而强迫自己进行内归因。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "在工作受挫时，感到受伤、苦闷、疲惫的自我部分。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "当结果不如意时，对自己进行自我攻击和批判的自我部分。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "mode:疏离保护者",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过降低投入度、理智化分析来规避痛苦的自我部分。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "coping:理智化",
+      "type": "coping",
+      "label": "理智化/智性化",
+      "domain": "",
+      "description": "使用AI、佛法、心理学理论来分析痛苦，试图以此解决问题，实质是逃避直接的情感体验。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "coping:降低投入",
+      "type": "coping",
+      "label": "降低投入/规避",
+      "domain": "",
+      "description": "通过迟到、减少工作精力来保护自己免受更多伤害。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "trigger:工作未获预期回报",
+      "type": "trigger",
+      "label": "工作未获预期回报",
+      "domain": "",
+      "description": "加薪请求被拒绝或推迟，触发了Andy的挫败感。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "automatic_thought:是不是我不够好",
+      "type": "automatic_thought",
+      "label": "是不是我不够好",
+      "domain": "",
+      "description": "当遇到挫折时，自动冒出的自我怀疑念头。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "emotion:苦闷",
+      "type": "emotion",
+      "label": "苦闷/疲惫",
+      "domain": "",
+      "description": "面对挫折时感到力不从心、灰心。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "id": "event:加薪升职申请被推迟",
+      "type": "event",
+      "label": "加薪升职申请被推迟",
+      "domain": "",
+      "description": "本次咨询中提到的关键事实，引发了后续的一系列情绪与防御。",
+      "related_dates": [
+        "2026-01-31"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:被认可",
+      "target": "schema:失败",
+      "relation_type": "unmet",
+      "relation": "长期渴望被认可但未得到满足，强化了失败图式。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "person:上司",
+      "target": "schema:疏离与拒绝",
+      "relation_type": "originates",
+      "relation": "渴望(W)：得到上司认可；对方反应(RO)：冷淡/不加薪；自我反应(RS)：感到被看不起/自我怀疑。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "schema:失败",
+      "target": "belief:痛苦必须被解决",
+      "relation_type": "assumes",
+      "relation": "因为深信自己不够好，所以必须通过解决痛苦来证明自己。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "schema:失败",
+      "target": "mode:惩罚性父母",
+      "relation_type": "derives",
+      "relation": "失败图式驱动了惩罚性父母模式的产生，导致自我攻击。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "trigger:工作未获预期回报",
+      "target": "mode:脆弱儿童",
+      "relation_type": "activates",
+      "relation": "触发了脆弱儿童的失落与受伤。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "mode:脆弱儿童",
+      "target": "emotion:苦闷",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式直接引发了苦闷与疲惫的情绪。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "emotion:苦闷",
+      "target": "coping:理智化",
+      "relation_type": "regulated_by",
+      "relation": "通过理智化来调节苦闷，试图将其转化为可解决的问题。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "automatic_thought:是不是我不够好",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式直接导致了自我怀疑的自动思维。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "coping:降低投入",
+      "target": "coping:理智化",
+      "relation_type": "reinforces",
+      "relation": "两者共同构成了疏离保护者的防御体系。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "coping:降低投入",
+      "target": "mode:脆弱儿童",
+      "relation_type": "conflicts_with",
+      "relation": "降低投入虽保护了脆弱儿童，但因责任感冲突加剧了内心的折磨。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "schema:失败",
+      "target": "event:加薪升职申请被推迟",
+      "relation_type": "manifested_in",
+      "relation": "失败图式在这一事件中得到了具体的体现。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    },
+    {
+      "source": "belief:向外归因是错误",
+      "target": "mode:惩罚性父母",
+      "relation_type": "reinforces",
+      "relation": "该信念迫使Andy放弃外归因，从而强化了对自我的攻击。",
+      "evidence_dates": [
+        "2026-01-31"
+      ]
+    }
+  ]
+}

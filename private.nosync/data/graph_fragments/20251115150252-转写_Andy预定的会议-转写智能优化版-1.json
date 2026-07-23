@@ -1,0 +1,315 @@
+{
+  "source_file": "20251115150252-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-11-15",
+  "nodes": [
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全与联结",
+      "domain": "",
+      "description": "渴望在关系中获得稳定的安全感，核心在于害怕被抛弃。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "need:acceptance",
+      "type": "need",
+      "label": "被无条件接纳",
+      "domain": "",
+      "description": "渴望成为自己并被对方接纳，而非通过扮演特定角色来换取关注。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "person:partners",
+      "type": "person",
+      "label": "恋爱对象",
+      "domain": "",
+      "description": "Andy在关系中试图通过控制和牺牲来留住的对象。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "被抛弃/不稳定",
+      "domain": "Disconnection & Rejection",
+      "description": "深层次被抛弃的痛，导致对关系稳定性的极度焦虑。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "臣服/自我牺牲",
+      "domain": "Other-Directedness",
+      "description": "为了维持关系，过度满足对方欲望，扮演对方需要的人。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻",
+      "domain": "Disconnection & Rejection",
+      "description": "潜意识中认为自己是“巨婴”，不完美，需要通过控制来掩盖。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "belief:control_for_safety",
+      "type": "belief",
+      "label": "控制即安全",
+      "domain": "",
+      "description": "“如果我控制住对方，我就不会被抛弃。”",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "belief:perform_to_be_loved",
+      "type": "belief",
+      "label": "表演换取爱",
+      "domain": "",
+      "description": "“我必须扮演他们需要的人，或者通过自我牺牲，才能锁住他们。”",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "belief:test_loyalty",
+      "type": "belief",
+      "label": "测试忠诚",
+      "domain": "",
+      "description": "“我必须制造不安全感或攻击他们，通过他们不离开来证明忠诚。”",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "mode:controlling_aggressor",
+      "type": "mode",
+      "label": "控制型攻击者",
+      "domain": "",
+      "description": "使用锁链、鞭子等手段控制对方，甚至通过攻击制造不安全感。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "内心深处害怕被抛弃、感到痛苦和不快乐的状态。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "mode:giant_baby",
+      "type": "mode",
+      "label": "巨婴",
+      "domain": "",
+      "description": "Andy自我觉察到的未成熟、依赖且需要被照顾的自我部分。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "通过强力控制、制造不安全感来防御被抛弃的恐惧。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "trigger:uncontrollability",
+      "type": "trigger",
+      "label": "情境不可控",
+      "domain": "",
+      "description": "当关系中出现无法预知、无法掌控的因素时。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "automatic_thought:must_control",
+      "type": "automatic_thought",
+      "label": "必须控制",
+      "domain": "",
+      "description": "“我必须有很多备选，必须锁住他们，不然我会失去一切。”",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "emotion:fear",
+      "type": "emotion",
+      "label": "恐惧",
+      "domain": "",
+      "description": "对失去关系、失控的深度恐惧。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "emotion:unhappiness",
+      "type": "emotion",
+      "label": "不快乐",
+      "domain": "",
+      "description": "在扮演控制者和被控制关系中的痛苦感。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "event:ai_image_generation",
+      "type": "event",
+      "label": "AI生成的心理画像",
+      "domain": "",
+      "description": "Andy利用AI生成的“巨婴锁链鞭子”图，象征其控制与攻击模式。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "id": "event:past_breakups",
+      "type": "event",
+      "label": "过去关系的结束",
+      "domain": "",
+      "description": "Andy提到过去的每一段关系都走向结束，与控制模式有关。",
+      "related_dates": [
+        "2025-11-15"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:safety",
+      "target": "schema:abandonment",
+      "relation_type": "unmet",
+      "relation": "核心安全需要长期未被满足，导致了被抛弃图式的形成。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "person:partners",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得安全联结 → 对方反应(RO)：表现出独立或不可控 → 自我反应(RS)：被抛弃图式被激活。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:control_for_safety",
+      "relation_type": "assumes",
+      "relation": "被抛弃图式派生出“只有控制才能安全”的假设。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:perform_to_be_loved",
+      "relation_type": "assumes",
+      "relation": "臣服图式导致认为必须通过表演和牺牲来换取爱。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "coping:overcompensation",
+      "relation_type": "derives",
+      "relation": "被抛弃图式驱动了过度补偿的应对方式。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "trigger:uncontrollability",
+      "target": "mode:controlling_aggressor",
+      "relation_type": "activates",
+      "relation": "面对不可控情境时，控制型攻击者模式被激活。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "belief:control_for_safety",
+      "target": "automatic_thought:must_control",
+      "relation_type": "produces",
+      "relation": "信念导致产生必须控制的自动思维。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "automatic_thought:must_control",
+      "target": "emotion:fear",
+      "relation_type": "evokes",
+      "relation": "对失控的思维引发了恐惧情绪。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "emotion:fear",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "通过控制和攻击来调节被抛弃的恐惧。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "event:ai_image_generation",
+      "relation_type": "manifested_in",
+      "relation": "过度补偿的模式在AI生成的锁链/鞭子画像中得到具象化体现。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "mode:controlling_aggressor",
+      "target": "mode:vulnerable_child",
+      "relation_type": "conflicts_with",
+      "relation": "控制行为掩盖了脆弱儿童的痛苦，两者在内心相互拉扯。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "event:past_breakups",
+      "relation_type": "manifested_in",
+      "relation": "过度补偿的控制行为导致了过去关系的结束。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "belief:test_loyalty",
+      "target": "mode:controlling_aggressor",
+      "relation_type": "reinforces",
+      "relation": "测试忠诚的信念强化了攻击性的控制模式。",
+      "evidence_dates": [
+        "2025-11-15"
+      ]
+    }
+  ]
+}

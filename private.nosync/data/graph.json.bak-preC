@@ -1,0 +1,824 @@
+{
+  "nodes": [
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "被抛弃图式",
+      "domain": "Disconnection & Rejection",
+      "description": "源于童年母亲离开的经历，表现为对关系断裂、失控、被留下独自生存的深层恐惧。",
+      "related_dates": [
+        "2025-05-13",
+        "2025-07-15",
+        "2025-07-19",
+        "2025-10-18",
+        "2025-10-25",
+        "2025-11-08",
+        "2025-11-15",
+        "2025-11-22"
+      ],
+      "degree_centrality": 0.0938,
+      "betweenness_centrality": 0.0806
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷羞耻感",
+      "domain": "Disconnection & Rejection",
+      "description": "表现为强烈的冒牌者综合征与不配得感，怀疑自己不配得到高薪、完美的伴侣或好的生活。",
+      "related_dates": [
+        "2025-05-24",
+        "2025-06-01",
+        "2025-06-07",
+        "2025-06-17",
+        "2025-09-06",
+        "2025-09-20",
+        "2025-09-28",
+        "2025-12-20",
+        "2026-01-11",
+        "2026-07-04"
+      ],
+      "degree_centrality": 0.125,
+      "betweenness_centrality": 0.1129
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从/讨好图式",
+      "domain": "Other-Directedness",
+      "description": "为了规避冲突、惩罚或被抛弃，习惯性压抑自身真实需求，无条件顺从他人期望。",
+      "related_dates": [
+        "2025-04-26",
+        "2025-05-20",
+        "2025-05-24",
+        "2025-06-01",
+        "2025-06-07",
+        "2025-06-17",
+        "2025-06-24",
+        "2025-07-05",
+        "2025-07-09",
+        "2025-07-15",
+        "2025-08-24",
+        "2025-09-28",
+        "2025-12-20"
+      ],
+      "degree_centrality": 0.0938,
+      "betweenness_centrality": 0.1149
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "不懈标准",
+      "domain": "Overvigilance & Inhibition",
+      "description": "表现为强烈的完美主义与结果导向，常常为了等待完美时机而过度延迟满足，进行自我苛责。",
+      "related_dates": [
+        "2025-05-27",
+        "2025-06-01",
+        "2025-06-21",
+        "2025-09-20",
+        "2025-12-27",
+        "2026-03-07",
+        "2026-06-05",
+        "2026-06-27"
+      ],
+      "degree_centrality": 0.0625,
+      "betweenness_centrality": 0.0665
+    },
+    {
+      "id": "schema:vulnerability_to_harm",
+      "type": "schema",
+      "label": "脆弱性图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "内化了母亲的生存焦虑，将失业、犯错、做错决定等同于彻底毁灭和走投无路。",
+      "related_dates": [
+        "2025-05-13",
+        "2025-06-14",
+        "2025-07-19",
+        "2025-12-13",
+        "2025-12-27",
+        "2026-01-31",
+        "2026-03-29",
+        "2026-04-04",
+        "2026-07-04"
+      ],
+      "degree_centrality": 0.0625,
+      "betweenness_centrality": 0.1008
+    },
+    {
+      "id": "coping:pleasing_avoidance",
+      "type": "coping",
+      "label": "讨好与冲突回避",
+      "domain": "",
+      "description": "在人际、亲密关系中通过无条件礼让、隐忍来维持好人形象，避免直接冲突。",
+      "related_dates": [
+        "2025-05-20",
+        "2025-05-24",
+        "2025-06-01",
+        "2025-06-24",
+        "2025-07-09",
+        "2025-07-15",
+        "2025-07-19",
+        "2025-07-22",
+        "2025-08-24",
+        "2025-08-30",
+        "2025-09-28",
+        "2025-12-20"
+      ],
+      "degree_centrality": 0.2188,
+      "betweenness_centrality": 0.1804
+    },
+    {
+      "id": "coping:passive_aggression",
+      "type": "coping",
+      "label": "被动攻击与拖延",
+      "domain": "",
+      "description": "在无法直接拒绝或感到被规则控制时，通过迟到、拖延、降低投入等方式进行消极反抗。",
+      "related_dates": [
+        "2025-05-20",
+        "2025-05-24",
+        "2025-06-21",
+        "2025-12-13",
+        "2026-01-31",
+        "2026-03-07"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "coping:intellectualization",
+      "type": "coping",
+      "label": "理智化防御",
+      "domain": "",
+      "description": "倾向于通过AI分析、佛学理论、理性规则来解释痛苦和无常，以此逃避直接体验负面情绪。",
+      "related_dates": [
+        "2025-05-10",
+        "2025-06-21",
+        "2025-07-05",
+        "2025-09-28",
+        "2025-10-05",
+        "2025-10-11",
+        "2025-10-18",
+        "2025-11-08",
+        "2025-11-15",
+        "2025-11-22",
+        "2026-01-17",
+        "2026-01-24",
+        "2026-01-31",
+        "2026-02-07",
+        "2026-03-07",
+        "2026-03-29"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "coping:hypercontrol",
+      "type": "coping",
+      "label": "过度控制与占有",
+      "domain": "",
+      "description": "通过高浓度投入、多线接触异性、测试忠诚度等手段，试图牢牢掌控关系走向以防御被抛弃感。",
+      "related_dates": [
+        "2025-10-18",
+        "2025-10-25",
+        "2025-11-08",
+        "2025-11-15"
+      ],
+      "degree_centrality": 0.1875,
+      "betweenness_centrality": 0.1855
+    },
+    {
+      "id": "coping:over_delayed_gratification",
+      "type": "coping",
+      "label": "过度延迟满足",
+      "domain": "",
+      "description": "为了等待所谓的完美条件而不断压抑当下的真实消费与享乐需求，导致错失时机。",
+      "related_dates": [
+        "2025-04-26",
+        "2025-05-10",
+        "2025-05-27",
+        "2026-01-11",
+        "2026-03-07",
+        "2026-06-13",
+        "2026-06-21",
+        "2026-06-27",
+        "2026-07-04"
+      ],
+      "degree_centrality": 0.0938,
+      "betweenness_centrality": 0.0867
+    },
+    {
+      "id": "coping:avoidance_of_action",
+      "type": "coping",
+      "label": "行动回避",
+      "domain": "",
+      "description": "因极度害怕犯错、失败及随之而来的自我攻击，而在求职、做决策时陷入拖延不作为的状态。",
+      "related_dates": [
+        "2025-12-27",
+        "2026-01-31",
+        "2026-04-04",
+        "2026-04-11",
+        "2026-04-25",
+        "2026-05-30"
+      ],
+      "degree_centrality": 0.125,
+      "betweenness_centrality": 0.127
+    },
+    {
+      "id": "coping:over_responsibility",
+      "type": "coping",
+      "label": "过度承担责任",
+      "domain": "",
+      "description": "将他人的负面情绪、关系破裂、甚至商家的生死等宏观结果归咎于自己，产生非理性内疚。",
+      "related_dates": [
+        "2025-04-26",
+        "2025-06-24",
+        "2025-07-05",
+        "2025-09-28",
+        "2025-10-05",
+        "2025-12-13",
+        "2025-12-20"
+      ],
+      "degree_centrality": 0.125,
+      "betweenness_centrality": 0.0655
+    },
+    {
+      "id": "coping:social_comparison",
+      "type": "coping",
+      "label": "社会比较与客体化",
+      "domain": "",
+      "description": "将自我价值与薪资、他人认可过度绑定，甚至将伴侣视为证明自身价值的‘花瓶’工具。",
+      "related_dates": [
+        "2025-05-27",
+        "2025-06-01",
+        "2025-08-10",
+        "2025-10-25",
+        "2025-11-02",
+        "2026-05-16",
+        "2026-05-30",
+        "2026-06-05",
+        "2026-07-04"
+      ],
+      "degree_centrality": 0.0625,
+      "betweenness_centrality": 0.0383
+    },
+    {
+      "id": "event:icecream_incident",
+      "type": "event",
+      "label": "母亲拒绝雪糕事件",
+      "domain": "",
+      "description": "母亲因嫌贵拒绝了来访者买的折扣雪糕，触发来访者的消费负罪感与非理性内疚。",
+      "related_dates": [
+        "2025-04-26"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:ants_hobby",
+      "type": "event",
+      "label": "开始养蚂蚁",
+      "domain": "",
+      "description": "来访者购买蚁后开始养蚂蚁，体验到了由内部动机驱动的、忘我的心流状态。",
+      "related_dates": [
+        "2025-05-10",
+        "2025-05-13",
+        "2025-05-27",
+        "2025-06-17"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:driving_test_fail",
+      "type": "event",
+      "label": "驾考因过度礼让不及格",
+      "domain": "",
+      "description": "来访者因过度礼让和车速过慢导致路考不及格，反映其讨好与缺乏攻击性的模式。",
+      "related_dates": [
+        "2025-05-20",
+        "2025-05-24"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:childhood_chopsticks",
+      "type": "event",
+      "label": "童年饭桌筷子事件",
+      "domain": "",
+      "description": "回忆小时候在饭桌上因拿筷子方式被父亲当众责骂惩罚，随后以不吃饭抗议。",
+      "related_dates": [
+        "2025-05-24"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:price_negotiation",
+      "type": "event",
+      "label": "咨询费还价至180元",
+      "domain": "",
+      "description": "在咨询师提出涨价后，来访者还价至180元，以此作为防御机制和争取对等地位的手段。",
+      "related_dates": [
+        "2025-06-01",
+        "2025-06-24",
+        "2025-08-24"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:ex_girlfriend_split",
+      "type": "event",
+      "label": "与前女友因金钱分工争吵分手",
+      "domain": "",
+      "description": "因承担恋爱中90%开销及建立共同约会基金被拒，双方发生争执并最终分手。",
+      "related_dates": [
+        "2025-07-09",
+        "2025-07-13",
+        "2025-07-15"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:bali_trip",
+      "type": "event",
+      "label": "独自前往巴厘岛旅行",
+      "domain": "",
+      "description": "分手后独自前往巴厘岛旅行，回港后通过高频社交来填满空闲时间以防孤独。",
+      "related_dates": [
+        "2025-08-10"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:bdsm_experience",
+      "type": "event",
+      "label": "体验BDSM扮演支配者",
+      "domain": "",
+      "description": "体验BDSM活动并扮演支配者，试图通过外在力量感来代偿现实中丧失的自主权。",
+      "related_dates": [
+        "2025-08-24"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:chongqing_girl_rejection",
+      "type": "event",
+      "label": "重庆女生快速发生关系后变冷淡",
+      "domain": "",
+      "description": "与酒吧认识的重庆女生快速发生关系，对方回渝后态度冷淡，触发来访者强烈焦虑与愤怒。",
+      "related_dates": [
+        "2025-10-18",
+        "2025-10-25"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:mourning_cat",
+      "type": "event",
+      "label": "与母亲共同悼念去世小猫",
+      "domain": "",
+      "description": "向母亲分享心理学笔记并共同悼念去世小猫，母子关系得到深层情感交流与缓和。",
+      "related_dates": [
+        "2025-11-08"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:salary_negotiation",
+      "type": "event",
+      "label": "向主管提出涨薪和调整职称",
+      "domain": "",
+      "description": "在两位同事辞职后，来访者向主管表达了涨薪需求，虽未获得即时结果但迈出了主动的一步。",
+      "related_dates": [
+        "2026-01-11",
+        "2026-01-31"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:malaysia_trip",
+      "type": "event",
+      "label": "马来西亚即兴旅行看到萤火虫",
+      "domain": "",
+      "description": "即兴前往马来西亚旅行，体验到轻松和开心，开始松动内在的‘守门员’角色。",
+      "related_dates": [
+        "2026-03-29"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:first_interview",
+      "type": "event",
+      "label": "参加两年半以来的第一次面试",
+      "domain": "",
+      "description": "参加了久违的面试，虽感焦虑失落，但在咨询师引导下尝试将价值感与结果解绑。",
+      "related_dates": [
+        "2026-05-30",
+        "2026-06-05"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "event:buying_pc_hesitation",
+      "type": "event",
+      "label": "纠结购买高配置电脑",
+      "domain": "",
+      "description": "工作五年存了钱，但因价格不合适及对未来财务安全的担忧，一直纠结没有购买心仪电脑。",
+      "related_dates": [
+        "2026-06-13",
+        "2026-06-21",
+        "2026-06-27",
+        "2026-07-04"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "极度节俭，常向来访者传递生存焦虑与失业恐慌，使来访者将自我满足视为背叛。",
+      "related_dates": [
+        "2025-04-26",
+        "2025-05-13",
+        "2025-07-19",
+        "2025-09-28",
+        "2025-10-05",
+        "2025-11-08",
+        "2026-03-29"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "person:father",
+      "type": "person",
+      "label": "父亲",
+      "domain": "",
+      "description": "童年期因赌博和暴怒给来访者留下破坏性攻击的阴影，导致来访者对自身力量感到恐惧。",
+      "related_dates": [
+        "2025-05-24",
+        "2025-06-24",
+        "2025-10-05"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "person:ex_girlfriend",
+      "type": "person",
+      "label": "前女友",
+      "domain": "",
+      "description": "恋爱中高额索取且拒绝比例共担，分手后重新加回好友，触发来访者回避坏人角色的模式。",
+      "related_dates": [
+        "2025-04-26",
+        "2025-05-10",
+        "2025-07-09",
+        "2025-07-13",
+        "2025-07-15",
+        "2025-08-10",
+        "2025-08-24",
+        "2025-09-20"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "person:new_girlfriend",
+      "type": "person",
+      "label": "深圳/现女友",
+      "domain": "",
+      "description": "新交往的女友，两人曾因互看手机发生争吵，后和解。来访者常去深圳看望她。",
+      "related_dates": [
+        "2026-01-17",
+        "2026-05-30",
+        "2026-06-21"
+      ],
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "person:therapist",
+      "type": "person",
+      "label": "咨询师",
+      "domain": "",
+      "description": "长期咨询的建立者，被来访者视为‘战友’。在费用调整和出国变动中，成为来访者探索边界的对象。",
+      "related_dates": [
+        "2025-04-26",
+        "2025-06-01",
+        "2025-06-24",
+        "2025-07-15",
+        "2025-07-19",
+        "2025-08-24",
+        "2025-10-11",
+        "2026-06-05"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "person:chongqing_girl",
+      "type": "person",
+      "label": "重庆女生",
+      "domain": "",
+      "description": "在酒吧结识并快速发生关系的异地女生，冷淡的态度触发了来访者的不安全感与控制欲。",
+      "related_dates": [
+        "2025-10-18",
+        "2025-10-25"
+      ],
+      "degree_centrality": 0.0312,
+      "betweenness_centrality": 0.0
+    }
+  ],
+  "edges": [
+    {
+      "source": "schema:abandonment",
+      "target": "coping:hypercontrol",
+      "relation_type": "derives",
+      "relation": "因深层被抛弃恐惧，衍生出在关系中通过下重注、测试忠诚等手段进行过度控制的应对模式。",
+      "evidence_dates": [
+        "2025-10-18",
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "coping:social_comparison",
+      "relation_type": "derives",
+      "relation": "因内在的不配得感和冒牌者综合征，倾向于通过外界薪资、他人认可和完美的伴侣来证明自我价值。",
+      "evidence_dates": [
+        "2025-06-01",
+        "2025-09-28",
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "coping:pleasing_avoidance",
+      "relation_type": "derives",
+      "relation": "服从图式直接驱动了在人际和亲密关系中无条件礼让、隐忍和避免冲突的讨好行为。",
+      "evidence_dates": [
+        "2025-05-20",
+        "2025-05-24",
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "coping:over_delayed_gratification",
+      "relation_type": "derives",
+      "relation": "完美主义和不懈标准导致来访者常常为了等待‘完美时机’而过度压抑和延迟当下的满足。",
+      "evidence_dates": [
+        "2025-05-27",
+        "2026-03-07",
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "schema:vulnerability_to_harm",
+      "target": "coping:avoidance_of_action",
+      "relation_type": "derives",
+      "relation": "对犯错和失败后‘走投无路’的极度恐惧，导致来访者在求职和决策时采取不作为的回避态度。",
+      "evidence_dates": [
+        "2026-01-31",
+        "2026-04-04",
+        "2026-04-25"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "coping:over_responsibility",
+      "relation_type": "derives",
+      "relation": "为了顺从和取悦他人，习惯性过度承担他人的情绪责任，将关系的破裂完全归咎于自己。",
+      "evidence_dates": [
+        "2025-06-24",
+        "2025-07-05",
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "schema:defectiveness",
+      "relation_type": "co_occurs",
+      "relation": "害怕被抛弃的恐惧与‘我不配得到爱’的缺陷感相互交织，在亲密关系受挫时同时被激活。",
+      "evidence_dates": [
+        "2025-06-17",
+        "2025-10-18"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "schema:vulnerability_to_harm",
+      "relation_type": "co_occurs",
+      "relation": "为了生存和规避母亲传递的匮乏危机，必须服从家庭的省钱规则，两者相互强化。",
+      "evidence_dates": [
+        "2025-05-13",
+        "2025-12-13"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "schema:defectiveness",
+      "relation_type": "co_occurs",
+      "relation": "通过追求极度完美的伴侣和高薪标准，来防御和掩盖内心深处的冒牌者综合征与低自尊。",
+      "evidence_dates": [
+        "2025-06-01",
+        "2025-09-20",
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "coping:pleasing_avoidance",
+      "target": "coping:passive_aggression",
+      "relation_type": "reinforces",
+      "relation": "当直接的讨好和隐忍无法解决问题时，积压的怨气转化为迟到、拖延等被动攻击行为。",
+      "evidence_dates": [
+        "2025-05-20",
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "coping:intellectualization",
+      "target": "coping:avoidance_of_action",
+      "relation_type": "reinforces",
+      "relation": "过度依赖AI分析和佛学‘无常’概念进行理智化，反而为不采取求职行动和逃避决策提供了合理借口。",
+      "evidence_dates": [
+        "2026-01-24",
+        "2026-01-31",
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "coping:over_responsibility",
+      "target": "coping:pleasing_avoidance",
+      "relation_type": "reinforces",
+      "relation": "对他人负面情绪的过度负责，加剧了在人际交往中通过委曲求全来避免冲突的讨好倾向。",
+      "evidence_dates": [
+        "2025-06-24",
+        "2025-07-05"
+      ]
+    },
+    {
+      "source": "coping:hypercontrol",
+      "target": "coping:social_comparison",
+      "relation_type": "reinforces",
+      "relation": "在亲密关系中追求支配与控制，强化了将伴侣视作证明自身价值的‘猎物’或‘花瓶’的客体化倾向。",
+      "evidence_dates": [
+        "2025-10-25",
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "coping:over_delayed_gratification",
+      "target": "coping:avoidance_of_action",
+      "relation_type": "reinforces",
+      "relation": "在消费上习惯性等待完美时机，这种拖延模式泛化到了职业转换中，导致长期无法投递简历。",
+      "evidence_dates": [
+        "2025-05-27",
+        "2026-03-07",
+        "2026-04-04"
+      ]
+    },
+    {
+      "source": "coping:pleasing_avoidance",
+      "target": "coping:hypercontrol",
+      "relation_type": "conflicts_with",
+      "relation": "在关系中习惯性让渡权利的‘讨好’，与因害怕失控而产生的‘支配/控制欲’在内心激烈拉扯。",
+      "evidence_dates": [
+        "2025-08-24",
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "coping:intellectualization",
+      "target": "coping:avoidance_of_action",
+      "relation_type": "conflicts_with",
+      "relation": "理智上通过佛法说服自己‘不执着结果’，但感性上对行动失败的极度焦虑仍导致其卡在原地。",
+      "evidence_dates": [
+        "2026-01-31",
+        "2026-04-11"
+      ]
+    },
+    {
+      "source": "coping:over_responsibility",
+      "target": "coping:hypercontrol",
+      "relation_type": "conflicts_with",
+      "relation": "‘自我牺牲式付出’（过度承担责任）与‘通过下重注来索取和控制对方’（过度控制）之间的动机冲突。",
+      "evidence_dates": [
+        "2025-10-18",
+        "2025-11-15"
+      ]
+    },
+    {
+      "source": "coping:over_responsibility",
+      "target": "event:icecream_incident",
+      "relation_type": "manifested_in",
+      "relation": "在母亲因嫌贵拒绝雪糕时，产生强烈的非理性内疚，认为自己过得比母亲好是一种伤害。",
+      "evidence_dates": [
+        "2025-04-26"
+      ]
+    },
+    {
+      "source": "coping:pleasing_avoidance",
+      "target": "event:driving_test_fail",
+      "relation_type": "manifested_in",
+      "relation": "在驾考中因过度礼让和车速过慢导致不及格，体现了讨好型人格对边界和规则的妥协。",
+      "evidence_dates": [
+        "2025-05-20",
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "coping:hypercontrol",
+      "target": "event:bdsm_experience",
+      "relation_type": "manifested_in",
+      "relation": "在BDSM活动中扮演支配者并感到乐趣，以此补偿现实生活中丧失的自主权与掌控感。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "coping:over_delayed_gratification",
+      "target": "event:buying_pc_hesitation",
+      "relation_type": "manifested_in",
+      "relation": "工作五年存了钱却因价格和对未来失业的担忧，在买电脑的决策上长期纠结观望。",
+      "evidence_dates": [
+        "2026-06-13",
+        "2026-06-21",
+        "2026-07-04"
+      ]
+    },
+    {
+      "source": "coping:avoidance_of_action",
+      "target": "event:first_interview",
+      "relation_type": "manifested_in",
+      "relation": "换工作想法拖延一年多，在经历极大的行动回避后，终于参加了两年半以来的第一次面试。",
+      "evidence_dates": [
+        "2026-04-04",
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "person:mother",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W): 获得无条件的母爱与情绪安全感 -> 对方反应(RO): 3岁时曾离开来访者，且日常不断灌输生存焦虑与失业恐慌 -> 自我反应(RS): 压抑自身软弱，形成极深的分离焦虑与被抛弃恐惧。",
+      "evidence_dates": [
+        "2025-05-13",
+        "2025-07-19",
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "person:father",
+      "target": "schema:defectiveness",
+      "relation_type": "originates",
+      "relation": "渴望(W): 获得父亲的尊重与认可 -> 对方反应(RO): 童年因筷子拿法等琐事在饭桌上当众怒斥与惩罚 -> 自我反应(RS): 产生强烈的羞耻感，认为自己必须有利用价值才配得到爱。",
+      "evidence_dates": [
+        "2025-05-24",
+        "2025-06-17",
+        "2025-10-05"
+      ]
+    },
+    {
+      "source": "person:ex_girlfriend",
+      "target": "coping:pleasing_avoidance",
+      "relation_type": "triggers",
+      "relation": "渴望(W): 维持亲密关系的和谐与对等 -> 对方反应(RO): 消费观冲突、提出高消费计划并拒绝共同约会基金 -> 自我反应(RS): 长期隐忍退让以规避冲突，直至最后崩溃分手。",
+      "evidence_dates": [
+        "2025-07-09",
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "person:chongqing_girl",
+      "target": "coping:hypercontrol",
+      "relation_type": "triggers",
+      "relation": "渴望(W): 快速建立亲密关系并获得安全感 -> 对方反应(RO): 快速发生关系后态度转冷并拒绝见面请求 -> 自我反应(RS): 触发失控焦虑，通过多线接触异性等手段试图夺回主动权。",
+      "evidence_dates": [
+        "2025-10-18",
+        "2025-10-25"
+      ]
+    },
+    {
+      "source": "person:therapist",
+      "target": "coping:pleasing_avoidance",
+      "relation_type": "triggers",
+      "relation": "渴望(W): 在长期的安全咨询关系中寻求对等 -> 对方反应(RO): 提出调整咨询费用 -> 自我反应(RS): 产生焦虑，通过还价和模拟演练来测试对方是否好沟通，避免直接冲突。",
+      "evidence_dates": [
+        "2025-06-24",
+        "2025-08-24"
+      ]
+    }
+  ]
+}

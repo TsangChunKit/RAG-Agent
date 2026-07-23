@@ -1,0 +1,258 @@
+{
+  "source_file": "20250928135953-Transcription_Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-09-28",
+  "nodes": [
+    {
+      "id": "need:unconditional_acceptance",
+      "type": "need",
+      "label": "被无条件接纳",
+      "domain": "",
+      "description": "渴望在不展示完美外在（如完美伴侣、高成就）的情况下，依然被他人爱与接纳。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "need:autonomy_and_competence",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望按照自己的意愿生活、消费、旅行，而不受他人情绪的束缚。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "核心依附对象，象征着生活在狭窄、受限空间中的人，是来访者产生“成功即伤害”内疚感的源头。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "不懈标准图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为必须拥有完美的伴侣（花瓶）和生活状态，否则自己就是失败的、不配被爱的。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "为了不伤害他人（特别是母亲），压抑自己的真实需求，甚至隐藏自己的成就。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "schema:defectiveness_shame",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深信如果暴露真实脆弱或分手，自己就是有问题的、会被攻击的。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "belief:if_imperfect_rejected",
+      "type": "belief",
+      "label": "不完美即不配被爱",
+      "domain": "",
+      "description": "如果伴侣不够完美，或者我表现得不够好，我就不配被爱或会被人看不起。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "belief:success_hurts_others",
+      "type": "belief",
+      "label": "成功即伤害他人",
+      "domain": "",
+      "description": "如果我过得太好或展示出来，会伤害到生活不如意的人（如母亲）。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内在的批判声音，在分手或遇到困难时，指责“都是我的错”。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过隐藏信息、不分享生活、避免深度暴露来保护自己免受外界评价的伤害。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "coping:hiding_avoidance",
+      "type": "coping",
+      "label": "隐藏与回避",
+      "domain": "",
+      "description": "将伴侣藏起来、屏蔽朋友圈、不在陌生人面前咨询等防御行为。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "trigger:public_display",
+      "type": "trigger",
+      "label": "公开展示",
+      "domain": "",
+      "description": "带伴侣出门或在社交媒体展示生活，触发对“评价”的恐惧。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "trigger:expensive_purchase",
+      "type": "trigger",
+      "label": "购买奢侈/高价物品",
+      "domain": "",
+      "description": "购买超出他人预期或昂贵的物品，触发对“伤害他人”的内疚。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "automatic_thought:others_judging_me",
+      "type": "automatic_thought",
+      "label": "他人正在评判我",
+      "domain": "",
+      "description": "“他们会觉得我是怪胎”、“他们会觉得我不够好”。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "内疚",
+      "domain": "",
+      "description": "在享受生活或购买物品时，感到对他人（母亲/朋友）的歉意。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "id": "event:shanghai_trip",
+      "type": "event",
+      "label": "上海旅游事件",
+      "domain": "",
+      "description": "本次咨询中提到的旅游，来访者选择对母亲屏蔽朋友圈以减轻内疚。",
+      "related_dates": [
+        "2025-09-28"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：保持联结与安全 → 对方反应(RO)：母亲生活受限/蜗居 → 自我反应(RS)：必须隐藏自己的光芒以防伤害她。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:if_imperfect_rejected",
+      "relation_type": "assumes",
+      "relation": "图式派生出规则：伴侣必须是完美的“花瓶”，否则不仅伴侣没价值，我也没价值。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "belief:success_hurts_others",
+      "target": "coping:hiding_avoidance",
+      "relation_type": "derives",
+      "relation": "因为认为成功会伤害他人，所以采取隐藏行为作为应对。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "trigger:public_display",
+      "target": "mode:detached_protector",
+      "relation_type": "activates",
+      "relation": "公开展示触发了疏离保护者模式，导致想把伴侣藏起来。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:others_judging_me",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式产出“我做错了/我会被攻击”的自动思维。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "trigger:expensive_purchase",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "购买高价物品引发了对他人经济状况的联想，进而产生内疚。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "emotion:guilt",
+      "target": "coping:hiding_avoidance",
+      "relation_type": "regulated_by",
+      "relation": "通过隐藏购买行为来调节内疚情绪。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "coping:hiding_avoidance",
+      "target": "event:shanghai_trip",
+      "relation_type": "manifested_in",
+      "relation": "在上海旅游中表现为对母亲屏蔽朋友圈。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "schema:unrelenting_standards",
+      "relation_type": "co_occurs",
+      "relation": "两者常同时出现：既要完美（标准），又要为了不伤害他人而隐藏（屈服）。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    },
+    {
+      "source": "need:unconditional_acceptance",
+      "target": "schema:defectiveness_shame",
+      "relation_type": "unmet",
+      "relation": "长期未被满足的接纳需要，导致了缺陷感图式的形成。",
+      "evidence_dates": [
+        "2025-09-28"
+      ]
+    }
+  ]
+}

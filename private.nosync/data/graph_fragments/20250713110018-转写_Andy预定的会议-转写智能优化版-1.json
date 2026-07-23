@@ -1,0 +1,286 @@
+{
+  "source_file": "20250713110018-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-07-13",
+  "nodes": [
+    {
+      "id": "need:reciprocity",
+      "type": "need",
+      "label": "互惠联结需要",
+      "domain": "",
+      "description": "渴望在亲密关系中获得对等的金钱付出与情感回应，以此确认双方的共同投入。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "当前亲密关系的主要对象，在金钱消费观念上与Andy存在显著冲突。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "担心自己在亲密关系中由于无法经营好而显得失败，将关系的结束等同于个人能力的失败。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "严苛标准图式",
+      "domain": "Overvigilance & Inhibition",
+      "description": "对自己和关系有极高的要求，认为必须通过不断的付出和努力来维持关系，否则就是不够好。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "belief:if_i_pay_more",
+      "type": "belief",
+      "label": "付出即爱假设",
+      "domain": "",
+      "description": "如果我愿意在金钱和行动上付出更多，就能弥补关系中的问题，并换取对方的同等对待。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "belief:boundary_is_conflict",
+      "type": "belief",
+      "label": "边界等于冲突假设",
+      "domain": "",
+      "description": "如果我设立边界（如要求共同出资），就会导致关系破裂或引发剧烈冲突。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到寒心、被忽视、被利用，对关系充满失望和无力感的自我部分。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "象征“火种”与“底气”，能够进行自我照见、反思，并在迷雾中寻找内在力量的部分。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内在严厉的批评声音，认为努力白费、自己失败、人性令人失望。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "试图通过考虑分手、切断情感投入来保护自己免受进一步伤害的部分。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "试图通过承担大部分开销、主动解决问题来掩盖内心的不安全感。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "coping:surrender",
+      "type": "coping",
+      "label": "屈服",
+      "domain": "",
+      "description": "在过去几个月里忍受不公平的待遇，试图通过顺从对方的消费习惯来维持关系。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "trigger:gf_financial_behavior",
+      "type": "trigger",
+      "label": "女友金钱行为",
+      "domain": "",
+      "description": "女友将钱花在自己身上（如拍照、买猫）却不愿为共同约会付出的情境。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "automatic_thought:effort_wasted",
+      "type": "automatic_thought",
+      "label": "努力白费念头",
+      "domain": "",
+      "description": "当女友拒绝共同出资时，一闪而过的念头：我的努力没有回报，她根本不在意。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "emotion:disappointment",
+      "type": "emotion",
+      "label": "失望",
+      "domain": "",
+      "description": "对关系无法达到理想状态、对人性感到灰心的情绪。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "emotion:fear",
+      "type": "emotion",
+      "label": "恐惧",
+      "domain": "",
+      "description": "对单身状态、生活转变以及失去亲密关系归属感的担忧。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "id": "event:boundary_setting",
+      "type": "event",
+      "label": "建立边界事件",
+      "domain": "",
+      "description": "本次咨询前尝试向女友提出“约会基金”方案，虽被拒绝但完成了边界尝试。",
+      "related_dates": [
+        "2025-07-13"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:reciprocity",
+      "target": "schema:failure",
+      "relation_type": "unmet",
+      "relation": "长期缺乏对等的互惠，导致个体认为自己无法经营好关系，从而形成失败图式。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "mode:vulnerable_child",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：希望获得对等的情感与金钱投入 → 对方反应(RO)：拒绝共同出资/不愿付出 → 自我反应(RS)：感到寒心、被忽视、产生无力感。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "belief:if_i_pay_more",
+      "relation_type": "assumes",
+      "relation": "为了避免被认定为失败的恋情，假设只要自己付出更多（金钱/行动），就能维系关系。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:boundary_is_conflict",
+      "relation_type": "assumes",
+      "relation": "由于有着必须完美经营关系的严苛标准，导致认为任何设立边界的行为都会破坏和谐而引发冲突。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "belief:if_i_pay_more",
+      "target": "automatic_thought:effort_wasted",
+      "relation_type": "produces",
+      "relation": "当付出无法换回对方的投入时，信念崩塌，产生努力白费的自动思维。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "trigger:gf_financial_behavior",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "女友的消费行为直接触发了脆弱儿童模式中被忽视、被利用的创伤感。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:disappointment",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式被激活后，引发强烈的对关系和人性的失望感。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "emotion:disappointment",
+      "target": "coping:surrender",
+      "relation_type": "regulated_by",
+      "relation": "通过屈服和忍受来调节失望带来的痛苦，试图维持表面的和平。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "mode:punitive_parent",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人（火种/底气）试图照见自我，与惩罚性父母（指责自己失败）产生拉扯。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "event:boundary_setting",
+      "relation_type": "manifested_in",
+      "relation": "过度补偿模式在本次事件中体现为尝试提出约会基金，试图通过行动掌控关系走向。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "emotion:fear",
+      "relation_type": "evokes",
+      "relation": "疏离保护者模式通过预想分手和单身，引发对未来不确定性的恐惧。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "coping:overcompensation",
+      "relation_type": "reinforces",
+      "relation": "健康成人部分通过反思，将过去的过度补偿转化为更理性的边界建立尝试。",
+      "evidence_dates": [
+        "2025-07-13"
+      ]
+    }
+  ]
+}

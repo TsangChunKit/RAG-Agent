@@ -1,0 +1,343 @@
+{
+  "source_file": "20260621140810-Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-06-21",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能够依据内心真实偏好而非外界压力（如房贷、他人评价）来生活。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望在亲密关系中获得确定感，减少不信任与冲突。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "反复出现的依附对象，其过往贫困经历（如指甲受伤不敢就医）深深影响了Andy的消费观。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "亲密关系对象，近期因相互查看手机引发冲突，通过物质赔偿修复关系。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "schema:self_sacrifice",
+      "type": "schema",
+      "label": "自我牺牲图式",
+      "domain": "Other-Directedness",
+      "description": "过度关注他人的需求或财务安全，导致自己无法享受应得的资源，源于母亲的节俭。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "担心自己不够完美（如不够有魅力、工作不够好）而不配被爱或被接纳。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "belief:guilt_spending",
+      "type": "belief",
+      "label": "花钱即负罪",
+      "domain": "",
+      "description": "认为为自己花钱（如买顶级电脑）是自私的或背信弃义的，必须存钱以备不时之需。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "belief:perfectionism",
+      "type": "belief",
+      "label": "必须完美才配成功",
+      "domain": "",
+      "description": "在职业选择和关系中，认为必须追求最优解，否则就是失败。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "面对未知变化（买房、换工作、母亲生病）时感到无助、忐忑与恐惧。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内心严厉的批判者，当Andy想要享受生活时，指责其浪费或不负责任。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过拖延决策、不作为来避免面对选择带来的潜在后果与负罪感。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "coping:compliance",
+      "type": "coping",
+      "label": "屈服/讨好应对",
+      "domain": "",
+      "description": "在关系冲突中通过赠送礼物（如平板）来平息矛盾，以此换取关系稳定。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "coping:procrastination",
+      "type": "coping",
+      "label": "拖延决策",
+      "domain": "",
+      "description": "将买电脑等决定搁置，认为保留“可能性”比做决定更安全。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "trigger:financial_decision",
+      "type": "trigger",
+      "label": "财务决策情境",
+      "domain": "",
+      "description": "面对购买大额物品（如电脑）或长期投资（如买房）时的决策时刻。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "trigger:relationship_conflict",
+      "type": "trigger",
+      "label": "关系不确定性",
+      "domain": "",
+      "description": "当亲密关系出现争吵或信任危机时，引发对关系是否长久的担忧。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "automatic_thought:guilt_if_spend",
+      "type": "automatic_thought",
+      "label": "消费负罪感思维",
+      "domain": "",
+      "description": "“如果我花钱买这台电脑，就是背叛了当初存钱的承诺，是不负责任的。”",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "负罪感",
+      "domain": "",
+      "description": "因满足自身需求而产生的深刻愧疚。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "面对剧烈变化、未来不确定性时产生的忐忑情绪。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "event:mothers_hospitalization",
+      "type": "event",
+      "label": "母亲住院事件",
+      "domain": "",
+      "description": "母亲突发急症住院，引发Andy对失去亲人的恐惧及对家庭财务的重新审视。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "id": "event:girlfriend_conflict",
+      "type": "event",
+      "label": "感情冲突事件",
+      "domain": "",
+      "description": "周末因查看手机引发的争吵，随后通过送礼和解。",
+      "related_dates": [
+        "2026-06-21"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:self_sacrifice",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被理解与安全感 → 对方反应(RO)：妈妈过去困苦不敢花钱 → 自我反应(RS)：我也要省钱，不能乱花，产生心疼与负罪感",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "schema:self_sacrifice",
+      "target": "belief:guilt_spending",
+      "relation_type": "assumes",
+      "relation": "图式派生出“花钱即负罪”的规则",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "belief:guilt_spending",
+      "target": "mode:punitive_parent",
+      "relation_type": "produces",
+      "relation": "信念强化了惩罚性父母模式的严厉指责",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "trigger:financial_decision",
+      "target": "mode:punitive_parent",
+      "relation_type": "activates",
+      "relation": "财务决策触发了内在批判声音",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:guilt_if_spend",
+      "relation_type": "produces",
+      "relation": "模式导致产生“背信弃义”的自动思维",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "automatic_thought:guilt_if_spend",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "思维引发强烈的负罪感",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "emotion:guilt",
+      "target": "coping:procrastination",
+      "relation_type": "regulated_by",
+      "relation": "通过拖延决策来规避负罪感",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "coping:procrastination",
+      "target": "trigger:financial_decision",
+      "relation_type": "manifested_in",
+      "relation": "在购买电脑的决策中体现",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "coping:compliance",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：亲密与联结 → 对方反应(RO)：吵架与不信任 → 自我反应(RS)：通过物质赔偿修复关系",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "coping:compliance",
+      "target": "event:girlfriend_conflict",
+      "relation_type": "manifested_in",
+      "relation": "在送平板赔礼道歉中体现",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "trigger:relationship_conflict",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "冲突激活了脆弱儿童模式",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式产生面对不确定性的焦虑",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "need:autonomy",
+      "target": "schema:self_sacrifice",
+      "relation_type": "unmet",
+      "relation": "核心需要长期被自我牺牲图式压抑",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "coping:procrastination",
+      "relation_type": "derives",
+      "relation": "疏离模式通过拖延来保护自己",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    },
+    {
+      "source": "event:mothers_hospitalization",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "母亲住院事件激活了对失去与未来的恐惧",
+      "evidence_dates": [
+        "2026-06-21"
+      ]
+    }
+  ]
+}

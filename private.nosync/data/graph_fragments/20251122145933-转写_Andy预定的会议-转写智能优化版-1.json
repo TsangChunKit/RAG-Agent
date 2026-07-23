@@ -1,0 +1,286 @@
+{
+  "source_file": "20251122145933-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-11-22",
+  "nodes": [
+    {
+      "id": "need:unconditional_acceptance",
+      "type": "need",
+      "label": "被无条件接纳",
+      "domain": "",
+      "description": "渴望在不表现完美的情况下依然被爱，是Andy核心的情感需求。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "need:safety_security",
+      "type": "need",
+      "label": "安全感",
+      "domain": "",
+      "description": "在亲密关系中渴望稳定、不受抛弃的安全感。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "person:partner",
+      "type": "person",
+      "label": "伴侣",
+      "domain": "",
+      "description": "Andy正在交往的女生，吵架事件触发了其不安全感。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "schema:defectiveness_shame",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深信自己是不完美的，需要通过不断努力和成就来证明价值才配被爱。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "被抛弃图式",
+      "domain": "Disconnection & Rejection",
+      "description": "极度担心重要他人离开，对关系中的不确定性高度敏感。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "belief:must_be_perfect_to_be_loved",
+      "type": "belief",
+      "label": "必须完美才配被爱",
+      "domain": "",
+      "description": "如果我不优秀、不成长、不解决问题，我就没有价值，会被抛弃。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "belief:therapy_must_solve_problems",
+      "type": "belief",
+      "label": "咨询必须解决问题",
+      "domain": "",
+      "description": "认为咨询室必须是高效率解决问题的场所，否则就是浪费时间。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "mode:critic_parent",
+      "type": "mode",
+      "label": "批判者模式",
+      "domain": "",
+      "description": "脑海中灰色的雾，像法官一样评价自己，推动自己不断前行。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "心脏部位的感受，充满本能愿望、沮丧、焦虑和无助感。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "mode:over_compensator",
+      "type": "mode",
+      "label": "过度补偿者",
+      "domain": "",
+      "description": "像拿着杠铃一样，强迫自己不断填满时间、健身、学习，以换取安全感。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "开始尝试接纳迷茫、允许自己休息、意识到不需要通过外驱力证明价值的部分。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "coping:over_achievement",
+      "type": "coping",
+      "label": "过度成就/填满时间",
+      "domain": "",
+      "description": "通过高强度的自我提升和活动来防御内心的空虚和焦虑。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "trigger:free_time",
+      "type": "trigger",
+      "label": "空白/空闲时间",
+      "domain": "",
+      "description": "当没有事情做、停下来的时候，会激活内心的焦虑和虚无感。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "trigger:relationship_conflict",
+      "type": "trigger",
+      "label": "关系冲突",
+      "domain": "",
+      "description": "与伴侣吵架或沟通不畅，激活了被抛弃的恐惧。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "在停下来或关系波动时产生的强烈不安感。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "emotion:exhaustion",
+      "type": "emotion",
+      "label": "疲惫",
+      "domain": "",
+      "description": "长期过度补偿导致的身体与心理耗竭。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "id": "event:argument_with_partner",
+      "type": "event",
+      "label": "吵架事件",
+      "domain": "",
+      "description": "咨询前与伴侣发生争吵，引发了对关系破灭的担忧。",
+      "related_dates": [
+        "2025-11-22"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:unconditional_acceptance",
+      "target": "schema:defectiveness_shame",
+      "relation_type": "unmet",
+      "relation": "因未获得无条件接纳，发展出需要通过成就证明价值的图式。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "person:partner",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得无条件的爱与确认 → 对方反应(RO)：吵架/情绪疏离 → 自我反应(RS)：焦虑/担心被抛弃。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "schema:defectiveness_shame",
+      "target": "belief:must_be_perfect_to_be_loved",
+      "relation_type": "assumes",
+      "relation": "图式派生出必须不断进步才能维持价值的信念。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "belief:must_be_perfect_to_be_loved",
+      "target": "mode:over_compensator",
+      "relation_type": "derives",
+      "relation": "信念驱动了过度补偿模式的形成。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "mode:over_compensator",
+      "target": "coping:over_achievement",
+      "relation_type": "reinforces",
+      "relation": "过度补偿模式通过过度成就行为来强化防御。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "trigger:free_time",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "空闲时间激活了内心深处的虚无与脆弱。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式产生强烈的焦虑。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:over_achievement",
+      "relation_type": "regulated_by",
+      "relation": "通过填满时间、健身等行为来调节焦虑。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "mode:over_compensator",
+      "target": "mode:healthy_adult",
+      "relation_type": "conflicts_with",
+      "relation": "过度补偿的惯性与想要休息、接纳自我的健康成人部分产生拉扯。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "trigger:relationship_conflict",
+      "target": "schema:abandonment",
+      "relation_type": "activates",
+      "relation": "吵架触发了被抛弃图式。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "event:argument_with_partner",
+      "relation_type": "manifested_in",
+      "relation": "被抛弃图式导致在吵架后产生过度的不安全感。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    },
+    {
+      "source": "mode:over_compensator",
+      "target": "belief:therapy_must_solve_problems",
+      "relation_type": "produces",
+      "relation": "过度补偿模式将咨询也视为必须解决问题的任务。",
+      "evidence_dates": [
+        "2025-11-22"
+      ]
+    }
+  ]
+}

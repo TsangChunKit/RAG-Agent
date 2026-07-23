@@ -1,0 +1,256 @@
+{
+  "source_file": "20251108155954-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-11-08",
+  "nodes": [
+    {
+      "id": "need:secure_attachment",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望在关系中获得确定性与长期的安全感，害怕被抛弃。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "need:competence",
+      "type": "need",
+      "label": "胜任感与价值感",
+      "domain": "",
+      "description": "渴望通过表现良好（如优秀、懂事）来获得被爱的资格。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "被抛弃/不稳定图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧重要他人会突然离开或因不可抗力而断联，导致关系破灭。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己需要表现得足够好才配被爱，否则会被抛弃。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "belief:fragile_relationship",
+      "type": "belief",
+      "label": "关系脆弱假设",
+      "domain": "",
+      "description": "如果无法确定下一次约会时间，关系就会在不确定中消亡。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "belief:conditional_love",
+      "type": "belief",
+      "label": "条件化被爱规则",
+      "domain": "",
+      "description": "如果我表现得不够好，或者没有掌控好关系，我就不值得被爱。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到孤独、被淹没、无助，渴望有人兜底和见证。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过使用AI、理智化分析来逃避直接面对痛苦情绪。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避/理智化应对",
+      "domain": "",
+      "description": "在面对强烈情绪时，寻求AI辅助或通过“浅水区”话题逃避深层创伤体验。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "trigger:uncertainty",
+      "type": "trigger",
+      "label": "关系不确定性",
+      "domain": "",
+      "description": "约会后没有确定下一次见面的具体时间，引发灾难化联想。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "automatic_thought:relationship_death",
+      "type": "automatic_thought",
+      "label": "关系死亡念头",
+      "domain": "",
+      "description": "没有下一次约会，这段关系就会破灭。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "emotion:panic",
+      "type": "emotion",
+      "label": "恐慌/被淹没感",
+      "domain": "",
+      "description": "面对分离或不确定性时，产生的强烈、深层的恐惧。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "event:nana_death",
+      "type": "event",
+      "label": "宠物娜娜离世",
+      "domain": "",
+      "description": "不可抗力导致重要联结断裂的创伤性事件。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "id": "event:singapore_relationship",
+      "type": "event",
+      "label": "新加坡异地恋失败",
+      "domain": "",
+      "description": "因物理距离和现实障碍导致深爱关系终结的事件。",
+      "related_dates": [
+        "2025-11-08"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:secure_attachment",
+      "target": "schema:abandonment",
+      "relation_type": "unmet",
+      "relation": "长期缺乏确定的安全感导致被抛弃图式形成。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:fragile_relationship",
+      "relation_type": "assumes",
+      "relation": "被抛弃图式派生出关系脆弱的假设。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:conditional_love",
+      "relation_type": "assumes",
+      "relation": "缺陷图式派生出必须表现好才被爱的规则。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "mode:vulnerable_child",
+      "relation_type": "derives",
+      "relation": "图式激活后进入脆弱儿童模式。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "trigger:uncertainty",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "不确定性触发了被抛弃的脆弱感。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "automatic_thought:relationship_death",
+      "relation_type": "produces",
+      "relation": "脆弱状态下产生关系会死亡的灾难化思维。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "automatic_thought:relationship_death",
+      "target": "emotion:panic",
+      "relation_type": "evokes",
+      "relation": "灾难化思维直接引发恐慌情绪。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "emotion:panic",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "通过使用AI等回避手段调节恐慌。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "coping:avoidance",
+      "target": "mode:detached_protector",
+      "relation_type": "reinforces",
+      "relation": "回避行为强化了疏离保护者模式。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "event:nana_death",
+      "relation_type": "manifested_in",
+      "relation": "娜娜的离世印证了不可抗力导致联结断裂的恐惧。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "event:singapore_relationship",
+      "relation_type": "manifested_in",
+      "relation": "新加坡关系的失败是图式的核心创伤源。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "mode:detached_protector",
+      "relation_type": "conflicts_with",
+      "relation": "想深层探索(脆弱)与想逃离痛苦(保护)之间的拉扯。",
+      "evidence_dates": [
+        "2025-11-08"
+      ]
+    }
+  ]
+}

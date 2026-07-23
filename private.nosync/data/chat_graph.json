@@ -1,0 +1,68 @@
+{
+  "nodes": [
+    {
+      "id": "chat:event:2027年上市计划",
+      "type": "event",
+      "label": "2027年公司上市计划",
+      "domain": "",
+      "description": "离职后得知原公司计划2027年上市，触发了Andy关于“错过红利”的强烈遗憾与自我怀疑。",
+      "related_dates": [
+        "2026-07-21"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "chat:belief:停下即死亡",
+      "type": "schema",
+      "label": "停下即死亡信念",
+      "domain": "Schema Therapy",
+      "description": "深层的生存恐惧，认为一旦停止奋斗、休息或离开既定轨道，就会遭遇毁灭性的后果或失去生命力。",
+      "related_dates": [
+        "2026-07-20"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    }
+  ],
+  "edges": [
+    {
+      "source": "chat:event:2027年上市计划",
+      "target": "emotion:135",
+      "relation_type": "triggers",
+      "relation": "引发了Andy对错过机会的亏损感。",
+      "evidence_dates": [
+        "2026-07-21"
+      ]
+    },
+    {
+      "source": "chat:event:2027年上市计划",
+      "target": "event:126",
+      "relation_type": "relates_to",
+      "relation": "该事件是对离职决策的后续反思与情绪冲击。",
+      "evidence_dates": [
+        "2026-07-21"
+      ]
+    },
+    {
+      "source": "chat:belief:停下即死亡",
+      "target": "mode:374",
+      "relation_type": "reinforces",
+      "relation": "惩罚性父母模式通过强化这一信念来压迫Andy持续保持高效。",
+      "evidence_dates": [
+        "2026-07-20"
+      ]
+    },
+    {
+      "source": "chat:belief:停下即死亡",
+      "target": "person:422",
+      "relation_type": "originates",
+      "relation": "这一信念是内在教练/法官用来审视和威胁Andy的核心规则。",
+      "evidence_dates": [
+        "2026-07-20"
+      ]
+    }
+  ]
+}

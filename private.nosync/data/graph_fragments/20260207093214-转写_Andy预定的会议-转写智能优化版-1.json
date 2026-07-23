@@ -1,0 +1,325 @@
+{
+  "source_file": "20260207093214-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2026-02-07",
+  "nodes": [
+    {
+      "id": "need:安全与掌控",
+      "type": "need",
+      "label": "安全感与掌控感",
+      "domain": "",
+      "description": "渴望在不稳定、错综复杂的世界中获得确定性，通过建立一套生存法则来缓解焦虑。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "need:自主表达",
+      "type": "need",
+      "label": "自主与真实表达",
+      "domain": "",
+      "description": "渴望能直接表达自己的喜恶（如不喜欢就离开），不被外界评价所束缚。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "person:他人",
+      "type": "person",
+      "label": "社交对象/同学",
+      "domain": "",
+      "description": "现实中出现的同学或朋友，是Andy感知到需要隐藏真实感受、进行合理化防御的对象。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "schema:苛求标准",
+      "type": "schema",
+      "label": "苛求标准图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为必须找到‘正确’的生存法则，否则就是错的、失败的，导致持续的自我审判。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "schema:情感剥夺",
+      "type": "schema",
+      "label": "情感剥夺/拒绝图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧直接表达攻击性或真实需求会导致被抛弃或伤害他人，因此需要伪装。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "belief:必须找到正确答案",
+      "type": "belief",
+      "label": "必须找到正确答案",
+      "domain": "",
+      "description": "如果我能找到问题的答案（理性的解释），我就不会痛苦。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "belief:表达攻击性会伤害他人",
+      "type": "belief",
+      "label": "直接表达即伤害",
+      "domain": "",
+      "description": "如果我直接表达不喜欢或攻击性，会伤害别人，是不好的行为。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "belief:离开就是坏人",
+      "type": "belief",
+      "label": "离开即坏人",
+      "domain": "",
+      "description": "提出分手、辞职或离开聚会，意味着我是坏人，会被审判。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "mode:理性分析者",
+      "type": "mode",
+      "label": "理性分析模式",
+      "domain": "",
+      "description": "利用心理学、佛学或AI分析来规避真实感受，将情绪转化为逻辑问题。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "内心真实感受到的不开心、想要逃离、想要被允许离开的那个部分。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内在的审判者，当Andy没有达到‘正确’标准时，会引发自我怀疑和不开心。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "coping:过度补偿",
+      "type": "coping",
+      "label": "过度分析/理性化",
+      "domain": "",
+      "description": "通过不断分析、寻找逻辑归因来防御痛苦情绪，避免直接体验感受。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "coping:回避",
+      "type": "coping",
+      "label": "回避/找借口",
+      "domain": "",
+      "description": "在社交场合中，通过编造合理的理由来离开，以避免直接冲突或被追问。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "trigger:面对负面情绪",
+      "type": "trigger",
+      "label": "面对负面情绪",
+      "domain": "",
+      "description": "当体验到嫉妒、尴尬、不喜欢等负面情绪时，触发防御机制。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "trigger:社交场合",
+      "type": "trigger",
+      "label": "不喜欢的社交场合",
+      "domain": "",
+      "description": "处于不喜欢的人群中，需要进行社交互动。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "automatic_thought:我做得对吗",
+      "type": "automatic_thought",
+      "label": "我是否又做错了",
+      "domain": "",
+      "description": "当被要求记录感受时，闪过的念头：我是不是又掉进了陷阱？是不是又做错了？",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "automatic_thought:我需要合理理由",
+      "type": "automatic_thought",
+      "label": "我需要合理理由",
+      "domain": "",
+      "description": "想要离开时，必须先编造一个能被他人接受的理由。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "emotion:焦虑",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "因无法确定什么是‘对’的，以及担心被审判而产生的持续紧张感。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "emotion:尴尬",
+      "type": "emotion",
+      "label": "尴尬",
+      "domain": "",
+      "description": "在不喜欢的社交环境中，因无法真实表达而感到的不适。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "id": "event:聚会事件",
+      "type": "event",
+      "label": "同学聚会",
+      "domain": "",
+      "description": "昨天发生的聚会，Andy感到不喜欢但无法直接说出口，最终找借口离开。",
+      "related_dates": [
+        "2026-02-07"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:安全与掌控",
+      "target": "schema:苛求标准",
+      "relation_type": "unmet",
+      "relation": "渴望(W)：在不稳定世界中获得安全感 → 对方反应(RO)：世界充满变数与不确定 → 自我反应(RS)：必须建立严苛标准与规则以掌控一切",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "person:他人",
+      "target": "schema:情感剥夺",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被接纳与理解 → 对方反应(RO)：可能无法理解或会审判直接表达 → 自我反应(RS)：必须压抑真实攻击性以防被拒绝",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "schema:苛求标准",
+      "target": "belief:必须找到正确答案",
+      "relation_type": "assumes",
+      "relation": "图式派生出信念：必须通过找到正确答案来规避痛苦",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "schema:苛求标准",
+      "target": "mode:理性分析者",
+      "relation_type": "derives",
+      "relation": "图式驱动了理性分析模式的形成",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "schema:情感剥夺",
+      "target": "mode:脆弱儿童",
+      "relation_type": "derives",
+      "relation": "图式导致真实感受（脆弱儿童）被压抑和隐藏",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "trigger:面对负面情绪",
+      "target": "mode:理性分析者",
+      "relation_type": "activates",
+      "relation": "一旦出现负面情绪，立即激活理性分析模式",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "mode:理性分析者",
+      "target": "automatic_thought:我需要合理理由",
+      "relation_type": "produces",
+      "relation": "模式产生自动思维：必须编造理由，不能直接表达",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "automatic_thought:我需要合理理由",
+      "target": "emotion:焦虑",
+      "relation_type": "evokes",
+      "relation": "因需要不断编造理由而产生的心理负担与焦虑",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "emotion:焦虑",
+      "target": "coping:过度补偿",
+      "relation_type": "regulated_by",
+      "relation": "通过过度分析来调节焦虑",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "mode:理性分析者",
+      "target": "mode:脆弱儿童",
+      "relation_type": "conflicts_with",
+      "relation": "理性分析（防御）与脆弱儿童（真实感受）之间的内心拉扯",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "coping:回避",
+      "target": "event:聚会事件",
+      "relation_type": "manifested_in",
+      "relation": "在聚会事件中，通过找借口离开来体现回避策略",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "automatic_thought:我做得对吗",
+      "relation_type": "produces",
+      "relation": "当练习未能完美执行时，惩罚性父母产生自我质疑的思维",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    },
+    {
+      "source": "mode:理性分析者",
+      "target": "coping:过度补偿",
+      "relation_type": "reinforces",
+      "relation": "模式与应对方式相互强化，形成固定的防御循环",
+      "evidence_dates": [
+        "2026-02-07"
+      ]
+    }
+  ]
+}

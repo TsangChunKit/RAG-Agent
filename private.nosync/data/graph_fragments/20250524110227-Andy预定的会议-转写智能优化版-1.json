@@ -1,0 +1,315 @@
+{
+  "source_file": "20250524110227-Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-05-24",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望在关系中拥有表达真实意愿的权利，而不需要为了讨好他人牺牲自我。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "安全与联结",
+      "domain": "",
+      "description": "渴望在人际关系中获得无条件的接纳，避免被抛弃或被视为异类。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "person:father",
+      "type": "person",
+      "label": "父亲",
+      "domain": "",
+      "description": "童年时期的核心教养者，通过批评和羞辱的方式强制要求Andy顺从。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "当前关系中的重要他人，Andy在与其互动时容易启动顺从模式。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免愤怒或报复，过度顺从他人，压抑自己的需求和情绪。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷感图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己如果不完美或不顺从，就是坏人，不配被爱。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "belief:refusal_equals_bad_person",
+      "type": "belief",
+      "label": "拒绝等于坏人",
+      "domain": "",
+      "description": "如果我拒绝别人的要求，我就是一个不考虑他人感受的坏人，会遭到抛弃。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "belief:reciprocity_trap",
+      "type": "belief",
+      "label": "互惠陷阱",
+      "domain": "",
+      "description": "我相信我怎么对待别人，别人就会怎么对待我（例如：我礼让他人，他人也会礼让我），但现实常相反。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "mode:compliant_child",
+      "type": "mode",
+      "label": "顺从儿童",
+      "domain": "",
+      "description": "当面对要求时，自动切换为“好的，没问题”的顺从状态，压抑真实意愿。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者",
+      "domain": "",
+      "description": "通过拖延来回避直接冲突和拒绝，是一种被动的防御手段。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内化的父亲形象，在拒绝他人时会对自己进行羞辱和指责。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "coping:procrastination",
+      "type": "coping",
+      "label": "拖延",
+      "domain": "",
+      "description": "通过拖延来消解任务的紧迫感，或者等待任务自动消失，以此逃避拒绝带来的压力。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "coping:extreme_resistance",
+      "type": "coping",
+      "label": "极端反抗",
+      "domain": "",
+      "description": "当被逼入悬崖边缘（忍无可忍）时，采取激烈的反抗或摔门离开。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "trigger:request_from_others",
+      "type": "trigger",
+      "label": "他人提出要求",
+      "domain": "",
+      "description": "无论是工作、生活还是咨询中，当他人提出要求时，即刻激活服从图式。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "trigger:boundary_violation",
+      "type": "trigger",
+      "label": "边界被侵犯",
+      "domain": "",
+      "description": "当他人一步步侵犯领地，导致安全感丧失的情境。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "因拒绝他人或被指责“不听话”而产生的深层羞愧。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "emotion:helplessness",
+      "type": "emotion",
+      "label": "无助感",
+      "domain": "",
+      "description": "在面对权威要求时，感到无法反抗的无力状态。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "event:childhood_rice_bowl_scolding",
+      "type": "event",
+      "label": "筷子事件",
+      "domain": "",
+      "description": "童年因拿筷子姿势被父亲当众羞辱和殴打，形成了“拒绝=被羞辱”的创伤记忆。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "id": "event:driving_test_failure",
+      "type": "event",
+      "label": "学车挂科",
+      "domain": "",
+      "description": "因过分礼让导致危险局面，反思到“无原则礼让”的危害。",
+      "related_dates": [
+        "2025-05-24"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:father",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得父亲的接纳与安全 → 对方反应(RO)：严厉批评与羞辱 → 自我反应(RS)：为了生存选择顺从与拖延",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:refusal_equals_bad_person",
+      "relation_type": "assumes",
+      "relation": "服从图式派生出“拒绝即是坏人”的规则",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "mode:compliant_child",
+      "relation_type": "derives",
+      "relation": "服从图式驱动了顺从儿童模式",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "trigger:request_from_others",
+      "target": "mode:compliant_child",
+      "relation_type": "activates",
+      "relation": "他人请求直接激活了顺从儿童模式",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "mode:compliant_child",
+      "target": "belief:refusal_equals_bad_person",
+      "relation_type": "produces",
+      "relation": "顺从模式下产生“我必须答应，否则就是坏人”的自动思维",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "belief:refusal_equals_bad_person",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "担心被视为坏人引发了深层的羞耻感",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "emotion:shame",
+      "target": "coping:procrastination",
+      "relation_type": "regulated_by",
+      "relation": "通过拖延来缓解面对拒绝时的羞耻与焦虑",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "mode:compliant_child",
+      "target": "mode:detached_protector",
+      "relation_type": "conflicts_with",
+      "relation": "顺从模式与拖延（疏离保护者）在应对要求时存在拉扯",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "coping:procrastination",
+      "target": "coping:extreme_resistance",
+      "relation_type": "conflicts_with",
+      "relation": "日常的拖延与被逼到绝境后的极端反抗形成矛盾",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "event:childhood_rice_bowl_scolding",
+      "relation_type": "manifested_in",
+      "relation": "服从图式在童年筷子事件中得到强化",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "coping:procrastination",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：维持关系和谐 → 对方反应(RO)：提出各种要求 → 自我反应(RS)：表面答应但内心抗拒并拖延",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "schema:defectiveness",
+      "relation_type": "co_occurs",
+      "relation": "服从图式与缺陷感图式相互强化，导致不敢拒绝",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    },
+    {
+      "source": "need:autonomy",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期未能满足自主需要，导致服从图式的形成",
+      "evidence_dates": [
+        "2025-05-24"
+      ]
+    }
+  ]
+}

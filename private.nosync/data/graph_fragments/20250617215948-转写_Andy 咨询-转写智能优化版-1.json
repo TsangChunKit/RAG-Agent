@@ -1,0 +1,334 @@
+{
+  "source_file": "20250617215948-转写_Andy 咨询-转写智能优化版-1.txt",
+  "session_date": "2025-06-17",
+  "nodes": [
+    {
+      "id": "need:unconditional_acceptance",
+      "type": "need",
+      "label": "无条件接纳",
+      "domain": "",
+      "description": "渴望被爱与接纳，无需通过达成特定成就或展现利用价值。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能按照自己的意愿生活，不被他人的评价或期望所左右。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "核心依附对象，表现出评价性、控制性，且互动中带有条件化爱意的特征。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "对金钱与社会地位敏感的伴侣，间接影响Andy对自身价值的评估。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "为了避免冲突或被抛弃，过度压抑自己的需求和情感，顺从他人的意志。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深信如果自己不够成功或有用，内在是糟糕的、不值得被爱的。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "belief:conditional_worth",
+      "type": "belief",
+      "label": "必须有利用价值才配被爱",
+      "domain": "",
+      "description": "如果我不能赚钱/成功，我就没有价值，会被抛弃。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "belief:expression_danger",
+      "type": "belief",
+      "label": "表达真实自我会导致被拒绝",
+      "domain": "",
+      "description": "如果表达真实的观点或需求，会招致他人的评价、嘲讽或抛弃。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到无助、恐惧、担心被抛弃，渴望得到成年人的保护与理解。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrender",
+      "type": "mode",
+      "label": "顺从/屈服模式",
+      "domain": "",
+      "description": "为了适应环境而压抑自我，顺从他人的意见，即使内心不同意。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "mode:critical_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内化的父母声音，不断批评自己不够努力、没有成就。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "coping:compliance",
+      "type": "coping",
+      "label": "顺从应对",
+      "domain": "",
+      "description": "通过听从他人意见、放弃自我主张来规避风险。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避应对",
+      "domain": "",
+      "description": "通过隐藏咨询、不辞职、不表达真实想法来回避冲突和焦虑。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "trigger:opposing_opinion",
+      "type": "trigger",
+      "label": "面对反对意见",
+      "domain": "",
+      "description": "当他人提出不同观点或反对时，容易被激活服从模式。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "trigger:threat_to_status",
+      "type": "trigger",
+      "label": "职业/地位威胁",
+      "domain": "",
+      "description": "面临失业或职业选择时，担心失去社会价值。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "automatic_thought:useless_without_money",
+      "type": "automatic_thought",
+      "label": "没钱就没价值",
+      "domain": "",
+      "description": "“如果我不工作赚钱，我就失去了作为男性的魅力/利用价值。”",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "emotion:fear",
+      "type": "emotion",
+      "label": "恐惧",
+      "domain": "",
+      "description": "担心被抛弃、被评价、被世界拒绝。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻",
+      "domain": "",
+      "description": "因未能达到他人期望（如事业成功）而产生的自我贬低感。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "event:therapy_interruption",
+      "type": "event",
+      "label": "咨询中被干扰",
+      "domain": "",
+      "description": "因担心父母听到而想打断对话，引发尴尬与抱歉感。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "id": "event:career_contemplation",
+      "type": "event",
+      "label": "关于辞职的思考",
+      "domain": "",
+      "description": "想要追求热爱但因恐惧而无法知行合一。",
+      "related_dates": [
+        "2025-06-17"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:parents",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：需要自由表达 → 对方反应(RO)：控制与评价 → 自我反应(RS)：为了安全而顺从",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "person:parents",
+      "target": "schema:defectiveness",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被无条件接纳 → 对方反应(RO)：只有表现好才给奖励/爱 → 自我反应(RS)：感到自己有缺陷",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:conditional_worth",
+      "relation_type": "assumes",
+      "relation": "图式派生出信念：必须有价值才能生存",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:expression_danger",
+      "relation_type": "assumes",
+      "relation": "图式派生出信念：表达自我即意味着危险",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "trigger:opposing_opinion",
+      "target": "mode:compliant_surrender",
+      "relation_type": "activates",
+      "relation": "他人反对触发了顺从模式",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "trigger:threat_to_status",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "职业威胁激活了脆弱儿童模式",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrender",
+      "target": "coping:compliance",
+      "relation_type": "derives",
+      "relation": "顺从模式导致了顺从应对行为",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "belief:conditional_worth",
+      "target": "automatic_thought:useless_without_money",
+      "relation_type": "produces",
+      "relation": "信念导致产生“没钱就没价值”的自动思维",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "automatic_thought:useless_without_money",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "思维引发羞耻感",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "emotion:shame",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "用回避（不辞职）来调节羞耻感",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "schema:defectiveness",
+      "relation_type": "co_occurs",
+      "relation": "两者相互强化，共同维持顺从状态",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrender",
+      "target": "mode:critical_parent",
+      "relation_type": "reinforces",
+      "relation": "顺从模式下自我批评加剧",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "event:therapy_interruption",
+      "target": "mode:compliant_surrender",
+      "relation_type": "manifested_in",
+      "relation": "在咨询干扰事件中体现了顺从模式（担心打扰他人）",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    },
+    {
+      "source": "event:career_contemplation",
+      "target": "mode:vulnerable_child",
+      "relation_type": "manifested_in",
+      "relation": "在职业思考中体现了脆弱儿童的恐惧",
+      "evidence_dates": [
+        "2025-06-17"
+      ]
+    }
+  ]
+}

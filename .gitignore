@@ -1,0 +1,13 @@
+# 咨询数据不再当作隐私硬约束：private.nosync/ 现在可以进 git / 推 GitHub。
+# 但凭证仍然不进库——Gemini API key 放在下面两个文件里，泄露到（尤其是公开）仓库 = 密钥外泄。
+private.nosync/.env
+private.nosync/gemini_settings.json
+
+# 万一根目录残留了 .env，也一并忽略
+.env
+
+# 代码/运行产物
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
