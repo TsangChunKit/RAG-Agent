@@ -1,4 +1,4 @@
-"""解析逐字稿 txt：从文件名取咨询日期，正则解析发言人/时间戳/文本。
+"""解析文档 txt：从文件名取日期，正则解析发言人/时间戳/文本。
 
 真实数据里发现的边界情况（53 份实测，非纯假设）：
   1. 标准格式：`发言人(HH:MM:SS): 文本`（绝大多数文件、绝大多数行）。
@@ -7,14 +7,15 @@
   3. 个别文件里嵌入了非对话内容（如分享的视频文本），前面有形如 "视频内容:" 的短标签行，
      后续若干段落属于该标签而非说话人。这类短标签行（以冒号结尾、长度较短）被视为新的
      伪发言人小节；其后未匹配的行追加为该小节的延续文本。
-  4. 文件首行有时是标题（如"2026年6月27日 咨询记录"），在还没有任何发言人之前出现，直接跳过。
+  4. 文件首行有时是标题（如"2026年6月27日 记录"），在还没有任何发言人之前出现，直接跳过。
   5. 个别 AI 生成的免责声明（如"（注：文档部分内容可能由 AI 生成）"）直接跳过，不计入内容。
 
-不硬编码只认 "Andy"/"海特" 两个名字——发言人完全由正则捕获得到。
+不硬编码发言人名字——发言人完全由正则捕获得到。
 """
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Optional
 
 from config import FILENAME_DATETIME_RE, RAW_DIR, TRANSCRIPT_LINE_RE
 
@@ -92,8 +93,9 @@ def parse_transcript(path: Path) -> ParsedSession:
     return session
 
 
-def iter_raw_files():
-    return sorted(RAW_DIR.glob("*.txt"))
+def iter_raw_files(workspace_id: Optional[str] = None):
+    """迭代 raw 文件（workspace 感知）。"""
+    return sorted(RAW_DIR(workspace_id).glob("*.txt"))
 
 
 def render_full_text(session: ParsedSession) -> str:
@@ -101,10 +103,10 @@ def render_full_text(session: ParsedSession) -> str:
     return "\n".join(f"{u.speaker}({u.timestamp}): {u.text}" for u in session.utterances)
 
 
-def find_files_for_date(date_str: str) -> list[Path]:
-    """找出文件名日期等于 date_str（YYYY-MM-DD）的原始逐字稿文件（通常 0 或 1 个，理论上允许多个）。"""
+def find_files_for_date(date_str: str, workspace_id: Optional[str] = None) -> list[Path]:
+    """找出文件名日期等于 date_str（YYYY-MM-DD）的原始文件（workspace 感知）。"""
     matches = []
-    for f in iter_raw_files():
+    for f in iter_raw_files(workspace_id):
         session_date, _ = parse_filename_date(f.name)
         if session_date == date_str:
             matches.append(f)
