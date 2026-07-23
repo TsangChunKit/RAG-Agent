@@ -538,17 +538,24 @@ def _format_full_transcripts(blocks: list[dict]) -> str:
     return "\n\n".join(parts)
 
 
-def answer(question: str, history: list[dict] | None = None, k: int | None = None) -> dict:
+def answer(question: str, history: list[dict] | None = None, k: int | None = None,
+           use_full_history: bool = False, max_context: int = 450_000) -> dict:
     """UI 与 CLI 共用的核心入口。
-    history: [{"role": "user"/"assistant", "content": str, "api_content": str|None}, ...]（可选）。
-    "content" 是给人看的原始短问句/回答；"api_content"（仅 user 轮需要）是当时实际发给 Gemini 的
-    完整内容（含记忆/检索片段）——调用方应该把 answer() 返回的 "api_content" 存起来，下一轮传回来，
-    这样历史轮次才能保留完整依据，且前缀逐字节相同才能命中 Gemini 的隐式缓存。缺失时退回 "content"。
+    history: [{"role": "user"/"assistant", "content": str, "api_content": str|None,
+               "history_content": str|None, "compressed": bool|None}, ...]（可选）。
+    - "content" 是给人看的原始短问句/回答
+    - "api_content" 是完整内容（含记忆/检索片段），仅供显示/调试
+    - "history_content" 是精简版（检索片段+问题），供历史回放（省 token）
+    - "compressed" 标记是否已压缩（压缩后只发送 content，不含检索片段）
+
+    use_full_history: 深度模式，历史使用完整 api_content（通常不需要）
+    max_context: context 上限（字符数），超过时自动压缩最旧的历史（默认 450K）
 
     如果问题里提到具体日期（如"2026年7月4日"），会把当天的完整逐字稿整份塞进上下文，
     而不是只给检索到的片段；检索片段里属于同一天的会被去重排除，避免重复。
 
-    返回 {"answer": str, "sources": list[dict], "token_usage": dict, "api_content": str, ...}。
+    返回 {"answer": str, "sources": list[dict], "token_usage": dict, "api_content": str,
+            "history_content": str, "compression_info": dict|None, ...}。
     """
     # 相对/序数会话引用（「上一次咨询」「最近3次对话」「第2次」）：解析成具体会话。
     # 真实咨询直接并进下面的「日期→整份逐字稿」通路；AI 聊天会话是另一套数据源，单独渲染。
@@ -736,15 +743,66 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
     current_turn_parts.append(f"【使用者当前问题】\n{question}")
     current_turn = "\n\n".join(current_turn_parts)
 
+    # 为历史回放准备精简版内容（检索片段 + 问题，不含静态/共享动态）
+    history_content = f"【检索到的相关历史咨询片段】\n{retrieved_block}\n\n【使用者当前问题】\n{question}"
+
+    # 估算 context 并自动压缩（避免超过 500K 上限）
+    compression_info = None
+    if history and not use_full_history:
+        # 粗略估算 context 大小
+        estimated_size = len(current_turn)
+        for turn in history:
+            if turn.get("role") == "user":
+                if turn.get("compressed"):
+                    estimated_size += len(turn.get("content", ""))
+                else:
+                    estimated_size += len(turn.get("history_content", turn.get("content", "")))
+            else:
+                estimated_size += len(turn.get("content", ""))
+
+        # 超过阈值时压缩最旧的一半历史
+        if estimated_size > max_context:
+            mid = len(history) // 2
+            compressed_count = 0
+            for i in range(mid):
+                if history[i].get("role") == "user" and not history[i].get("compressed"):
+                    history[i]["compressed"] = True
+                    compressed_count += 1
+
+            if compressed_count > 0:
+                # 压缩后重新估算
+                new_estimated = len(current_turn)
+                for turn in history:
+                    if turn.get("role") == "user":
+                        new_estimated += len(turn.get("content", "")) if turn.get("compressed") else len(turn.get("history_content", turn.get("content", "")))
+                    else:
+                        new_estimated += len(turn.get("content", ""))
+
+                compression_info = {
+                    "triggered": True,
+                    "compressed_turns": compressed_count,
+                    "before": estimated_size,
+                    "after": new_estimated,
+                }
+
+    # 组装历史对话
     contents = []
     for turn in history or []:
         role = "model" if turn.get("role") in ("assistant", "model") else "user"
-        # 用户轮回放"实际发给 API 的完整内容"（含记忆/检索片段），而不是显示用的原始短问句——
-        # 否则不仅历史轮次会丢失当时的检索依据，Gemini 的隐式缓存（要求前缀逐字节相同）也完全用不上。
-        # 兼容旧会话数据（还没有 api_content 字段的），退回显示文本。
-        text = turn.get("api_content") if role == "user" else turn.get("content")
-        if text is None:
+
+        if role == "user":
+            if use_full_history:
+                # 深度模式：使用完整 api_content
+                text = turn.get("api_content", turn.get("content", ""))
+            elif turn.get("compressed"):
+                # 已压缩：只用原始问题（不含检索片段）
+                text = turn.get("content", "")
+            else:
+                # 正常：检索片段 + 问题
+                text = turn.get("history_content", turn.get("content", ""))
+        else:
             text = turn.get("content", "")
+
         contents.append({"role": role, "parts": [{"text": text}]})
     contents.append({"role": "user", "parts": [{"text": current_turn}]})
 
@@ -797,8 +855,9 @@ def answer(question: str, history: list[dict] | None = None, k: int | None = Non
             "total": usage.total_token_count or 0,
         },
         "matched_graph_nodes": [{"type": n["type"], "label": n["label"]} for n in matched_nodes],
-        # 调用方需要把这个存起来，作为这条用户消息的 history 重放内容（见上面 contents 组装的注释）。
-        "api_content": current_turn,
+        "api_content": current_turn,  # 完整内容（供显示/调试）
+        "history_content": history_content,  # 精简版（检索片段+问题，供历史回放，省 token）
+        "compression_info": compression_info,  # 压缩信息（如果触发了压缩）
     }
 
 

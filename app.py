@@ -378,6 +378,15 @@ with st.sidebar:
     st.subheader("设置")
     show_sources = st.checkbox("显示本轮检索来源", value=True)
     show_tokens = st.checkbox("显示本轮 token 用量明细", value=True)
+
+    st.divider()
+    st.subheader("高级选项")
+    use_full_history = st.checkbox(
+        "深度模式（历史包含完整检索片段）",
+        value=False,
+        help="开启后，历史对话包含完整检索片段。通常不需要开启。\n"
+             "注意：深度模式下 context 增长更快，可能更快达到 500K 上限。"
+    )
     if st.button("⚙️ Gemini 设置（模型 / 参数 / API Key）"):
         gemini_settings_dialog()
     if st.button("⚙️ 索引设置（本地检索 / 分块 / 向量化）"):
@@ -418,11 +427,29 @@ if "messages" not in st.session_state:
 def _render_meta(sources: list[dict], token_usage: dict | None, matched_graph_nodes: list[dict] | None = None):
     if not (show_sources or show_tokens):
         return
+
+    # 估算累积 context 大小
+    total_history = 0
+    for m in st.session_state.messages:
+        if m["role"] == "user":
+            if m.get("compressed"):
+                total_history += len(m.get("content", ""))
+            else:
+                total_history += len(m.get("history_content", m.get("content", "")))
+        else:
+            total_history += len(m.get("content", ""))
+
     label_bits = []
     if show_tokens and token_usage:
         label_bits.append(f"共 {token_usage.get('total', 0)} tokens")
     if show_sources:
         label_bits.append(f"{len(sources)} 个来源片段")
+
+    # Context 监控
+    label_bits.append(f"累积 {total_history/1000:.0f}K 字符")
+    if total_history > 450_000:
+        label_bits.append("⚠️ 接近上限")
+
     with st.expander(" · ".join(label_bits) if label_bits else "详情"):
         if show_tokens and token_usage:
             c1, c2, c3, c4 = st.columns(4)
@@ -456,24 +483,49 @@ if prompt := st.chat_input("说说你在想什么…"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # history 回放每条用户消息当时实际发给 Gemini 的完整内容（api_content），而不是这里显示的
-    # 原始短问句——这样历史轮次才保留完整依据，且能命中 Gemini 的隐式缓存（要求前缀逐字节相同）。
+    # history 传递给 answer()，包含必要的字段供压缩逻辑使用
     history = [
-        {"role": m["role"], "content": m["content"], "api_content": m.get("api_content")}
+        {
+            "role": m["role"],
+            "content": m["content"],
+            "api_content": m.get("api_content"),
+            "history_content": m.get("history_content"),
+            "compressed": m.get("compressed", False),
+        }
         for m in st.session_state.messages
     ]
 
     with st.chat_message("assistant"):
         with st.spinner("正在检索历史咨询、组织回答…"):
             try:
-                result = answer(prompt, history=history)
+                result = answer(prompt, history=history, use_full_history=use_full_history)
             except Exception as e:  # noqa: BLE001
                 st.error(f"出错了：{e}")
                 st.stop()
+
+        # 显示压缩提示
+        if result.get("compression_info") and result["compression_info"]["triggered"]:
+            info = result["compression_info"]
+            st.info(
+                f"📦 自动压缩：为保持在 500K context 以内，已将最旧的 {info['compressed_turns']} 轮对话压缩\n"
+                f"（{info['before']/1000:.0f}K → {info['after']/1000:.0f}K，节省 {(info['before']-info['after'])/1000:.0f}K）"
+            )
+
         st.markdown(result["answer"])
         _render_meta(result["sources"], result.get("token_usage"), result.get("matched_graph_nodes"))
 
-    st.session_state.messages.append({"role": "user", "content": prompt, "api_content": result.get("api_content")})
+    # 同步压缩标记的变化回 session_state
+    if result.get("compression_info"):
+        for i, h in enumerate(history):
+            if i < len(st.session_state.messages) and h.get("compressed"):
+                st.session_state.messages[i]["compressed"] = True
+
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt,
+        "api_content": result.get("api_content"),
+        "history_content": result.get("history_content"),
+    })
     st.session_state.messages.append(
         {
             "role": "assistant",
