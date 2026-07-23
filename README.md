@@ -1,6 +1,93 @@
-# 个人 AI 心理咨询系统 —— 运维手册
+# RAG Agent —— 通用知识库系统（支持多 Workspace）
 
-详细的架构设计见 [PROJECT_SPEC.md](PROJECT_SPEC.md)。这份文件只讲"怎么启动/怎么维护"。
+> 🆕 本系统已改造为**通用的多 Workspace 架构**，支持不同领域的知识库（心理咨询/阿含经/架构设计等）。
+> 原有的心理咨询功能完全保留，作为默认 workspace 继续使用。
+
+详细的架构设计见 [PROJECT_SPEC.md](PROJECT_SPEC.md)。这份文件讲"怎么启动/怎么维护/怎么使用 workspace"。
+
+## 🗂️ Workspace 功能（新）
+
+### 什么是 Workspace？
+
+Workspace 是完全隔离的知识库实例，每个 workspace 有独立的：
+- 📄 **原始文档**（`data/raw/`）
+- 🗄️ **向量库**（LanceDB）
+- 🕸️ **知识图谱**（graph.json）
+- 💬 **对话历史**（chat_sessions/）
+- 📝 **摘要和记忆**（summaries/, LONG_TERM_MEMORY.md）
+
+不同 workspace 可以使用不同的 **Graph Schema**（节点/关系类型），适配不同领域。
+
+### 预置的 Graph Schema
+
+系统提供 4 种预定义 schema：
+
+| Schema | 领域 | 节点类型 | 适用场景 |
+|--------|------|---------|---------|
+| **counseling** | 心理咨询 | 10 类（need/schema/belief/mode/coping/等） | 心理学概念、图式治疗、认知模型 |
+| **generic** | 通用兜底 | 4 类（concept/entity/event/process） | 任意领域的快速上手 |
+| **sutras** | 阿含经 | 5 类（concept/person/teaching/practice/text） | 佛学经文、教义分析 |
+| **solution_arch** | 架构设计 | 6 类（requirement/component/technology/pattern/risk/decision） | 技术方案、系统设计 |
+
+### 如何使用 Workspace？
+
+#### 1. 在 UI 中切换（推荐）
+1. 访问 http://localhost:8502
+2. 侧边栏顶部的 **🗂️ Workspace** 下拉框选择
+3. 查看当前 workspace 状态（文档数/图谱状态）
+
+#### 2. 命令行创建新 Workspace
+
+```python
+from scripts.workspace_manager import create_workspace
+
+# 创建阿含经 workspace
+create_workspace(
+    name="agama-sutras",
+    display_name="阿含经",
+    domain="sutras",
+    graph_schema_mode="predefined",
+    schema_file="sutras.json"
+)
+
+# 创建架构设计 workspace
+create_workspace(
+    name="solution-arch",
+    display_name="架构设计",
+    domain="solution_architecture",
+    graph_schema_mode="predefined",
+    schema_file="solution_arch.json"
+)
+
+# 创建通用 workspace（快速上手）
+create_workspace(
+    name="my-notes",
+    display_name="我的笔记",
+    domain="generic",
+    graph_schema_mode="generic"
+)
+```
+
+### Workspace 目录结构
+
+```
+private.nosync/
+├── .env                      # 全局 - API keys
+├── gemini_settings.json      # 全局 - LLM 参数
+├── index_settings.json       # 全局 - 索引参数
+└── workspaces/
+    ├── counseling/           # 心理咨询（原有数据）
+    │   ├── .workspace_config.json
+    │   ├── data/
+    │   │   ├── raw/
+    │   │   ├── graph.json
+    │   │   └── ...
+    │   └── db/
+    ├── agama-sutras/         # 阿含经
+    └── solution-arch/        # 架构设计
+```
+
+---
 
 ## 〇、架构总览（先有张图心里有底）
 
