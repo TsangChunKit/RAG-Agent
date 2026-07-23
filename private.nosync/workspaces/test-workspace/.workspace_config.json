@@ -1,0 +1,17 @@
+{
+  "name": "test-workspace",
+  "display_name": "测试 Workspace",
+  "description": "测试 Workspace 的知识库",
+  "domain": "generic",
+  "graph_schema": {
+    "mode": "generic"
+  },
+  "persona": {
+    "system_instruction_file": "system_instruction.md",
+    "ai_name": "测试 Workspace AI 助手",
+    "context_role": "助手"
+  },
+  "chunk_prefix_template": "[{session_date} {domain_label}｜发言人：{speakers}｜时间段：{start_ts}–{end_ts}]",
+  "domain_label": "测试 Workspace",
+  "created_at": "2026-07-24T00:21:32.116204"
+}
