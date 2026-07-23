@@ -38,7 +38,9 @@
       "Bash(gh *)",
       "Bash(python3 *)",
       "Bash(python *)",
-      "Bash(awk '{print $NF}')"
+      "Bash(awk '{print $NF}')",
+      "Bash(grep -E \"\\\\.\\(py|sh\\)$\")",
+      "Bash(xargs -I {} basename {})"
     ]
   },
   "hooks": {
