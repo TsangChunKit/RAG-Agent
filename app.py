@@ -25,7 +25,7 @@ from scripts.chat_store import delete_session, list_sessions, load_session, make
 # 真正的报错也仍会打出来。这样就兼得了「改代码自动生效」和「日志干净、闲时零开销」。
 logging.getLogger("streamlit.watcher.local_sources_watcher").setLevel(logging.ERROR)
 
-st.set_page_config(page_title="AI 心理咨询助手", page_icon="🌱", layout="centered")
+st.set_page_config(page_title="RAG Agent", page_icon="🤖", layout="centered")
 
 st.markdown(
     """
@@ -36,8 +36,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("🌱 AI 心理咨询助手")
-st.caption("基于你历次咨询逐字稿的检索增强问答——只发送检索到的相关片段，不上传全部逐字稿。")
+st.title("🤖 RAG Agent")
+st.caption("基于检索增强生成（RAG）的智能问答系统——只发送检索到的相关片段，支持多 workspace 和图谱推理。")
 
 
 @st.dialog("⚙️ System Instruction 设置", width="large")
