@@ -269,12 +269,24 @@ done
 
 ### 完全手动跑（不经过 launchd，纯前台调试用）
 
+**推荐方式（自动处理端口冲突）**：
 ```bash
-cd "/Users/andytsang/Documents/Project/心理咨詢agent"
+cd "/Users/andytsang/Documents/Project/RAG-Agent"
+./scripts/restart_ui.sh          # 自动重启 UI（固定 8502 端口）
+```
+
+**手动方式**：
+```bash
+cd "/Users/andytsang/Documents/Project/RAG-Agent"
 source .venv/bin/activate
-streamlit run app.py --server.port 8501       # Ctrl+C 结束
+streamlit run app.py --server.port 8502       # Ctrl+C 结束
 python -m scripts.chat_memory_watcher          # 另开一个终端跑
 ```
+
+**说明**：
+- `restart_ui.sh` 脚本会自动终止占用 8502 端口的旧进程
+- 日志保存在 `/tmp/streamlit_8502.log`
+- 固定使用 **8502 端口**（避免与其他服务冲突）
 
 ## 四、维护类命令（不是每天要跑，按需执行）
 
