@@ -230,6 +230,10 @@ class TestGraphLoading:
     def test_load_graph_valid(self, tmp_path):
         """测试加载有效图谱"""
         from scripts.ask import _load_graph
+        import scripts.ask
+
+        # 清空 cache（避免之前测试的缓存）
+        scripts.ask._graph_cache = None
 
         graph_file = tmp_path / "graph.json"
         graph_data = {
@@ -241,14 +245,18 @@ class TestGraphLoading:
         }
         graph_file.write_text(json.dumps(graph_data))
 
+        # _load_graph 会合并真实图谱 + AI 对话图谱，两个路径都要 mock，
+        # 否则真实的 chat_graph.json 会被合并进来。
         with patch("scripts.ask.GRAPH_JSON_PATH") as mock_path:
             mock_path.return_value = graph_file
+            with patch("scripts.ask.CHAT_GRAPH_JSON_PATH") as mock_chat_path:
+                mock_chat_path.return_value = tmp_path / "chat_graph.json"  # 不存在
 
-            result = _load_graph(workspace_id=None)
+                result = _load_graph(workspace_id=None)
 
-            assert result is not None
-            assert len(result["nodes"]) == 2
-            assert len(result["edges"]) == 1
+                assert result is not None
+                assert len(result["nodes"]) == 2
+                assert len(result["edges"]) == 1
 
     def test_load_graph_missing(self, tmp_path):
         """测试图谱文件不存在"""
@@ -260,12 +268,15 @@ class TestGraphLoading:
 
         missing_file = tmp_path / "graph.json"
 
+        # 两个图谱路径都不存在时才应返回 None，所以两个都要 mock。
         with patch("scripts.ask.GRAPH_JSON_PATH") as mock_path:
             mock_path.return_value = missing_file
+            with patch("scripts.ask.CHAT_GRAPH_JSON_PATH") as mock_chat_path:
+                mock_chat_path.return_value = tmp_path / "chat_graph.json"  # 不存在
 
-            result = _load_graph(workspace_id=None)
+                result = _load_graph(workspace_id=None)
 
-            assert result is None
+                assert result is None
 
     def test_load_graph_invalid_json(self, tmp_path):
         """测试无效 JSON"""

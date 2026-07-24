@@ -11,3 +11,10 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+
+# 测试/覆盖率产物
+.coverage
+.coverage.*
+.coverage *
+htmlcov/
+.pytest_cache/

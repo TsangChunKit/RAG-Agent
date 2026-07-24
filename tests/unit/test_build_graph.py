@@ -264,7 +264,7 @@ class TestBuildChatGraph:
     @patch("scripts.build_chat_graph.compute_centrality")
     @patch("scripts.build_chat_graph.ask_llm")
     @patch("scripts.build_chat_graph._load_therapy_graph")
-    @patch("scripts.update_chat_memory.load_chat_sessions")
+    @patch("scripts.build_chat_graph.load_chat_sessions")
     def test_build_chat_graph_basic(
         self,
         mock_load_sessions,
@@ -341,7 +341,7 @@ class TestBuildChatGraph:
     @patch("scripts.build_chat_graph.compute_centrality")
     @patch("scripts.build_chat_graph.ask_llm")
     @patch("scripts.build_chat_graph._load_therapy_graph")
-    @patch("scripts.update_chat_memory.load_chat_sessions")
+    @patch("scripts.build_chat_graph.load_chat_sessions")
     def test_build_chat_graph_empty_sessions(
         self,
         mock_load_sessions,
@@ -365,7 +365,7 @@ class TestBuildChatGraph:
     @patch("scripts.build_chat_graph.compute_centrality")
     @patch("scripts.build_chat_graph.ask_llm")
     @patch("scripts.build_chat_graph._load_therapy_graph")
-    @patch("scripts.update_chat_memory.load_chat_sessions")
+    @patch("scripts.build_chat_graph.load_chat_sessions")
     def test_build_chat_graph_filters_invalid_dates(
         self,
         mock_load_sessions,
@@ -414,7 +414,7 @@ class TestBuildChatGraph:
     @patch("scripts.build_chat_graph.compute_centrality")
     @patch("scripts.build_chat_graph.ask_llm")
     @patch("scripts.build_chat_graph._load_therapy_graph")
-    @patch("scripts.update_chat_memory.load_chat_sessions")
+    @patch("scripts.build_chat_graph.load_chat_sessions")
     def test_build_chat_graph_filters_invalid_node_ids(
         self,
         mock_load_sessions,
@@ -467,7 +467,7 @@ class TestBuildChatGraph:
     @patch("scripts.build_chat_graph.compute_centrality")
     @patch("scripts.build_chat_graph.ask_llm")
     @patch("scripts.build_chat_graph._load_therapy_graph")
-    @patch("scripts.update_chat_memory.load_chat_sessions")
+    @patch("scripts.build_chat_graph.load_chat_sessions")
     def test_build_chat_graph_filters_invalid_edges(
         self,
         mock_load_sessions,
@@ -580,7 +580,7 @@ class TestErrorHandling:
     @patch("scripts.build_chat_graph.compute_centrality")
     @patch("scripts.build_chat_graph.ask_llm")
     @patch("scripts.build_chat_graph._load_therapy_graph")
-    @patch("scripts.update_chat_memory.load_chat_sessions")
+    @patch("scripts.build_chat_graph.load_chat_sessions")
     def test_build_chat_graph_with_malformed_llm_response(
         self,
         mock_load_sessions,
