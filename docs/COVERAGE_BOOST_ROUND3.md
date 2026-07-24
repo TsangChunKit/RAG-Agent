@@ -287,7 +287,7 @@ scripts/: 53% → 61% (+8%)
 累计测试: 569 个（Round 1: 124 + Round 2: 159 + Round 3: 286）
 ```
 
-### 测试通过率
+### 测试通过率（Round 3 完成时）
 
 ```
 总测试: 569 个
@@ -296,6 +296,11 @@ scripts/: 53% → 61% (+8%)
 跳过: 1 个
 通过率: 97.7%
 ```
+
+> 📌 **最新实测（2026-07-24 复核）**：565 通过 / 3 失败 / 73 跳过，整体覆盖率 **60%**。
+> 仍有 3 个失败测试（`test_ask.py::TestGraphLoading::test_load_graph_valid/_missing`、
+> `test_build_graph.py::TestBuildChatGraph::test_build_chat_graph_empty_sessions`），
+> 均为 mock/数据结构不匹配，非生产 bug，待修复。跳过数由 1 增至 73（多为需要真实模型/集成环境的用例）。
 
 ### 开发投入
 

@@ -338,22 +338,24 @@ def validate_input(text: str) -> bool:
 
 #### 覆蓋率目標（強制執行）
 
+> 數據更新於 2026-07-24（實測 `pytest --cov=scripts --cov=app`）。
+
 | 模塊類型 | 最低覆蓋率 | 推薦覆蓋率 | 狀態 |
 |---------|----------|-----------|-----|
-| **核心業務邏輯** | 80% | 90% | 🔴 當前 13-35% |
-| **配置/工具類** | 60% | 80% | 🟡 當前 50-71% |
-| **UI 代碼** | 50% | 70% | 🟢 當前 N/A |
-| **批處理腳本** | 40% | 60% | 🔴 當前 0% |
-| **整體項目** | 70% | 85% | 🔴 當前 22% |
+| **核心業務邏輯** | 80% | 90% | 🟡 當前 54-100%（多數達標）|
+| **配置/工具類** | 60% | 80% | 🟢 當前 71-100% |
+| **UI 代碼** | 50% | 70% | 🔴 當前 app.py 33% |
+| **批處理腳本** | 40% | 60% | 🔴 當前 0-43%（watcher/ingest_new 未測）|
+| **整體項目** | 70% | 85% | 🟡 當前 60% |
 
-**核心業務邏輯包括**：
-- `scripts/ask.py` - 問答核心（當前 13% ❌）
-- `scripts/chunk.py` - 分塊邏輯（當前 35% ❌）
-- `scripts/ingest.py` - 入庫邏輯（當前 32% ❌）
-- `scripts/build_graph.py` - 圖譜構建（當前 33% ❌）
-- `scripts/graph_utils.py` - 圖譜工具（當前 9% ❌）
+**核心業務邏輯現狀**：
+- `scripts/ask.py` - 問答核心（當前 75% 🟡）
+- `scripts/chunk.py` - 分塊邏輯（當前 89% ✅）
+- `scripts/ingest.py` - 入庫邏輯（當前 78% 🟡）
+- `scripts/build_graph.py` - 圖譜構建（當前 54% 🟡）
+- `scripts/graph_utils.py` - 圖譜工具（當前 100% ✅）
 
-**當前問題**：這些文件總共 1000+ 行代碼，只有 20% 被測試覆蓋 = 80% 完全沒測試！
+**當前缺口**：仍有多個批處理/看門狗腳本（`auto_fix.py`、`chat_memory_watcher.py`、`raw_ingest_watcher.py`、`ingest_new.py`、`update_memory.py`、`check_code_patterns.py`）覆蓋率為 0%，以及 `app.py` 僅 33%——是拉低整體到 60% 的主因。
 
 #### 新功能開發檢查清單
 
@@ -531,38 +533,28 @@ git commit --no-verify -m "emergency fix: ..."
 
 ## 提升覆蓋率行動計劃
 
-### 優先級 P0（核心業務邏輯，必須儘快達到 80%）
+> 數據更新於 2026-07-24。早期 P0 目標（ask.py / graph_utils.py / chunk.py）已基本達成，
+> 剩餘缺口集中在批處理/看門狗腳本與 UI。
 
-1. **scripts/ask.py** (13% → 80%)
-   - 當前：532 行，只測試了 67 行
-   - 需要：400+ 行測試覆蓋
-   - 重點測試：
-     * `retrieve()` 函數（混合檢索邏輯）
-     * `answer()` 函數（問答主流程）
-     * GraphRAG 引導檢索
-     * 歷史壓縮邏輯
+### 已達成（保持不回退）
 
-2. **scripts/graph_utils.py** (9% → 80%)
-   - 當前：99 行，只測試了 9 行
-   - 需要：70+ 行測試覆蓋
-   - 重點測試：
-     * `resolve_graph()` 圖譜歸並算法
-     * 節點去重邏輯
-     * 邊合併邏輯
+- ✅ **scripts/graph_utils.py** 100%
+- ✅ **scripts/chunk.py** 89%
+- 🟡 **scripts/ask.py** 75%（接近 80% 目標，補齊歷史壓縮/GraphRAG 分支即可達標）
+- 🟡 **scripts/ingest.py** 78%、**scripts/session_graph.py** 78%
 
-3. **scripts/chunk.py** (35% → 80%)
-   - 當前：133 行，測試了 47 行
-   - 需要：60+ 行新測試
-   - 重點測試：
-     * 滑動窗口分塊
-     * 父塊擴展
-     * 上下文前綴生成
+### 優先級 P0（0% 覆蓋，風險最高）
 
-### 優先級 P1（工具類，達到 60%）
+1. **scripts/update_memory.py** (0% → 60%)
+2. **scripts/ingest_new.py** (0% → 40%)
+3. **scripts/auto_fix.py** (0% → 40%)
+4. 看門狗腳本 **chat_memory_watcher.py / raw_ingest_watcher.py** (0% → 40%)
 
-4. **scripts/ingest.py** (32% → 60%)
-5. **scripts/build_graph.py** (33% → 60%)
-6. **scripts/session_graph.py** (21% → 60%)
+### 優先級 P1（拉高整體到 70%）
+
+5. **app.py** (33% → 50%)：UI 主流程
+6. **scripts/index_records.py** (20% → 60%)
+7. **scripts/build_graph.py** (54% → 60%)
 
 ### 如何快速提升？
 

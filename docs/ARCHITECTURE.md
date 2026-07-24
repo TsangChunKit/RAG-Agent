@@ -42,7 +42,7 @@ ParsedSession
 
 **关键模块依赖**：
 - `summarize.py` → `llm.py`, `parse.py`
-- `update_memory.py` → `summarize.py`
+- `update_memory.py` → `llm.py`, `settings.py`, `config`（直接读 SUMMARIES_DIR，不依赖 summarize.py）
 
 ### 3. 图谱构建流程
 
@@ -94,7 +94,7 @@ ParsedSession
 
 ```
 Layer 0: 基础设施
-├─ config.py          # 配置和路径
+├─ config.py          # 配置和路径（位于项目根目录，导入用 `from config import ...`）
 ├─ workspace_manager.py  # Workspace 管理
 └─ graph_schema_loader.py  # Schema 加载
 
@@ -170,22 +170,39 @@ def some_function(..., workspace_id: Optional[str] = None):
 ```python
 from scripts.llm import ask_llm
 
-# 基本调用
+# 基本调用（contents 为位置参数，其余均为 keyword-only）
 response = ask_llm(
-    system="You are...",
-    user_prompt="Question",
-    llm_type="dialogue",  # 或 "summary"
-    cache_name=None,      # 缓存名（可选）
+    "Question",                    # contents: str 或多轮 [{"role", "parts"}]
+    profile="dialogue",            # 或 "summary"
+    system_instruction="You are...",
+    cached_content=None,           # Explicit Cache 资源名（可选，仅 Gemini）
 )
 
-# response 是 LLM 原始响应对象，有 .text 属性
+# response 是 _Response(text, usage_metadata)，有 .text 属性
 answer = response.text
 ```
 
+完整签名：
+
+```python
+def ask_llm(
+    contents,                              # 位置参数：str 或 [{"role": "user"/"model", "parts": [...]}]
+    *,                                     # 以下均为 keyword-only
+    profile: str = "dialogue",
+    system_instruction: Optional[str] = None,
+    response_schema: Optional[dict] = None,  # 传入则强制 JSON 结构化输出
+    max_output_tokens: Optional[int] = None,
+    model: Optional[str] = None,
+    temperature: Optional[float] = None,
+    thinking_level: Optional[str] = None,
+    cached_content: Optional[str] = None,
+): ...
+```
+
 **注意**：
-- `llm_type="dialogue"` 使用对话配置（model, temperature 等）
-- `llm_type="summary"` 使用摘要配置（更便宜的模型）
-- `cache_name` 用于 Explicit Cache（仅 Gemini）
+- `profile="dialogue"` 使用对话配置（model, temperature 等）
+- `profile="summary"` 使用摘要配置（更便宜的模型）
+- `cached_content` 用于 Explicit Cache（仅 Gemini；grok 恒为 None）
 
 ### 向量检索接口
 
@@ -194,8 +211,7 @@ from scripts.ask import retrieve
 
 results = retrieve(
     query="用户问题",
-    k=10,  # 返回 10 个片段
-    workspace_id="my-workspace"
+    k=10,  # 返回 10 个片段（无 workspace_id 参数，使用当前 workspace）
 )
 
 # results: list[dict]
@@ -225,12 +241,12 @@ private.nosync/
         ├── CHAT_MEMORY.md          # 对话记忆总结
         ├── data/
         │   ├── raw/                # 原始逐字稿
-        │   ├── processed/          # (保留，未使用)
+        │   ├── processed/          # 处理产物
+        │   │   └── chunks.jsonl    # 所有 chunks（入库/统计用）
         │   ├── summaries/          # 摘要 JSON
         │   ├── graph_fragments/    # 图谱片段
         │   ├── graph.json          # 合并后的主图谱
         │   ├── chat_graph.json     # AI 对话图谱
-        │   ├── chunks.jsonl        # 所有 chunks（用于覆盖率统计）
         │   ├── index_changelog.jsonl  # 索引变更记录
         │   └── chat_sessions/      # 对话会话
         │       └── {session_id}.json
@@ -244,18 +260,22 @@ LanceDB 表：`sessions`
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
+| `id` | `str` | chunk 唯一 ID |
 | `vector` | `FixedSizeList(1024, float32)` | BGE-M3 dense 向量 |
-| `text` | `str` | 片段文本 |
+| `text` | `str` | 片段文本（含上下文前缀，供 FTS/embedding）|
+| `raw_text` | `str` | 原始拼接文本（不含前缀）|
 | `source_file` | `str` | 来源文件名 |
 | `session_date` | `str` | 日期 YYYY-MM-DD |
 | `chunk_index` | `int` | 在文件中的索引 |
-| `speakers` | `str` | 发言人（逗号分隔）|
+| `speaker` | `str` | 发言人（逗号分隔，⚠️ 列名单数，来自 Chunk.speakers）|
 | `start_ts` | `str` | 起始时间戳 |
 | `end_ts` | `str` | 结束时间戳 |
+| `prev_chunk_id` | `str` | 前一个 chunk 的 id（无则空串）|
+| `next_chunk_id` | `str` | 后一个 chunk 的 id（无则空串）|
 
 **索引**：
-- FTS 索引：`text` 字段
-- 向量索引：IVF-PQ
+- FTS 索引：`text` 字段（ngram tokenizer，见 index_settings）
+- 向量：不建 ANN 索引（数据规模小，直接暴力搜索即可）
 
 ### 图谱 Schema
 
@@ -438,11 +458,15 @@ UI 状态存储在 `st.session_state`：
 
 ### Workspace 迁移
 
-从旧结构（`private.nosync/data/`）到新结构（`workspaces/`）：
+从旧项目（`心理咨詢agent`）迁移到新项目的 workspace：
 
 ```bash
-python scripts/migrate_to_workspace.py --name counseling
+python scripts/migrate_from_old_project.py
 ```
+
+**注意**：脚本不接受 CLI 参数——源路径、目标路径、workspace 名称
+（`counseling`）均在 `migrate_from_old_project.py` 顶部常量中硬编码，
+如需改动请直接编辑该文件。
 
 ### 配置升级
 

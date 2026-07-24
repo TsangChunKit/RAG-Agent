@@ -79,10 +79,14 @@ def answer(
     
     Returns:
         {
-            "answer": str,              # LLM 回答
-            "retrieved_count": int,     # 检索到的片段数
-            "graph_nodes_matched": int, # 匹配的图谱节点数
-            "thinking_content": str,    # 思考过程（如果有）
+            "answer": str,                    # LLM 回答
+            "sources": list[dict],            # 检索到的来源片段
+            "input_tokens": int,              # 输入 token 数（向后兼容旧字段名）
+            "token_usage": dict,              # {input, output, thinking, cached, total}
+            "matched_graph_nodes": list[dict],# 匹配的图谱节点 [{"type", "label"}]
+            "api_content": str,               # 完整内容（供显示/调试）
+            "history_content": str,           # 精简版（检索片段+问题，供历史回放）
+            "compression_info": Optional[dict], # 压缩信息（如果触发了压缩）
         }
     """
 ```
@@ -91,25 +95,27 @@ def answer(
 ```python
 def retrieve(
     query: str,
-    k: Optional[int] = None,
-    workspace_id: Optional[str] = None
+    k: Optional[int] = None
 ) -> list[dict]:
     """
-    混合检索（向量 + FTS + 重排序）。
+    混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排 → 父块/窗口扩展。
+
+    注意：本函数没有 workspace_id 参数，使用当前 workspace（由 index_settings 决定）。
     
     Args:
         query: 查询文本
-        k: 返回结果数量
-        workspace_id: Workspace ID
+        k: 返回结果数量（None = 使用「⚙️ 索引设置」当前值）
     
     Returns:
         [
             {
-                "text": str,           # 片段文本
-                "source_file": str,    # 来源文件
-                "session_date": str,   # 日期 YYYY-MM-DD
-                "rank": int,           # 排序（越小越相关）
-                "score": float,        # 相关性分数
+                "source_file": str,          # 来源文件
+                "session_date": str,         # 日期 YYYY-MM-DD
+                "start_ts": str,             # 窗口起始时间戳
+                "end_ts": str,               # 窗口结束时间戳
+                "chunk_index_range": tuple,  # (起始 chunk_index, 结束 chunk_index)
+                "text": str,                 # 片段文本（父块/窗口扩展后）
+                "rank": int,                 # 排序（越小越相关）
             }
         ]
     """
@@ -157,7 +163,9 @@ def get_current_workspace() -> str:
     优先级：
     1. Streamlit session_state
     2. 环境变量 CURRENT_WORKSPACE
-    3. "_legacy" (兼容模式)
+    3. 旧路径数据检测（存在则回退 "_legacy"）
+    4. WORKSPACES_ROOT 下按字母序的第一个 workspace
+    5. 兜底 "_legacy"
     
     Returns:
         Workspace ID 字符串
@@ -170,24 +178,24 @@ def create_workspace(
     name: str,
     display_name: str,
     domain: str,
-    graph_schema_mode: str,
+    graph_schema_mode: str = "generic",
     schema_file: Optional[str] = None
-) -> str:
+) -> Path:
     """
     创建新 workspace。
     
     Args:
-        name: Workspace ID（slug 格式，如 "my-notes"）
+        name: Workspace ID（slug 格式，如 "my-notes"；不能为 "_legacy"）
         display_name: 显示名称（如 "我的笔记"）
-        domain: 领域（"counseling", "generic", "sutras" 等）
-        graph_schema_mode: Schema 模式（"predefined", "generic", "custom"）
+        domain: 领域（"counseling", "generic", "sutras", "solution_arch" 等）
+        graph_schema_mode: Schema 模式（"predefined", "generic", "custom"，默认 "generic"）
         schema_file: Schema 文件名（mode="predefined" 时必需）
     
     Returns:
-        创建的 workspace ID
+        Path: 创建的 workspace 根目录
     
     Raises:
-        ValueError: Workspace 已存在
+        ValueError: Workspace 已存在或参数无效
     """
 ```
 
@@ -202,10 +210,12 @@ def list_workspaces() -> list[dict]:
             {
                 "name": str,          # Workspace ID
                 "display_name": str,  # 显示名称
-                "domain": str,        # 领域
-                "created_at": str,    # 创建时间 ISO 8601
+                "created_at": str,    # 创建时间 ISO 8601（_legacy 为 None）
             }
         ]
+
+    注意：返回项不含 domain 字段；如需 domain 请用 load_workspace_config(name)。
+    列表包含 _legacy（若旧路径数据存在），并按 name 排序。
     """
 ```
 
@@ -219,14 +229,20 @@ def list_workspaces() -> list[dict]:
 ```python
 @dataclass
 class Chunk:
-    text: str              # 片段文本
-    chunk_index: int       # 在文件中的索引（从 0 开始）
-    source_file: str       # 来源文件名
+    id: str                # 唯一 ID
     session_date: str      # 会话日期 YYYY-MM-DD
-    speakers: str          # 发言人（逗号分隔）
-    start_ts: str         # 起始时间戳
-    end_ts: str           # 结束时间戳
+    source_file: str       # 来源文件名
+    chunk_index: int       # 在文件中的索引（从 0 开始）
+    speakers: str          # 发言人（逗号分隔，去重）
+    start_ts: str          # 起始时间戳
+    end_ts: str            # 结束时间戳
+    raw_text: str          # 原始拼接文本（不含上下文前缀）
+    text: str              # raw_text 前加上下文化前缀，供 embedding + FTS
+    prev_chunk_id: Optional[str] = None  # 前一个 chunk 的 id
+    next_chunk_id: Optional[str] = None  # 后一个 chunk 的 id
 ```
+
+> ⚠️ 字段顺序即为 dataclass 定义顺序，位置构造请以此为准。
 
 ### 核心函数
 
@@ -258,32 +274,34 @@ def chunk_session(
 ```python
 @dataclass
 class Utterance:
-    timestamp: str    # 时间戳（如 "00:15:30"）
     speaker: str      # 发言人
+    timestamp: str    # 时间戳 HH:MM:SS（伪发言人小节沿用上一条真实时间戳）
     text: str         # 发言内容
     line_no: int      # 行号
 ```
+
+> ⚠️ 首两字段顺序为 `speaker, timestamp`（与直觉相反），位置构造请注意。
 
 #### `ParsedSession` (dataclass)
 ```python
 @dataclass
 class ParsedSession:
     source_file: str        # 文件名
-    session_date: str       # 日期 YYYY-MM-DD
-    file_datetime: str      # 文件名中的时间戳
-    utterances: list[Utterance]  # 发言列表
+    session_date: str       # 日期 YYYY-MM-DD，来自文件名
+    file_datetime: str      # 文件名原始 14 位数字（生成时间，仅记录）
+    utterances: list[Utterance] = field(default_factory=list)  # 发言列表
 ```
 
 ### 核心函数
 
 #### `parse_transcript()`
 ```python
-def parse_transcript(file_path: str) -> ParsedSession:
+def parse_transcript(path: Path) -> ParsedSession:
     """
     解析逐字稿文件。
     
     Args:
-        file_path: 文件路径（文件名必须包含日期）
+        path: 文件路径 Path 对象（文件名必须包含日期；内部调用 path.name / path.read_text）
     
     Returns:
         ParsedSession 对象
