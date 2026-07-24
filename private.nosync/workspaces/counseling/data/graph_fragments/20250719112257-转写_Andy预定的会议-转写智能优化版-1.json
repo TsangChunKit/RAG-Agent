@@ -1,0 +1,277 @@
+{
+  "source_file": "20250719112257-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-07-19",
+  "nodes": [
+    {
+      "id": "need:predictability",
+      "type": "need",
+      "label": "安全与可预测感",
+      "domain": "",
+      "description": "渴望通过提前预设最坏情况来掌控局面，以获得心理上的安全感。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望在关系中保持独立，不被过度依赖或被他人情绪绑架。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "遗弃/不稳定图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧重要他人会离开，源于童年母亲离去及初恋的拒绝。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为主动结束关系即意味着自己是伤害他人的坏人，内心感到羞耻。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "belief:worst_case_control",
+      "type": "belief",
+      "label": "预设最坏假设",
+      "domain": "",
+      "description": "如果我预设了最坏的可能性并准备好应对，我就能感到安心。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "belief:bad_person_if_leave",
+      "type": "belief",
+      "label": "抛弃者即坏人",
+      "domain": "",
+      "description": "如果我明确提出分手，我就是在伤害对方，我就是一个坏人。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者",
+      "domain": "",
+      "description": "通过回避、拖延、不回应来隔绝情感痛苦和冲突。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "在面对关系变动时感到焦虑、无助，害怕被抛弃或被指责。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避/拖延",
+      "domain": "",
+      "description": "通过拖着不分手、不直接回应对方需求来避免直接面对冲突。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "trigger:therapist_move",
+      "type": "trigger",
+      "label": "咨询师变动",
+      "domain": "",
+      "description": "咨询师即将去国外，引发对关系不稳定的担忧。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "trigger:girlfriend_demand",
+      "type": "trigger",
+      "label": "伴侣情感索取",
+      "domain": "",
+      "description": "伴侣发长文指责或要求回应，激活了被指责和需要负责的压力。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "面对不确定性时的心理紧张。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "内疚",
+      "domain": "",
+      "description": "认为自己伤害了对方而产生的负罪感。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "3岁时离开的母亲，是遗弃感的来源。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "person:first_love",
+      "type": "person",
+      "label": "初恋",
+      "domain": "",
+      "description": "曾主动提出分手，导致来访者体验到被抛弃的痛苦。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "现任/前任女友",
+      "domain": "",
+      "description": "目前处于分手边缘，不断索取回应的对象。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "id": "event:mother_departure",
+      "type": "event",
+      "label": "母亲离去事件",
+      "domain": "",
+      "description": "3岁时母亲离开，形成早期的遗弃创伤。",
+      "related_dates": [
+        "2025-07-19"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W)：母亲陪伴 -> 对方反应(RO)：母亲离开 -> 自我反应(RS)：形成遗弃感",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "person:first_love",
+      "target": "schema:abandonment",
+      "relation_type": "originates",
+      "relation": "渴望(W)：维持关系 -> 对方反应(RO)：提出分手 -> 自我反应(RS)：感到被抛弃且受重伤",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "belief:bad_person_if_leave",
+      "relation_type": "assumes",
+      "relation": "因恐惧遗弃，将主动结束关系等同于成为抛弃者（坏人）",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "belief:bad_person_if_leave",
+      "target": "coping:avoidance",
+      "relation_type": "derives",
+      "relation": "为了避免成为坏人，采取拖延和回避策略",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "trigger:therapist_move",
+      "target": "belief:worst_case_control",
+      "relation_type": "activates",
+      "relation": "咨询师变动激活了预设最坏假设的防御机制",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "belief:worst_case_control",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "通过控制假设试图缓解焦虑",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "trigger:girlfriend_demand",
+      "target": "mode:detached_protector",
+      "relation_type": "activates",
+      "relation": "伴侣的索取激活了疏离保护者模式",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "coping:avoidance",
+      "relation_type": "derives",
+      "relation": "疏离保护者通过回避来调节情绪",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "coping:avoidance",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "回避行为导致无法彻底解决关系，产生持续的内疚",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "coping:avoidance",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：摆脱纠缠 -> 对方反应(RO)：不断索取 -> 自我反应(RS)：采取回避/拖延",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    },
+    {
+      "source": "schema:abandonment",
+      "target": "mode:vulnerable_child",
+      "relation_type": "derives",
+      "relation": "遗弃图式使得脆弱儿童部分在关系变动时被激活",
+      "evidence_dates": [
+        "2025-07-19"
+      ]
+    }
+  ]
+}

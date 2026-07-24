@@ -1,4 +1,4 @@
-“””知识图谱可视化：多层可交互关系图（mindmap），支持多 workspace。
+"""知识图谱可视化：多层可交互关系图（mindmap），支持多 workspace。
 
 这里负责可视化 + 合并两张图：
 - data/graph.json：主图谱（build_graph.py 生成，手动重新生成）；
@@ -8,7 +8,7 @@
 AI 对话记忆的节点带虚线边框，和主图谱区分开。
 
 支持 workspace：自动读取当前 workspace 的图谱文件。
-“””
+"""
 import json
 
 import streamlit as st
@@ -20,26 +20,26 @@ from scripts.graph_utils import NODE_TYPES, RELATION_TYPES, merge_graphs
 from scripts.workspace_manager import get_current_workspace, load_workspace_config
 from scripts.graph_schema_loader import load_schema, get_node_types, get_relation_types
 
-st.set_page_config(page_title=”知识图谱”, page_icon=”🕸️”, layout=”wide”)
+st.set_page_config(page_title="知识图谱", page_icon="🕸️", layout="wide")
 
 # 获取当前 workspace 信息
 current_workspace = get_current_workspace()
 workspace_config = load_workspace_config(current_workspace)
-workspace_name = workspace_config.get(“display_name”, current_workspace)
+workspace_name = workspace_config.get("display_name", current_workspace)
 
-st.title(f”🕸️ {workspace_name} - 知识图谱”)
+st.title(f"🕸️ {workspace_name} - 知识图谱")
 st.caption(
-    f”Workspace: {workspace_name} | “
-    “节点大小 = 中心性（越大说明连接越多），可拖拽/缩放/悬停查看详情。”
-    “虚线边框 = 来自 AI 对话记忆。”
+    f"Workspace: {workspace_name} | "
+    "节点大小 = 中心性（越大说明连接越多），可拖拽/缩放/悬停查看详情。"
+    "虚线边框 = 来自 AI 对话记忆。"
 )
 
 
 def _load(path):
-    “””加载 JSON 文件（workspace 感知）。”””
+    """加载 JSON 文件（workspace 感知）。"""
     if callable(path):
         path = path(current_workspace)
-    return json.loads(path.read_text(encoding=”utf-8”)) if path.exists() else None
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
 therapy_graph = _load(GRAPH_JSON_PATH)

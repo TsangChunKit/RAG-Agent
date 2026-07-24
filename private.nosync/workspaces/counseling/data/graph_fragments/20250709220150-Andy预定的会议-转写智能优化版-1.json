@@ -1,0 +1,248 @@
+{
+  "source_file": "20250709220150-Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-07-09",
+  "nodes": [
+    {
+      "id": "need:fairness_and_autonomy",
+      "type": "need",
+      "label": "公平与财务自主",
+      "domain": "",
+      "description": "渴望在亲密关系中获得对等的付出与财务上的独立空间，不希望被当作补贴工具。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "咨询中反复提及的核心依附对象，消费观与Andy存在冲突，常表现出理所当然索取的态度。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "臣服图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "为了避免冲突和被抛弃，过度顺从对方的经济要求，牺牲自己的真实意愿。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "schema:emotional_deprivation",
+      "type": "schema",
+      "label": "情感剥夺图式",
+      "domain": "Disconnection & Rejection",
+      "description": "感到在关系中没有得到应有的理解、支持和公平对待，内心感到孤独与受损。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "belief:if_i_set_boundaries_she_will_leave",
+      "type": "belief",
+      "label": "如果我设限，她就会离开",
+      "domain": "",
+      "description": "认为建立财务边界会导致关系破裂，因此不敢真正执行。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "belief:i_am_subsidizing_her_life",
+      "type": "belief",
+      "label": "我是在补贴她的生活",
+      "domain": "",
+      "description": "认为自己的付出被对方视为理所当然，自己处于一种被利用的被补贴者位置。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到委屈、无力、被利用，渴望被爱与被公平对待，但感到无能为力。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "屈服顺从者模式",
+      "domain": "",
+      "description": "为了维持关系，默默承受不公平的经济压力，不敢直接表达拒绝。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "mode:angry_child",
+      "type": "mode",
+      "label": "愤怒儿童模式",
+      "domain": "",
+      "description": "对不公平待遇感到愤怒，想反抗但又感到矛盾和无力。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "coping:avoidance_of_conflict",
+      "type": "coping",
+      "label": "冲突回避",
+      "domain": "",
+      "description": "选择不直接摊牌，把冲突压在心里，避免面对可能的分手结果。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "trigger:girlfriend_unreasonable_spending",
+      "type": "trigger",
+      "label": "对方不合理消费",
+      "domain": "",
+      "description": "当对方在自己觉得没必要的地方（如高价拍照）花费大额金钱，而日常开销依赖自己时。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "automatic_thought:she_treats_me_as_a_wallet",
+      "type": "automatic_thought",
+      "label": "她把我当提款机",
+      "domain": "",
+      "description": "在看到对方乱花钱时，脑中闪过的念头，感到被利用。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "emotion:resentment",
+      "type": "emotion",
+      "label": "心理不平衡/怨恨",
+      "domain": "",
+      "description": "对不公平支出的直接情绪反应。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "emotion:helplessness",
+      "type": "emotion",
+      "label": "无力感",
+      "domain": "",
+      "description": "面对既不想分手又不想继续被剥削的处境，感到卡在中间。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "id": "event:girlfriend_spent_3000_on_photos",
+      "type": "event",
+      "label": "女友花3000元拍照事件",
+      "domain": "",
+      "description": "本次咨询的核心触发事件，导致Andy心理失衡。",
+      "related_dates": [
+        "2025-07-09"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:fairness_and_autonomy",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期在关系中无法获得公平对待，导致形成通过压抑自我来换取关系的臣服模式。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：希望获得公平对待与财务尊重 → 对方反应(RO)：理所当然地索取并忽视边界 → 自我反应(RS)：感到被利用、委屈但又不敢拒绝",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:if_i_set_boundaries_she_will_leave",
+      "relation_type": "assumes",
+      "relation": "臣服图式派生出对冲突的灾难化预测。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "derives",
+      "relation": "图式直接驱动了屈服顺从的行为模式。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "trigger:girlfriend_unreasonable_spending",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "触发了内心感到受委屈和无助的脆弱部分。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "automatic_thought:she_treats_me_as_a_wallet",
+      "relation_type": "produces",
+      "relation": "脆弱状态下产生的认知偏差。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "automatic_thought:she_treats_me_as_a_wallet",
+      "target": "emotion:resentment",
+      "relation_type": "evokes",
+      "relation": "引发强烈的心理不平衡感。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "emotion:resentment",
+      "target": "coping:avoidance_of_conflict",
+      "relation_type": "regulated_by",
+      "relation": "通过回避来调节无法处理的愤怒与怨恨。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "mode:angry_child",
+      "relation_type": "conflicts_with",
+      "relation": "顺从的行为与内心的愤怒在不断拉扯，造成内耗。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "event:girlfriend_spent_3000_on_photos",
+      "relation_type": "manifested_in",
+      "relation": "该事件是臣服图式被激活的具体体现。",
+      "evidence_dates": [
+        "2025-07-09"
+      ]
+    }
+  ]
+}

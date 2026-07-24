@@ -1,0 +1,326 @@
+{
+  "source_file": "20250513220005-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-05-13",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能够自由掌控生活节奏，如在失业时选择休息，而非被外界压力驱使。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "need:acceptance",
+      "type": "need",
+      "label": "被无条件接纳",
+      "domain": "",
+      "description": "渴望即使在不工作或表现不佳时，依然能获得母亲的接纳而非指责。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "核心依附对象，其表现出的焦虑与对勤奋的要求直接影响了Andy的心理状态。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈从图式",
+      "domain": "他人取向（Other-Directedness）",
+      "description": "为了避免冲突或被抛弃，过度压抑自己的真实需求，屈从于母亲的焦虑和价值观。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败者图式",
+      "domain": "自主性与表现受损（Impaired Autonomy & Performance）",
+      "description": "内心深处担忧自己如果不够努力、不工作就是无用的，这是一种对‘无能’的恐惧。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "belief:work_hard_or_useless",
+      "type": "belief",
+      "label": "勤奋即价值假设",
+      "domain": "",
+      "description": "如果不时刻保持勤奋工作，我就是一个好吃懒做、没有价值的人。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "belief:unemployment_is_catastrophic",
+      "type": "belief",
+      "label": "失业即灾难假设",
+      "domain": "",
+      "description": "失业或不工作等同于世界末日，会招致严重的后果（被指责、被抛弃）。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "在母亲焦虑情绪下，感到恐惧、无助，担心被抛弃和指责的自我部分。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内化的母亲声音，不断评价自己‘是不是工作表现不好’、‘是不是太懒’。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "理性的自我部分，能分析财务状况，意识到即使失业也有存款，不需要过度恐慌。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "coping:hypervigilance",
+      "type": "coping",
+      "label": "过度警觉/防御",
+      "domain": "",
+      "description": "对经济和工作状态保持高度关注，通过节俭和不断工作来防御生存焦虑。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避/隐瞒",
+      "domain": "",
+      "description": "当遇到失败（如大学挂科）时，选择不告诉母亲，以回避被指责的风险。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "trigger:mother_anxiety",
+      "type": "trigger",
+      "label": "母亲表达生存焦虑",
+      "domain": "",
+      "description": "当母亲谈论裁员、交税、不要乱花钱时，会瞬间激活Andy的生存恐惧。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "trigger:potential_unemployment",
+      "type": "trigger",
+      "label": "提及失业或辞职",
+      "domain": "",
+      "description": "无论是主动辞职还是被动裁员的设想，都会触发对‘被指责’的恐惧。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "thought:mom_will_criticize",
+      "type": "automatic_thought",
+      "label": "母亲会指责我",
+      "domain": "",
+      "description": "‘如果我不工作，妈妈会问我为什么被炒，是不是表现不好，是不是太懒。’",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "thought:i_am_useless",
+      "type": "automatic_thought",
+      "label": "我是个无用的人",
+      "domain": "",
+      "description": "‘如果不努力工作，我就没什么用，这简直是世界末日。’",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "emotion:survival_anxiety",
+      "type": "emotion",
+      "label": "生存焦虑",
+      "domain": "",
+      "description": "对未来失去经济保障的恐惧，被母亲的焦虑所感染。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "认为自己‘好吃懒做’或‘不努力’而产生的自我厌恶。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "emotion:resentment",
+      "type": "emotion",
+      "label": "厌恶/反感",
+      "domain": "",
+      "description": "对母亲带来的焦虑情绪感到厌恶，因为这打断了自己本来平静的生活。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "event:university_failure",
+      "type": "event",
+      "label": "大学挂科事件",
+      "domain": "",
+      "description": "大学期间全科挂科，当时感到恐慌，但最终发现并不会导致‘世界末日’，是现实检验的转折点。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "id": "event:keeping_ants",
+      "type": "event",
+      "label": "养蚂蚁",
+      "domain": "",
+      "description": "近期实现的爱好，带来兴奋和期待，是健康成人模式运作的体现。",
+      "related_dates": [
+        "2025-05-13"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得母亲认可与安全感 → 对方反应(RO)：母亲表现出紧绷与焦虑，要求勤奋 → 自我反应(RS)：不得不压抑自身需求，屈从于母亲的焦虑。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:work_hard_or_useless",
+      "relation_type": "assumes",
+      "relation": "屈从于母亲的价值观，派生出‘必须时刻勤奋才有价值’的规则。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "belief:unemployment_is_catastrophic",
+      "relation_type": "assumes",
+      "relation": "失败者图式派生出‘失业等于灾难’的假设。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "trigger:mother_anxiety",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "母亲的焦虑直接激活了Andy内心感到不安全、害怕被抛弃的脆弱儿童部分。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "thought:mom_will_criticize",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式冒出‘母亲会因为我不工作而指责我’的自动思维。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "thought:mom_will_criticize",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "被指责的预期引发了深层的羞耻感。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "emotion:survival_anxiety",
+      "target": "coping:hypervigilance",
+      "relation_type": "regulated_by",
+      "relation": "用过度警觉（存钱、不敢辞职）来调节生存焦虑。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "mode:punitive_parent",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人意识到‘失业也没关系’，与惩罚性父母的‘必须工作’产生拉扯。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "event:university_failure",
+      "relation_type": "manifested_in",
+      "relation": "失败者图式在大学挂科事件中被激活，并最终通过现实检验得到缓解。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "need:autonomy",
+      "target": "event:keeping_ants",
+      "relation_type": "manifested_in",
+      "relation": "自主需要通过发展爱好（养蚂蚁）得到满足。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:survival_anxiety",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式被激活时，引发强烈的生存焦虑。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    },
+    {
+      "source": "person:mother",
+      "target": "coping:avoidance",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：避免冲突与指责 → 对方反应(RO)：母亲倾向于指责不努力 → 自我反应(RS)：选择隐瞒失败事实。",
+      "evidence_dates": [
+        "2025-05-13"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,314 @@
+{
+  "source_file": "20260530150113-转写_Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-05-30",
+  "nodes": [
+    {
+      "id": "need:validation",
+      "type": "need",
+      "label": "被认可与价值感",
+      "domain": "",
+      "description": "渴望通过成就或外界反馈来确认自身的价值，避免感到低人一等。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "亲密关系的联结",
+      "domain": "",
+      "description": "渴望在亲密关系中被接纳，担心失去社会价值会导致失去伴侣或婚姻。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "Andy的母亲，其生活习惯（存钱、节俭）影响了Andy对金钱与价值的看法。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "person:partner",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "Andy的现任伴侣，是Andy在关系中的依附对象，也是其对未来婚姻焦虑的投射对象。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻感图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为如果自己没有世俗成就，内在就是有缺陷的、不值得被爱的。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为自己在职业表现上不如他人，无法达到预期的成功标准。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "belief:income_equals_value",
+      "type": "belief",
+      "label": "收入等于价值假设",
+      "domain": "",
+      "description": "“我的收入、职业成就和房产等外在条件，直接定义了我个人的价值。”",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "belief:no_money_no_love",
+      "type": "belief",
+      "label": "缺乏成就导致被抛弃假设",
+      "domain": "",
+      "description": "“如果我没有世俗意义上的成就，我就无法维系婚姻或亲密关系。”",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "在面试受挫或面对不确定性时，感到失落、低价值、需要被安抚的状态。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内化了社会对成功的苛刻标准，在面试不顺利时自我指责、贬低。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "能客观评估现状，将注意力从结果转向自我成长，并能忍受不适感。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "通过拼命工作、追求高薪、存钱来掩盖内心的低价值感。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避",
+      "domain": "",
+      "description": "因为害怕失败带来的羞耻感，在过去迟迟不敢投简历或行动。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "trigger:job_interview",
+      "type": "trigger",
+      "label": "面试情境",
+      "domain": "",
+      "description": "面试结果不达预期或面试过程中的不顺，会直接触发Andy的低价值感。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "trigger:social_media",
+      "type": "trigger",
+      "label": "社会评价类信息",
+      "domain": "",
+      "description": "观看关于房地产、婚姻条件、励志视频等社会性内容，激活了世俗评价体系。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_am_not_good_enough",
+      "type": "automatic_thought",
+      "label": "我不够好",
+      "domain": "",
+      "description": "“面试不顺利，是不是因为我这两年半的工作经历不被市场认可？”",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "面试失败后产生的一种深层的不适感，觉得自己没价值。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "id": "event:recent_interview",
+      "type": "event",
+      "label": "近期面试事件",
+      "domain": "",
+      "description": "Andy近期参加了一场大公司的面试，感觉过程不顺，面试官更偏向售后角色。",
+      "related_dates": [
+        "2026-05-30"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:validation",
+      "target": "schema:defectiveness",
+      "relation_type": "unmet",
+      "relation": "核心需要长期未被满足，导致形成了通过外在成就来定义自我的图式。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "person:mother",
+      "target": "belief:income_equals_value",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得安全感与认可 → 对方反应(RO)：母亲强调存钱与金钱价值 → 自我反应(RS)：内化为金钱等于价值的信念。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:income_equals_value",
+      "relation_type": "assumes",
+      "relation": "图式派生出“收入等于价值”的中间信念以防御羞耻感。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "coping:avoidance",
+      "relation_type": "derives",
+      "relation": "失败图式驱动Andy在过去通过回避投简历来保护自己。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "trigger:job_interview",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "面试的不顺利激活了脆弱儿童模式，产生失落感。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "automatic_thought:i_am_not_good_enough",
+      "relation_type": "produces",
+      "relation": "脆弱儿童模式下产生的自动思维，怀疑自身经历的价值。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_am_not_good_enough",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "这种自我怀疑引发了强烈的羞耻感。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "emotion:shame",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "试图通过过度补偿（拼命工作、存钱）来缓解羞耻感。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "trigger:social_media",
+      "target": "mode:punitive_parent",
+      "relation_type": "activates",
+      "relation": "社会评价内容激活了惩罚性父母模式，不断施压。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "belief:no_money_no_love",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式强化了“没钱就没关系”的信念。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "person:partner",
+      "target": "mode:punitive_parent",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：维系与伴侣的关系 → 对方反应(RO)：担心世俗标准导致关系破裂 → 自我反应(RS)：激活惩罚性父母模式苛责自己。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "mode:healthy_adult",
+      "relation_type": "conflicts_with",
+      "relation": "过度补偿的焦虑与健康成人试图理性反思、自我成长之间存在拉扯。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "schema:defectiveness",
+      "relation_type": "co_occurs",
+      "relation": "两者常同时被激活，共同构成了Andy的自我价值困境。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "event:recent_interview",
+      "relation_type": "manifested_in",
+      "relation": "健康成人模式体现为Andy在面试失败后能够进行反思，并将其视为一种成长。",
+      "evidence_dates": [
+        "2026-05-30"
+      ]
+    }
+  ]
+}

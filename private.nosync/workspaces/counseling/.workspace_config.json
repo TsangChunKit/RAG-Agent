@@ -1,0 +1,19 @@
+{
+  "name": "counseling",
+  "display_name": "心理咨询",
+  "description": "从旧项目迁移的心理咨询知识库",
+  "domain": "counseling",
+  "graph_schema": {
+    "mode": "predefined",
+    "schema_file": "counseling.json"
+  },
+  "persona": {
+    "system_instruction_file": null,
+    "ai_name": "AI 心理咨询助手",
+    "context_role": "咨询师海特"
+  },
+  "chunk_prefix_template": "[{session_date} {domain_label}｜发言人：{speakers}｜时间段：{start_ts}–{end_ts}]",
+  "domain_label": "咨询",
+  "created_at": "2026-07-24T10:49:54.785491",
+  "migrated_from": "/Users/andytsang/Documents/Project/心理咨詢agent"
+}

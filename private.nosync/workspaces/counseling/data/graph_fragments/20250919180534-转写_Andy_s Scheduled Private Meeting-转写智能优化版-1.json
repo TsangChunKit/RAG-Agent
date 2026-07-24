@@ -1,0 +1,180 @@
+{
+  "source_file": "20250919180534-转写_Andy_s Scheduled Private Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-09-19",
+  "nodes": [
+    {
+      "id": "need:competence_and_control",
+      "type": "need",
+      "label": "胜任感与掌控感",
+      "domain": "",
+      "description": "渴望在互动中保持有效的沟通与掌控，确保咨询过程顺利进行。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "person:sitong",
+      "type": "person",
+      "label": "来访者思彤",
+      "domain": "",
+      "description": "本次咨询的来访者，在对话初期处于静音或未回应状态。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "schema:defectiveness_shame",
+      "type": "schema",
+      "label": "缺陷/羞耻感图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧自己是不够好的、有问题的，导致互动失败。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "belief:responsibility_for_connection",
+      "type": "belief",
+      "label": "互动责任假设",
+      "domain": "",
+      "description": "认为如果互动出现中断或沉默，一定是自己（咨询师）做错了什么或没说话。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "mode:over_compensating_fixer",
+      "type": "mode",
+      "label": "过度补偿的修复者模式",
+      "domain": "",
+      "description": "通过快速、密集的指令和尝试（耳机、Google等）来消除不确定性，试图立刻修复问题。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "coping:over_functioning",
+      "type": "coping",
+      "label": "过度功能化",
+      "domain": "",
+      "description": "通过不断提出解决方案来规避沉默带来的焦虑。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "trigger:client_silence",
+      "type": "trigger",
+      "label": "来访者沉默/技术故障",
+      "domain": "",
+      "description": "来访者在会话初期处于静音状态，未能及时回应。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "automatic_thought:is_it_my_fault",
+      "type": "automatic_thought",
+      "label": "是不是我没说话",
+      "domain": "",
+      "description": "原话：\"是不是因为我没在说话？\"，将外部技术问题归因为自身行为。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "面对未知沉默时的不安感，表现为急促的追问。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "id": "event:troubleshooting_session",
+      "type": "event",
+      "label": "会话初期故障排查",
+      "domain": "",
+      "description": "咨询师在会话前两分钟内不断尝试询问耳机、Google等方式解决静音问题。",
+      "related_dates": [
+        "2025-09-19"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:competence_and_control",
+      "target": "schema:defectiveness_shame",
+      "relation_type": "unmet",
+      "relation": "长期无法从互动中获得掌控感，导致缺陷图式被强化。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "source": "person:sitong",
+      "target": "mode:over_compensating_fixer",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：保持顺畅的咨询关系 → 对方反应(RO)：静音/沉默 → 自我反应(RS)：激活修复者模式，感到焦虑并急于解决问题。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "source": "trigger:client_silence",
+      "target": "mode:over_compensating_fixer",
+      "relation_type": "activates",
+      "relation": "来访者的沉默直接激活了咨询师的修复者模式。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "source": "schema:defectiveness_shame",
+      "target": "belief:responsibility_for_connection",
+      "relation_type": "assumes",
+      "relation": "缺陷图式派生出一种假设：如果互动失败，必然是我的责任。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "source": "belief:responsibility_for_connection",
+      "target": "automatic_thought:is_it_my_fault",
+      "relation_type": "produces",
+      "relation": "基于责任假设，产生了\"是不是我没在说话\"的自动思维。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "source": "automatic_thought:is_it_my_fault",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "这种归因引发了对互动失败的焦虑。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:over_functioning",
+      "relation_type": "regulated_by",
+      "relation": "通过过度功能化（不断提问、建议）来调节焦虑情绪。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    },
+    {
+      "source": "coping:over_functioning",
+      "target": "event:troubleshooting_session",
+      "relation_type": "manifested_in",
+      "relation": "应对策略在故障排查事件中具体体现出来。",
+      "evidence_dates": [
+        "2025-09-19"
+      ]
+    }
+  ]
+}

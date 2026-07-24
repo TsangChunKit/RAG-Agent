@@ -1,0 +1,248 @@
+{
+  "source_file": "20260329140106-转写_Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-03-29",
+  "nodes": [
+    {
+      "id": "need:自主与掌控感",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "对独立生活、自由做决定并承担后果的渴望，SDT理论中的核心心理需要。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "person:妈妈",
+      "type": "person",
+      "label": "妈妈",
+      "domain": "",
+      "description": "反复出现的依附对象，被Andy内化为“守门员”或“班长”的形象，代表了金钱观与生存规则的监管者。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "schema:脆弱/易受伤害",
+      "type": "schema",
+      "label": "脆弱/易受伤害",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "担心随时会发生灾难性的失控（如吸毒、裸奔、无法生存），认为自己抗风险能力极低。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "schema:不懈追求/高标准",
+      "type": "schema",
+      "label": "不懈追求/高标准",
+      "domain": "Overvigilance & Inhibition",
+      "description": "认为必须时刻警惕、通过严格的“质检”来避免犯错，否则生活会崩溃。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "belief:如果没有守门员会失控",
+      "type": "belief",
+      "label": "如果没有守门员会失控",
+      "domain": "",
+      "description": "认为如果没有内部的“守门员”进行约束，自己会像小学生在大街上奔跑一样，必然遭遇毁灭性的意外。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "belief:犯错即灾难",
+      "type": "belief",
+      "label": "犯错即灾难",
+      "domain": "",
+      "description": "将任何小的决策失误（如多花钱）等同于毁灭性的后果，认为自己承担不起失败。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "体验到被抛弃感和无助感的部分，担心失去外部保护后会遭遇不可控的伤害。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内化的“守门员”或“班长”，通过不断叫嚣、威胁和打压来阻止Andy的冒险行为。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "mode:健康成人",
+      "type": "mode",
+      "label": "健康成人",
+      "domain": "",
+      "description": "能够进行“说走就走”的旅行，体验到放松和真实快乐，并开始意识到守门员并非不可或缺。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "coping:过度警觉",
+      "type": "coping",
+      "label": "过度警觉",
+      "domain": "",
+      "description": "通过反复纠结、寻找客观依据、自我监控来应对焦虑，试图维持对生活的控制。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "trigger:做决定与花钱",
+      "type": "trigger",
+      "label": "做决定与花钱",
+      "domain": "",
+      "description": "涉及金钱、假期、购买大件物品等需要自主决策的情境，是激活“惩罚性父母”模式的关键触发点。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "automatic_thought:如果我犯错就完了",
+      "type": "automatic_thought",
+      "label": "如果我犯错就完了",
+      "domain": "",
+      "description": "在做决定时一闪而过的念头，认为任何偏差都会导致生存资源的枯竭或失控。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "emotion:焦虑",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "在面临选择或面对“守门员”压力时产生的紧张、不安情绪。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "emotion:放松",
+      "type": "emotion",
+      "label": "放松",
+      "domain": "",
+      "description": "在马来西亚旅行中体验到的、脱离“守门员”控制后的自在感。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "id": "event:马来西亚之旅",
+      "type": "event",
+      "label": "马来西亚之旅",
+      "domain": "",
+      "description": "本次咨询中提到的关键进展，Andy成功在无过度纠结的情况下完成了一次自主的旅行。",
+      "related_dates": [
+        "2026-03-29"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:妈妈",
+      "target": "schema:不懈追求/高标准",
+      "relation_type": "originates",
+      "relation": "渴望(W)：想要获得妈妈的认同与安全感 → 对方反应(RO)：妈妈表现出节俭/反对 → 自我反应(RS)：内化惩罚性声音以自我监管",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "schema:不懈追求/高标准",
+      "target": "belief:如果没有守门员会失控",
+      "relation_type": "assumes",
+      "relation": "该图式派生出必须有外部规则监管才能生存的信念",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "schema:不懈追求/高标准",
+      "target": "mode:惩罚性父母",
+      "relation_type": "derives",
+      "relation": "图式驱动了惩罚性父母模式的运作",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "trigger:做决定与花钱",
+      "target": "mode:惩罚性父母",
+      "relation_type": "activates",
+      "relation": "情境激活了内化的监管者，开始进行“质检”",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "automatic_thought:如果我犯错就完了",
+      "relation_type": "produces",
+      "relation": "该模式产生灾难化思维",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "automatic_thought:如果我犯错就完了",
+      "target": "emotion:焦虑",
+      "relation_type": "evokes",
+      "relation": "思维引发了强烈的焦虑情绪",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "emotion:焦虑",
+      "target": "coping:过度警觉",
+      "relation_type": "regulated_by",
+      "relation": "通过过度警觉来缓解焦虑",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "mode:健康成人",
+      "relation_type": "conflicts_with",
+      "relation": "两者在生活决策上存在持续拉扯，惩罚性父母试图压制健康成人的冒险欲望",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "mode:健康成人",
+      "target": "event:马来西亚之旅",
+      "relation_type": "manifested_in",
+      "relation": "健康成人模式在马来西亚之旅中得以体现和实践",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    },
+    {
+      "source": "need:自主与掌控感",
+      "target": "schema:脆弱/易受伤害",
+      "relation_type": "unmet",
+      "relation": "长期被压抑的自主需要导致了对自身能力的不信任",
+      "evidence_dates": [
+        "2026-03-29"
+      ]
+    }
+  ]
+}

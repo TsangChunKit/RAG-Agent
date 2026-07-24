@@ -1,0 +1,276 @@
+{
+  "source_file": "20250824140008-转写_Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-08-24",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望在关系及决策中拥有主导权，能够自由表达需求而不被他人支配。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全与保护",
+      "domain": "",
+      "description": "渴望在人际互动中感到安全，不被具有力量优势的人伤害或压制。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "早期的权力上位者，导致来访者形成顺从模式。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "person:boss",
+      "type": "person",
+      "label": "上司",
+      "domain": "",
+      "description": "工作中的权力上位者，通过纠正和打断行为引发来访者的顺从。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "感到被迫顺从他人以避免冲突或惩罚，牺牲个人需求。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "schema:mistrust",
+      "type": "schema",
+      "label": "不信任/虐待图式",
+      "domain": "Disconnection & Rejection",
+      "description": "预设他人（尤其是更强壮者）会利用权力伤害自己，导致防御性警觉。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "belief:strong_or_harmed",
+      "type": "belief",
+      "label": "必须强壮否则会被伤害",
+      "domain": "",
+      "description": "如果我不够强壮或没有支配力，我就无法保护自己，会处于危险中。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "belief:refusal_is_bad",
+      "type": "belief",
+      "label": "拒绝他人是不道德的",
+      "domain": "",
+      "description": "如果我拒绝别人的要求，我会感到愧疚，或者认为自己是不好的。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "mode:submissive_child",
+      "type": "mode",
+      "label": "屈服儿童模式",
+      "domain": "",
+      "description": "在权力不对等时感到无助、恐惧，自动进入顺从状态。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "mode:compensatory_dominator",
+      "type": "mode",
+      "label": "补偿性支配者模式",
+      "domain": "",
+      "description": "试图通过健身、搭讪、BDSM等方式找回权力和掌控感。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "coping:yielding",
+      "type": "coping",
+      "label": "屈服应对",
+      "domain": "",
+      "description": "通过顺从对方的要求、让渡权利来应对不适感。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "通过追求力量感（肌肉、征服欲）来抵消内心的无力感。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "trigger:power_imbalance",
+      "type": "trigger",
+      "label": "权力不对等情境",
+      "domain": "",
+      "description": "面对比自己强壮的人、上司、或伴侣要求时，感觉到权力处于弱势。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_am_weak",
+      "type": "automatic_thought",
+      "label": "我太弱了",
+      "domain": "",
+      "description": "在健身或与人对比时，闪过的认为自己身体赢弱、不如人的想法。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "emotion:fear",
+      "type": "emotion",
+      "label": "恐惧",
+      "domain": "",
+      "description": "对被支配、被伤害或失去掌控的深层恐惧。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻/愧疚",
+      "domain": "",
+      "description": "因拒绝他人或表现出软弱而产生的道德谴责感。",
+      "related_dates": [
+        "2025-08-24"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:parents",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：自主与掌控感 → 对方反应(RO)：父母权威压制 → 自我反应(RS)：屈服并逃避冲突",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "person:boss",
+      "target": "schema:subjugation",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：表达自我 → 对方反应(RO)：纠正与打断 → 自我反应(RS)：恐惧说错话而选择沉默",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:refusal_is_bad",
+      "relation_type": "assumes",
+      "relation": "屈服图式派生出不能拒绝他人的道德规则。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "schema:mistrust",
+      "target": "belief:strong_or_harmed",
+      "relation_type": "assumes",
+      "relation": "不信任图式派生出力量是唯一安全保障的假设。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "belief:strong_or_harmed",
+      "target": "coping:overcompensation",
+      "relation_type": "produces",
+      "relation": "相信必须强壮，从而产生过度补偿（健身/支配）的行为。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "trigger:power_imbalance",
+      "target": "mode:submissive_child",
+      "relation_type": "activates",
+      "relation": "权力失衡情境激活了屈服儿童模式。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "mode:submissive_child",
+      "target": "emotion:fear",
+      "relation_type": "evokes",
+      "relation": "进入屈服模式时引发对失去掌控的恐惧。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "emotion:fear",
+      "target": "coping:yielding",
+      "relation_type": "regulated_by",
+      "relation": "通过屈服来调节对被支配的恐惧。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "coping:overcompensation",
+      "target": "mode:compensatory_dominator",
+      "relation_type": "reinforces",
+      "relation": "过度补偿行为强化了支配者模式。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "mode:compensatory_dominator",
+      "target": "mode:submissive_child",
+      "relation_type": "conflicts_with",
+      "relation": "支配者模式与屈服儿童模式在内心激烈拉扯。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "schema:mistrust",
+      "relation_type": "co_occurs",
+      "relation": "屈服图式与不信任图式常伴随出现，形成防御闭环。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_am_weak",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "对自己赢弱的认知引发了羞耻感。",
+      "evidence_dates": [
+        "2025-08-24"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "source_file": "20260613100211-Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-06-13",
+  "nodes": [
+    {
+      "id": "need:play",
+      "type": "need",
+      "label": "自主与娱乐需要",
+      "domain": "",
+      "description": "渴望在工作之余享受放松、娱乐（如看动漫、打游戏、买电脑），无需背负生产力压力。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主掌控感",
+      "domain": "",
+      "description": "渴望能按照自己的意愿支配时间和金钱，而非被‘应该’做的事情所驱动。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "苛求标准图式",
+      "domain": "Overvigilance & Inhibition",
+      "description": "认为必须高效、时刻处于准备状态、不能浪费时间或金钱，否则就是失败的。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧自己是‘无聊的’或‘平庸的’，担心因不够有趣而被他人拒绝。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "belief:relaxation_is_waste",
+      "type": "belief",
+      "label": "放松即浪费",
+      "domain": "",
+      "description": "如果我花时间看视频或花钱买非必需品，就是浪费时间和金钱，是不负责任的行为。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "belief:productive_worth",
+      "type": "belief",
+      "label": "生产力价值假设",
+      "domain": "",
+      "description": "我的价值取决于我是否在高效利用时间（工作、学习、投简历），而非享受生活。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "mode:demanding_parent",
+      "type": "mode",
+      "label": "苛求父母模式",
+      "domain": "",
+      "description": "内在严厉的声音，不断提醒‘应该’做的事（投简历、学习），打断放松体验。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到疲惫、焦虑，渴望被允许放松，但又因无法达到‘高效’标准而感到内疚。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过看短视频切片代替完整内容，以‘高效率’掩盖对深度投入和失败的恐惧，规避情感连接。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "trigger:free_time",
+      "type": "trigger",
+      "label": "空闲时间",
+      "domain": "",
+      "description": "下班后或周末的空闲时间，本应放松却触发了对‘无所事事’的焦虑。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "trigger:luxury_purchase",
+      "type": "trigger",
+      "label": "大额消费决策",
+      "domain": "",
+      "description": "考虑购买电脑等高价物品时，理性计算与感性渴望产生激烈冲突。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "automatic_thought:must_optimize",
+      "type": "automatic_thought",
+      "label": "必须压缩娱乐",
+      "domain": "",
+      "description": "‘连娱乐的时间都要压缩得有效率’，所以倾向看短视频切片。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "内疚感",
+      "domain": "",
+      "description": "在享受娱乐时，因为想到‘应该’做的事情而产生的负罪感。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对未来、对无法平衡生活、对不够有趣的持续担忧。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "person:past_crush",
+      "type": "person",
+      "label": "高中喜欢的女孩",
+      "domain": "",
+      "description": "曾因Andy‘太无聊’而拒绝他，导致其对平淡生活有负面评价。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "id": "event:pc_purchase_hesitation",
+      "type": "event",
+      "label": "买电脑的纠结",
+      "domain": "",
+      "description": "工作四五年存了钱，但因理性分析（内存贵）和感性需求（想犒劳自己）冲突，迟迟不敢下单。",
+      "related_dates": [
+        "2026-06-13"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:play",
+      "target": "schema:unrelenting_standards",
+      "relation_type": "unmet",
+      "relation": "苛求标准图式长期压抑了对轻松娱乐的需要，导致无法心安理得地放松。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "person:past_crush",
+      "target": "schema:defectiveness",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被喜欢 → 对方反应(RO)：评价无聊并拒绝 → 自我反应(RS)：认定自己必须变得有趣，否则会被抛弃。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:productive_worth",
+      "relation_type": "assumes",
+      "relation": "图式派生出‘只有高效生产才有价值’的规则。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "mode:demanding_parent",
+      "relation_type": "derives",
+      "relation": "图式在当下转化为严厉的内在批评声音。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "trigger:free_time",
+      "target": "mode:demanding_parent",
+      "relation_type": "activates",
+      "relation": "空闲时刻触发了‘应该做点什么’的苛求声音。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "mode:demanding_parent",
+      "target": "automatic_thought:must_optimize",
+      "relation_type": "produces",
+      "relation": "苛求模式产生必须压缩娱乐以追求效率的自动思维。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "automatic_thought:must_optimize",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "当无法达到高效率时，产生内疚感。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "emotion:guilt",
+      "target": "mode:detached_protector",
+      "relation_type": "regulated_by",
+      "relation": "通过看短视频切片来调节内疚感，试图在‘享受’与‘高效’间寻找平衡。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "mode:demanding_parent",
+      "relation_type": "conflicts_with",
+      "relation": "脆弱儿童想放松，与苛求父母要求的高标准产生剧烈冲突，导致能量消耗。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "trigger:luxury_purchase",
+      "target": "event:pc_purchase_hesitation",
+      "relation_type": "manifested_in",
+      "relation": "该触发情境具体体现为买电脑时的理性与感性拉扯。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "schema:defectiveness",
+      "relation_type": "co_occurs",
+      "relation": "两个图式相互强化：不仅要高效（苛求），还要避免平庸（缺陷），共同导致对生活的焦虑。",
+      "evidence_dates": [
+        "2026-06-13"
+      ]
+    }
+  ]
+}

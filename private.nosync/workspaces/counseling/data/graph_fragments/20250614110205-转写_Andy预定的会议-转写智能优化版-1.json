@@ -1,0 +1,305 @@
+{
+  "source_file": "20250614110205-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-06-14",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望在职场中能够独立决策，实现自我价值，这是Andy在最近的项目中体验到的核心需要。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "need:secure_attachment",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望在关系中被接纳，害怕因犯错而被抛弃，这是其早年依附关系中的深层渴望。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "person:supervisor",
+      "type": "person",
+      "label": "销售组长/上司",
+      "domain": "",
+      "description": "职场中的权威人物，Andy将其视为评估自己是否合格的依附对象。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "童年抚养者",
+      "domain": "",
+      "description": "早年依附对象，可能未提供足够的安全感，导致Andy对抛弃产生深刻恐惧。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或被拒绝，过度顺从他人的需求，压抑自己的真实想法。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "schema:vulnerability",
+      "type": "schema",
+      "label": "易受伤害图式",
+      "domain": "Disconnection & Rejection",
+      "description": "夸大灾难发生的可能性，深信如果不寻求保护就会面临毁灭性后果。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己能力不足，若犯错就会被揭穿是不合格的，从而引发羞耻感。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "belief:permission_seeking",
+      "type": "belief",
+      "label": "必须获得许可",
+      "domain": "",
+      "description": "“如果我不先咨询上司的意见，我就不能行动。”",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "belief:risk_catastrophizing",
+      "type": "belief",
+      "label": "风险灾难化",
+      "domain": "",
+      "description": "“如果我犯错，就会被老板辞退，这意味着我无法生存。”",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到害怕、无助，渴望得到保护和许可，担心被抛弃。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "能够承担风险，客观评估现实，安抚内在小孩，意识到自己已有抗风险能力。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "coping:compliance",
+      "type": "coping",
+      "label": "顺从/寻求许可",
+      "domain": "",
+      "description": "将决策权移交给上司，通过寻求确认来缓解焦虑。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "风险回避",
+      "domain": "",
+      "description": "避免表达真实意见，避免独立承担决策责任。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "trigger:authority_interaction",
+      "type": "trigger",
+      "label": "权威互动情境",
+      "domain": "",
+      "description": "在资深同事或上司面前表达意见或进行决策的情境。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "automatic_thought:fear_of_firing",
+      "type": "automatic_thought",
+      "label": "被辞退的恐惧",
+      "domain": "",
+      "description": "“如果我讲错了话或做错了决定，他们会对我失望并辞退我。”",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "在面对决策压力时产生的生理和心理紧张感。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "emotion:empowerment",
+      "type": "emotion",
+      "label": "赋能感",
+      "domain": "",
+      "description": "在独立完成项目后感到的力量感和自我效能感。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "id": "event:independent_project",
+      "type": "event",
+      "label": "独立完成项目",
+      "domain": "",
+      "description": "Andy最近尝试不咨询上司直接处理项目，并获得了平稳结果的经历。",
+      "related_dates": [
+        "2025-06-14"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:secure_attachment",
+      "target": "schema:vulnerability",
+      "relation_type": "unmet",
+      "relation": "早年安全感缺失导致对生存威胁的过度警觉。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "person:parents",
+      "target": "schema:vulnerability",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被保护 → 对方反应(RO)：忽视/威胁 → 自我反应(RS)：极度恐惧被抛弃。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:permission_seeking",
+      "relation_type": "assumes",
+      "relation": "为了维持顺从，必须通过获得许可来规避责任。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "schema:vulnerability",
+      "target": "belief:risk_catastrophizing",
+      "relation_type": "assumes",
+      "relation": "因恐惧生存危机，将任何职场风险都等同于毁灭。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "coping:compliance",
+      "relation_type": "derives",
+      "relation": "图式驱动个体采取顺从行为来维持表面安全。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "trigger:authority_interaction",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "权威出现激活了内在小孩的无助感。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "automatic_thought:fear_of_firing",
+      "relation_type": "produces",
+      "relation": "脆弱模式下自动产生灾难化联想。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "automatic_thought:fear_of_firing",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "对后果的灾难化想象引发强烈焦虑。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "通过回避决策来降低焦虑。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "event:independent_project",
+      "relation_type": "manifested_in",
+      "relation": "健康成人模式在独立处理项目中得以体现。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "person:supervisor",
+      "target": "coping:compliance",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：认可/不被开除 → 对方反应(RO)：评价/潜在批评 → 自我反应(RS)：顺从/寻求许可。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "mode:vulnerable_child",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人模式试图安抚和接纳脆弱儿童，产生内心拉扯。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    },
+    {
+      "source": "event:independent_project",
+      "target": "emotion:empowerment",
+      "relation_type": "evokes",
+      "relation": "成功的独立尝试带来了自我效能感的提升。",
+      "evidence_dates": [
+        "2025-06-14"
+      ]
+    }
+  ]
+}

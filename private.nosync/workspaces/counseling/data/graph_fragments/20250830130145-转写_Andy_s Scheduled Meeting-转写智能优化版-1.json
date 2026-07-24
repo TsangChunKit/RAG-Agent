@@ -1,0 +1,286 @@
+{
+  "source_file": "20250830130145-转写_Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-08-30",
+  "nodes": [
+    {
+      "id": "need:being_seen",
+      "type": "need",
+      "label": "被看见与理解",
+      "domain": "",
+      "description": "渴望真实的欲望和生活方式被重要他人看见与接纳，这能带来快乐和联结感。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望在关系中拥有表达自我、做出选择的自由，而非总是处于被支配的下位。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "为了避免冲突或被抛弃，过度压抑自己的需求和欲望，顺从他人的意愿。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深信如果自己的偏好或选择被否定，那么作为一个人也是有缺陷的、不被喜欢的。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "schema:approval_seeking",
+      "type": "schema",
+      "label": "寻求认可图式",
+      "domain": "Other-Directedness",
+      "description": "过度依赖他人的评价来定义自我价值，导致在关系中容易进入被支配位置。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "belief:disapproval_is_rejection",
+      "type": "belief",
+      "label": "否定即拒绝",
+      "domain": "",
+      "description": "如果对方不喜欢我选择的餐厅或活动，意味着他们不喜欢我这个人。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "belief:expression_leads_to_conflict",
+      "type": "belief",
+      "label": "表达即冲突",
+      "domain": "",
+      "description": "如果我表达真实的欲望，会引发对方的攻击或冲突，从而导致关系破裂。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "当偏好被否定时，感到受伤、羞耻、被拒绝的内在体验。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrender",
+      "type": "mode",
+      "label": "屈服/顺从模式",
+      "domain": "",
+      "description": "自动进入顺从、讨好、隐藏欲望的应对状态，以维持表面和谐。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "尝试勇敢表达欲望、设定边界、即使面对冲突也保持真实自我。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "trigger:partner_disagreement",
+      "type": "trigger",
+      "label": "对方不同意/否定偏好",
+      "domain": "",
+      "description": "当对方对自己的提议（如餐厅选择）表示不悦或拒绝时。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "trigger:expressing_desire",
+      "type": "trigger",
+      "label": "表达真实欲望",
+      "domain": "",
+      "description": "在关系中主动提出自己的想法或需求。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "被否定时的那种觉得自己不够好、被拒绝的痛苦感受。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "emotion:empowerment",
+      "type": "emotion",
+      "label": "力量感",
+      "domain": "",
+      "description": "在表达自我、怼回对方或坚持立场时感受到的爽感和掌控感。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "event:restaurant_conflict",
+      "type": "event",
+      "label": "餐厅选择冲突事件",
+      "domain": "",
+      "description": "来访者坚持不告知餐厅名字，引发女方不满，最终导致对话终止。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "event:sm_activity",
+      "type": "event",
+      "label": "SM活动体验",
+      "domain": "",
+      "description": "尝试支配者角色，发现若对方不舒服自己也会不开心，引发对支配欲望的探索。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "id": "person:romantic_partners",
+      "type": "person",
+      "label": "亲密关系对象",
+      "domain": "",
+      "description": "反复出现的约会对象或前任，常被投射为评价者或潜在的伤害者。",
+      "related_dates": [
+        "2025-08-30"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:autonomy",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期自主需求未被满足，导致形成通过顺从来获得安全感的图式。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "person:romantic_partners",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：希望在关系中被接纳 → 对方反应(RO)：表现出挑剔或否定 → 自我反应(RS)：为了维持关系而顺从，形成被支配角色。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:disapproval_is_rejection",
+      "relation_type": "assumes",
+      "relation": "缺陷图式派生出将‘对事物的否定’等同于‘对人格的否定’的认知规则。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "mode:compliant_surrender",
+      "relation_type": "derives",
+      "relation": "服从图式直接驱动了屈服/顺从模式的运作。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "trigger:partner_disagreement",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "当对方否定来访者的偏好时，激活了内在受伤的儿童部分。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "belief:disapproval_is_rejection",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "信念导致当对方不喜欢选择时，产生强烈的羞耻感。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "emotion:shame",
+      "target": "mode:compliant_surrender",
+      "relation_type": "regulated_by",
+      "relation": "为了调节羞耻感，自动切换到顺从模式以寻求安全。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrender",
+      "target": "mode:healthy_adult",
+      "relation_type": "conflicts_with",
+      "relation": "旧有的顺从模式与当前试图表达自我、尝试‘自私’的健康成人模式产生激烈对抗。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "event:restaurant_conflict",
+      "relation_type": "manifested_in",
+      "relation": "健康成人部分在餐厅事件中尝试坚持自我，宁愿闹掰也不顺从。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "trigger:expressing_desire",
+      "target": "emotion:empowerment",
+      "relation_type": "evokes",
+      "relation": "表达真实欲望后，即使面临冲突，也会产生力量感。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "event:sm_activity",
+      "target": "mode:healthy_adult",
+      "relation_type": "activates",
+      "relation": "通过SM活动探索支配与被支配的边界，激活了对自身欲望的觉察。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    },
+    {
+      "source": "schema:approval_seeking",
+      "target": "schema:subjugation",
+      "relation_type": "co_occurs",
+      "relation": "寻求认可与服从图式常同时出现，构成被支配的心理动力。",
+      "evidence_dates": [
+        "2025-08-30"
+      ]
+    }
+  ]
+}

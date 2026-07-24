@@ -1,0 +1,76 @@
+{
+  "nodes": [
+    {
+      "id": "chat:event:放棄遊戲習慣",
+      "type": "event",
+      "label": "放棄遊戲習慣",
+      "domain": "",
+      "description": "停止了過去作為“避風港”和“休息代償”的遊戲習慣，導致出現空虛感。",
+      "related_dates": [
+        "2026-07-20"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "chat:event:舊公司上市消息",
+      "type": "event",
+      "label": "舊公司上市消息",
+      "domain": "",
+      "description": "得知舊公司計劃在2027年上市，觸發了對離職決定的後悔與錯失紅利的焦慮。",
+      "related_dates": [
+        "2026-07-21"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.0,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "chat:schema:孤獨生存信念",
+      "type": "schema",
+      "label": "孤獨生存信念",
+      "domain": "Schema Therapy",
+      "description": "源於12歲獨自搬家經歷，認為環境變動極其危險，必須完全依靠自己才能生存。",
+      "related_dates": [
+        "2026-07-23"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.3333,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "chat:person:12歲的自己",
+      "type": "person",
+      "label": "12歲的自己",
+      "domain": "",
+      "description": "內在家庭系統中一個極度恐懼變動、掙扎求生的內在小孩部分。",
+      "related_dates": [
+        "2026-07-23"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.3333,
+      "betweenness_centrality": 0.0
+    }
+  ],
+  "edges": [
+    {
+      "source": "chat:person:12歲的自己",
+      "target": "event:312",
+      "relation_type": "originates",
+      "relation": "該內在部分形成於六年級搬家這一轉折事件。",
+      "evidence_dates": [
+        "2026-07-23"
+      ]
+    },
+    {
+      "source": "chat:schema:孤獨生存信念",
+      "target": "chat:person:12歲的自己",
+      "relation_type": "originates",
+      "relation": "此信念由12歲的自己持有，作為其核心生存規則。",
+      "evidence_dates": [
+        "2026-07-23"
+      ]
+    }
+  ]
+}

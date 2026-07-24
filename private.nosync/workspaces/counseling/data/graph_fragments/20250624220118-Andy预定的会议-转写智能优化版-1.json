@@ -1,0 +1,306 @@
+{
+  "source_file": "20250624220118-Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-06-24",
+  "nodes": [
+    {
+      "id": "need:safety",
+      "type": "need",
+      "label": "安全与稳定的联结",
+      "domain": "",
+      "description": "渴望在关系中感到安全，不担心突如其来的冲突或抛弃。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能够表达真实需求并参与协商，而不是被动接受。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "person:father",
+      "type": "person",
+      "label": "父亲",
+      "domain": "",
+      "description": "早期依附对象，虽然记忆模糊，但被认为是恐惧冲突的源头。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "person:girlfriend",
+      "type": "person",
+      "label": "女朋友",
+      "domain": "",
+      "description": "现任伴侣，在发生冲突时会表现出情绪化，触发Andy的防御。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "person:therapist",
+      "type": "person",
+      "label": "咨询师",
+      "domain": "",
+      "description": "当前的依附对象，其涨价行为触发了Andy的图式。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或报复，压抑自己的需求和情绪，顺从他人。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "schema:abandonment",
+      "type": "schema",
+      "label": "遗弃图式",
+      "domain": "Disconnection & Rejection",
+      "description": "担心重要他人会随时离开，导致关系破灭。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为对方的愤怒或暴怒是自己造成的，需要承担后果。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "belief:conflict_equals_abandonment",
+      "type": "belief",
+      "label": "冲突即抛弃假设",
+      "domain": "",
+      "description": "如果我表达真实需求或引发冲突，关系就会破裂。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "belief:responsible_for_others",
+      "type": "belief",
+      "label": "他人情绪责任假设",
+      "domain": "",
+      "description": "如果对方暴怒，那一定是我造成的，我必须为他们的情绪负责。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到害怕、无助，担心被抛弃和被惩罚。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过冷漠、远离和切断情感联系来保护自己免受伤害。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrenderer",
+      "type": "mode",
+      "label": "顺从屈服者模式",
+      "domain": "",
+      "description": "表面上顺从对方的要求（如答应涨价），内心感到委屈。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "逃避/远离",
+      "domain": "",
+      "description": "当感到无法解决冲突时，默默远离关系或寻找替代者。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "trigger:fee_increase",
+      "type": "trigger",
+      "label": "咨询费涨价触发",
+      "domain": "",
+      "description": "咨询师提出涨价，打破了Andy原本的安全感。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "automatic_thought:catastrophizing",
+      "type": "automatic_thought",
+      "label": "灾难化思维",
+      "domain": "",
+      "description": "如果我现在表达异议，咨询师会暴怒，咨询会立刻结束。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对未来不确定性和关系破裂的担忧。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "在不得不面对冲突情境时感到难堪。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "id": "event:negotiation_simulation",
+      "type": "event",
+      "label": "模拟协商事件",
+      "domain": "",
+      "description": "咨询中进行的关于涨价的模拟对话，暴露了Andy的防御模式。",
+      "related_dates": [
+        "2025-06-24"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:safety",
+      "target": "schema:abandonment",
+      "relation_type": "unmet",
+      "relation": "长期缺乏安全感导致对抛弃的过度敏感。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "person:father",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被温柔对待 → 对方反应(RO)：严厉/惩罚 → 自我反应(RS)：压抑需求以顺从。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "person:girlfriend",
+      "target": "coping:avoidance",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：被理解 → 对方反应(RO)：暴怒/指责 → 自我反应(RS)：默默远离以保护自己。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:conflict_equals_abandonment",
+      "relation_type": "assumes",
+      "relation": "屈服图式派生出冲突会导致关系破裂的假设。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "mode:compliant_surrenderer",
+      "relation_type": "derives",
+      "relation": "屈服图式驱动了顺从模式。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "trigger:fee_increase",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "涨价请求激活了脆弱儿童模式，感到害怕。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "automatic_thought:catastrophizing",
+      "relation_type": "produces",
+      "relation": "脆弱儿童模式产生灾难化念头。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "automatic_thought:catastrophizing",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "灾难化思维引发强烈的焦虑。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "emotion:anxiety",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "通过远离和寻找备选方案来调节焦虑。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrenderer",
+      "target": "mode:detached_protector",
+      "relation_type": "conflicts_with",
+      "relation": "表面顺从与内心想要远离以保护自己的拉扯。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "event:negotiation_simulation",
+      "relation_type": "manifested_in",
+      "relation": "在模拟对话中，Andy不敢直言，表现出屈服。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:responsible_for_others",
+      "relation_type": "assumes",
+      "relation": "认为对方暴怒是自己错的信念。",
+      "evidence_dates": [
+        "2025-06-24"
+      ]
+    }
+  ]
+}

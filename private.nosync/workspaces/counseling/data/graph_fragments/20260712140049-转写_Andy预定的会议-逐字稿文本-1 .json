@@ -1,0 +1,295 @@
+{
+  "source_file": "20260712140049-转写_Andy预定的会议-逐字稿文本-1 .txt",
+  "session_date": "2026-07-12",
+  "nodes": [
+    {
+      "id": "need:自主与掌控感",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望在职业生涯中拥有主动权，摆脱慢性压力，掌控生活节奏。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "need:被接纳与归属",
+      "type": "need",
+      "label": "被接纳与归属",
+      "domain": "",
+      "description": "在离开团队时渴望得到理解，害怕被视为背叛者，寻求情感上的安全感。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "person:前主管",
+      "type": "person",
+      "label": "前主管",
+      "domain": "",
+      "description": "离职事件中的核心对象，Andy与其共事三年，对其产生愧疚感。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "schema:苛求标准",
+      "type": "schema",
+      "label": "苛求标准",
+      "domain": "Overvigilance & Inhibition",
+      "description": "认为必须追求最优解、完美决策，否则就是失败或损失。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "schema:失败图式",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "担心职业发展不如预期，害怕做错决定导致未来失败。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "belief:必须追求最优解",
+      "type": "belief",
+      "label": "必须追求最优解",
+      "domain": "",
+      "description": "认为人生每一个选择都必须是利益最大化的，否则就是一种错误。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "belief:离职即背叛",
+      "type": "belief",
+      "label": "离职即背叛",
+      "domain": "",
+      "description": "认为离开长期共事的团队是一种背叛，会导致对方麻烦，引发愧疚。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内心苛责的声音，在决策后反复质问“为什么当初没坚持”、“是不是做错了”。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "mode:健康成人",
+      "type": "mode",
+      "label": "健康成人",
+      "domain": "",
+      "description": "能够理性分析概率、接受不确定性、允许生活进入的自我部分。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "在面对未知职业环境和离职压力时感到焦虑、担心、需要被安抚的部分。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "coping:过度补偿",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "通过查攻略、精细计算利益、追求完美决策来应对不确定性。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "coping:回避",
+      "type": "coping",
+      "label": "回避",
+      "domain": "",
+      "description": "通过打游戏、看剧来逃避离职后的焦虑和压力。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "trigger:面临职业决策",
+      "type": "trigger",
+      "label": "面临职业决策",
+      "domain": "",
+      "description": "处于离职、接受新Offer等关键转折点，触发对决策正确性的审视。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "automatic_thought:我做错了吗",
+      "type": "automatic_thought",
+      "label": "我做错了吗",
+      "domain": "",
+      "description": "在做出决定后反复怀疑自己是否选错了方向。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "emotion:愧疚感",
+      "type": "emotion",
+      "label": "愧疚感",
+      "domain": "",
+      "description": "因离开团队给主管带来麻烦而产生的负面情感。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "emotion:焦虑",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对新环境不确定性及决策后果的担忧。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "id": "event:辞职事件",
+      "type": "event",
+      "label": "辞职事件",
+      "domain": "",
+      "description": "周五提离职，面对主管挽留并最终确认离职的标志性事件。",
+      "related_dates": [
+        "2026-07-12"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:自主与掌控感",
+      "target": "schema:苛求标准",
+      "relation_type": "unmet",
+      "relation": "长期缺乏自主掌控感，导致通过苛求标准来试图建立对生活的绝对控制。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "person:前主管",
+      "target": "schema:失败图式",
+      "relation_type": "originates",
+      "relation": "渴望(W):被认可/不被视为背叛 → 对方反应(RO):主管挽留/显得麻烦 → 自我反应(RS):愧疚/觉得自己是逃兵。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "schema:苛求标准",
+      "target": "belief:必须追求最优解",
+      "relation_type": "assumes",
+      "relation": "图式派生出必须追求最优解的规则。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "schema:苛求标准",
+      "target": "coping:过度补偿",
+      "relation_type": "derives",
+      "relation": "图式驱动Andy通过查攻略、计算利益来过度补偿不安全感。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "trigger:面临职业决策",
+      "target": "mode:惩罚性父母",
+      "relation_type": "activates",
+      "relation": "决策情境激活了内心的苛责模式。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "automatic_thought:我做错了吗",
+      "relation_type": "produces",
+      "relation": "惩罚性模式导致反复产生自我怀疑的念头。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "automatic_thought:我做错了吗",
+      "target": "emotion:焦虑",
+      "relation_type": "evokes",
+      "relation": "自我怀疑引发了焦虑情绪。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "emotion:焦虑",
+      "target": "coping:回避",
+      "relation_type": "regulated_by",
+      "relation": "通过回避（打游戏、看剧）来调节焦虑。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "person:前主管",
+      "target": "emotion:愧疚感",
+      "relation_type": "triggers",
+      "relation": "面对主管的麻烦处境，触发了愧疚感。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "schema:苛求标准",
+      "target": "schema:失败图式",
+      "relation_type": "co_occurs",
+      "relation": "两者常伴随出现，共同强化对决策完美性的执着。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "coping:过度补偿",
+      "target": "coping:回避",
+      "relation_type": "conflicts_with",
+      "relation": "“追求最优解”的努力与“想休息/回避”的渴望在内心拉扯。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "schema:苛求标准",
+      "target": "event:辞职事件",
+      "relation_type": "manifested_in",
+      "relation": "在辞职过程中，对离职时机和后续影响的担忧体现了苛求标准。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    },
+    {
+      "source": "mode:健康成人",
+      "target": "coping:过度补偿",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人模式试图接纳不完美，与过度补偿的完美主义倾向产生冲突。",
+      "evidence_dates": [
+        "2026-07-12"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "source_file": "20260627163210-Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-06-27",
+  "nodes": [
+    {
+      "id": "need:self_acceptance",
+      "type": "need",
+      "label": "无条件自我接纳",
+      "domain": "",
+      "description": "渴望在不完美、不成功的情况下依然感受到自我价值和被爱。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望拥有生活选择权，而非被社会评价或他人眼光推着走。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "person:early_caregivers",
+      "type": "person",
+      "label": "早期养育者",
+      "domain": "",
+      "description": "形成批判性声音和高标准要求的源头，虽然未直接提及具体事件，但作为图式起源。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "严苛标准图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为必须达到高标准、完美表现才能获得认可，导致持续的紧张感。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "schema:failure",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "深信自己在竞争中会失败，无法达到他人水平，引发对新尝试的恐惧。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "belief:must_be_perfect",
+      "type": "belief",
+      "label": "完美主义信念",
+      "domain": "",
+      "description": "如果我不完美、不成功，我就没有价值，也不配被爱。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "belief:rest_is_lazy",
+      "type": "belief",
+      "label": "休息即懒惰假设",
+      "domain": "",
+      "description": "如果停下来休息，就是没有价值的，会陷入被淘汰的恐慌。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "当取得进展时，立刻跳出来指责为何不早点做的声音。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "能够同理自己、接纳不完美、允许休息的自我部分。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "在面试、竞争情境下感到恐惧、无助、担心被抛弃和否定的部分。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "coping:overcompensation",
+      "type": "coping",
+      "label": "过度补偿",
+      "domain": "",
+      "description": "通过拼命工作、追求世俗成就来抵御失败感和不安全感。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "trigger:job_interview",
+      "type": "trigger",
+      "label": "求职面试情境",
+      "domain": "",
+      "description": "面临评估、竞争和潜在拒绝的高压情境。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "trigger:downtime",
+      "type": "trigger",
+      "label": "闲暇与休息",
+      "domain": "",
+      "description": "当生活节奏慢下来，没有具体任务时，容易引发焦虑。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "automatic_thought:self_criticism",
+      "type": "automatic_thought",
+      "label": "为什么不早点做",
+      "domain": "",
+      "description": "在取得小成就时，产生的“早点做就不会这么累”的自我苛责。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "emotion:fear",
+      "type": "emotion",
+      "label": "恐惧",
+      "domain": "",
+      "description": "对失败、被发现无能、被淘汰的深层恐惧。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "emotion:peace",
+      "type": "emotion",
+      "label": "平静",
+      "domain": "",
+      "description": "在接纳不完美状态下感受到的心理平稳感。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "id": "event:job_hunt",
+      "type": "event",
+      "label": "换工作进程",
+      "domain": "",
+      "description": "从不敢投简历到面试顺利，历经两年酝酿的职业转型事件。",
+      "related_dates": [
+        "2026-06-27"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:early_caregivers",
+      "target": "schema:unrelenting_standards",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得肯定 → 对方反应(RO)：只有达到高标准才给回应 → 自我反应(RS)：形成严苛标准以维持联结",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "need:self_acceptance",
+      "target": "schema:failure",
+      "relation_type": "unmet",
+      "relation": "长期缺乏无条件接纳，导致将挫折内化为自身能力的失败。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:must_be_perfect",
+      "relation_type": "assumes",
+      "relation": "严苛标准图式派生出“必须完美才有价值”的规则。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "schema:failure",
+      "target": "mode:vulnerable_child",
+      "relation_type": "derives",
+      "relation": "失败图式驱动了脆弱儿童模式，在面临挑战时感到恐惧。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "trigger:job_interview",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "面试情境激活了脆弱儿童的失败恐惧。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:self_criticism",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式产出“为什么不早点做”的苛责思维。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "automatic_thought:self_criticism",
+      "target": "emotion:fear",
+      "relation_type": "evokes",
+      "relation": "自我批评引发了对现状不满的焦虑与恐惧。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "mode:healthy_adult",
+      "relation_type": "conflicts_with",
+      "relation": "惩罚性父母的苛责与健康成人的自我慈悲发生冲突。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "emotion:fear",
+      "target": "coping:overcompensation",
+      "relation_type": "regulated_by",
+      "relation": "通过过度补偿（拼命工作）来调节对失败的恐惧。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "event:job_hunt",
+      "relation_type": "manifested_in",
+      "relation": "严苛标准在求职过程中体现为对失败的灾难化想象。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "trigger:downtime",
+      "relation_type": "activates",
+      "relation": "健康成人模式在闲暇时尝试接纳自己，对抗“休息即懒惰”的信念。",
+      "evidence_dates": [
+        "2026-06-27"
+      ]
+    }
+  ]
+}

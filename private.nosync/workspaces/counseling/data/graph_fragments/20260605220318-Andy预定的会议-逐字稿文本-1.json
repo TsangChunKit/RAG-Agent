@@ -1,0 +1,278 @@
+{
+  "source_file": "20260605220318-Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-06-05",
+  "nodes": [
+    {
+      "id": "need:被无条件接纳",
+      "type": "need",
+      "label": "被无条件接纳",
+      "domain": "",
+      "description": "渴望无论表现如何、是否成功，都能获得他人的喜爱与接纳。对应Andy提到的‘为什么我不能是所有人都喜欢的’。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "need:自主与掌控感",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "希望掌控生活节奏与咨询目标，但目前感到被‘解决问题’的压力所裹挟。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "schema:不懈追求完美",
+      "type": "schema",
+      "label": "不懈追求完美图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为必须达到高成就、高收入、完美状态才配被爱或被认可。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "schema:情感剥夺",
+      "type": "schema",
+      "label": "情感剥夺图式",
+      "domain": "Disconnection & Rejection",
+      "description": "在人际互动中感到难以获得深层联结，产生‘为什么没有人能无条件喜欢我’的失落感。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "belief:必须完美才配被爱",
+      "type": "belief",
+      "label": "必须完美才配被爱",
+      "domain": "",
+      "description": "认为自己需要有钱、高收入、娶漂亮老婆，否则就无法获得认可。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "belief:咨询必须解决问题",
+      "type": "belief",
+      "label": "咨询必须解决问题",
+      "domain": "",
+      "description": "认为付费咨询的唯一价值是‘解决问题’，否则就是浪费钱或没尽责。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "mode:要求苛刻的父母",
+      "type": "mode",
+      "label": "要求苛刻的父母模式",
+      "domain": "",
+      "description": "内在不断鞭策自己要‘尽忠尽责’、‘不能闲着’、‘必须利用好咨询时间’的声音。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到疲惫、被生活议题压垮，渴望放松和被照顾的状态。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "mode:疏离保护者",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过理智化、过度工作、解决问题来隔绝真实的情感疲惫。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "coping:过度补偿",
+      "type": "coping",
+      "label": "过度补偿/完美主义",
+      "domain": "",
+      "description": "通过不断面试、跳槽、追求高成就来对抗内心的无力感。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "coping:理智化应对",
+      "type": "coping",
+      "label": "理智化/认知应对",
+      "domain": "",
+      "description": "使用‘反脆弱’等理论来解释失败，试图将情绪压力转化为可控的逻辑问题。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "trigger:面临面试",
+      "type": "trigger",
+      "label": "面临面试/职业选择",
+      "domain": "",
+      "description": "触发对自我价值的评估，激活完美主义图式。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "trigger:感到疲惫",
+      "type": "trigger",
+      "label": "感到疲惫",
+      "domain": "",
+      "description": "身体与心理的耗竭状态，导致‘疏离保护者’模式减弱，脆弱儿童浮现。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "automatic_thought:我必须利用好咨询的每一分钟",
+      "type": "automatic_thought",
+      "label": "必须利用好咨询时间",
+      "domain": "",
+      "description": "在咨询中产生的压力，认为不讨论问题就是浪费。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "automatic_thought:为什么我不能让所有人都喜欢我",
+      "type": "automatic_thought",
+      "label": "为什么我不能被所有人喜欢",
+      "domain": "",
+      "description": "面对拒绝时的自恋式反思，反映了对无条件接纳的渴望。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "emotion:疲惫",
+      "type": "emotion",
+      "label": "疲惫",
+      "domain": "",
+      "description": "长期的生活压力与不断解决问题的循环导致的耗竭感。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "emotion:被拒绝的难过",
+      "type": "emotion",
+      "label": "被拒绝的难过",
+      "domain": "",
+      "description": "因面试失败或他人喜好不同而产生的失落感。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "id": "event:一起看视频的咨询尝试",
+      "type": "event",
+      "label": "看视频的咨询尝试",
+      "domain": "",
+      "description": "打破‘解决问题’模式，尝试通过共同体验而非认知加工来获得放松。",
+      "related_dates": [
+        "2026-06-05"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:被无条件接纳",
+      "target": "schema:情感剥夺",
+      "relation_type": "unmet",
+      "relation": "长期未被满足的接纳需求，形成了对‘为什么没人无条件喜欢我’的执念。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "schema:不懈追求完美",
+      "target": "belief:必须完美才配被爱",
+      "relation_type": "assumes",
+      "relation": "图式衍生出‘如果不完美/不成功，就不配被爱’的假设。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "schema:不懈追求完美",
+      "target": "coping:过度补偿",
+      "relation_type": "derives",
+      "relation": "驱动Andy通过不断努力、跳槽来证明自我价值。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "trigger:面临面试",
+      "target": "mode:要求苛刻的父母",
+      "relation_type": "activates",
+      "relation": "面试情境激活了内在要求完美的严苛声音。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "mode:要求苛刻的父母",
+      "target": "automatic_thought:我必须利用好咨询的每一分钟",
+      "relation_type": "produces",
+      "relation": "该模式下产生的强迫性思维，要求咨询必须高效。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "automatic_thought:为什么我不能让所有人都喜欢我",
+      "target": "emotion:被拒绝的难过",
+      "relation_type": "evokes",
+      "relation": "这种思维引发了对被拒绝的真实难过。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "emotion:疲惫",
+      "target": "coping:理智化应对",
+      "relation_type": "regulated_by",
+      "relation": "用‘反脆弱’理论来解释疲惫和失败，试图缓解负面情绪。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "coping:过度补偿",
+      "target": "mode:脆弱儿童",
+      "relation_type": "conflicts_with",
+      "relation": "完美主义的过度补偿与内心疲惫的脆弱儿童产生拉扯。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "trigger:感到疲惫",
+      "target": "event:一起看视频的咨询尝试",
+      "relation_type": "manifested_in",
+      "relation": "在极度疲惫下，Andy尝试改变咨询方式，从解决问题转向放松。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    },
+    {
+      "source": "mode:疏离保护者",
+      "target": "belief:咨询必须解决问题",
+      "relation_type": "produces",
+      "relation": "保护者模式通过要求‘解决问题’来回避深层的情感交流。",
+      "evidence_dates": [
+        "2026-06-05"
+      ]
+    }
+  ]
+}

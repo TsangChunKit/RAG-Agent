@@ -1,0 +1,257 @@
+{
+  "source_file": "20250527215831-Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-05-27",
+  "nodes": [
+    {
+      "id": "need:autonomy_expression",
+      "type": "need",
+      "label": "自主与自我表达",
+      "domain": "",
+      "description": "渴望能够自由地进行个人兴趣（如养蚂蚁、看电影），不被外界过度干扰。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "need:connection_approval",
+      "type": "need",
+      "label": "联结与认可",
+      "domain": "",
+      "description": "渴望通过他人的认可来获得自我价值感，在工作和人际中尤为明显。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "不懈的标准图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为必须达到完美、最佳时机、最佳性价比才能行动，否则就是浪费。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "schema:defectiveness_shame",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "害怕被他人看到自己不够完美的一面（如发型、工作表现），认为自己需要伪装。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "在面对权威或重要他人（如母亲）的声音时，倾向于压抑自己的真实需求。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "belief:perfect_timing_rule",
+      "type": "belief",
+      "label": "完美时机假设",
+      "domain": "",
+      "description": "如果我没有在最佳时机、最佳条件下做某事，那就是亏了/浪费了，因此应该推迟。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "belief:approval_equals_worth",
+      "type": "belief",
+      "label": "认可即价值假设",
+      "domain": "",
+      "description": "如果我不能得到同事或客户的认可，我所做的事情就没有意义，我也会变得不快乐。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "mode:demanding_parent",
+      "type": "mode",
+      "label": "要求苛刻的父母模式",
+      "domain": "",
+      "description": "内化的声音，不断要求自己要完美、要对比、要延迟满足，导致无法享受当下。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "渴望被允许做自己喜欢的小事（如养蚂蚁），在纯粹的快乐中感到被滋养。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "coping:maladaptive_delay",
+      "type": "coping",
+      "label": "适应不良的延迟满足",
+      "domain": "",
+      "description": "通过无限期推迟行动来等待“完美时机”，最终导致热情消退，错失体验。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "trigger:work_comparison",
+      "type": "trigger",
+      "label": "工作表现对比",
+      "domain": "",
+      "description": "在职场中面对资深同事或上司的评价，触发对自己能力的质疑。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "trigger:resource_acquisition",
+      "type": "trigger",
+      "label": "资源获取与决策",
+      "domain": "",
+      "description": "在购买物品（如显卡）、规划旅行或开始某项活动时，因追求最优解而陷入纠结。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "person:mother",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "童年时期限制其兴趣（如养蚂蚁）的主要人物，其否定态度被内化。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "emotion:joy",
+      "type": "emotion",
+      "label": "纯粹的快乐",
+      "domain": "",
+      "description": "在做自己真正想做的事（养蚂蚁）时体验到的忘我状态。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "id": "emotion:inadequacy",
+      "type": "emotion",
+      "label": "不适与匮乏感",
+      "domain": "",
+      "description": "在工作对比或追求完美失败时产生的挫败感。",
+      "related_dates": [
+        "2025-05-27"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:mother",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：想被允许做自己喜欢的事 → 对方反应(RO)：母亲坚决反对/嫌弃 → 自我反应(RS)：压抑欲望/听从母亲",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:perfect_timing_rule",
+      "relation_type": "assumes",
+      "relation": "图式派生出必须追求完美条件和最佳时机的规则。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "belief:perfect_timing_rule",
+      "target": "coping:maladaptive_delay",
+      "relation_type": "derives",
+      "relation": "为了追求完美时机，采取了过度的延迟满足，导致热情消退。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "trigger:work_comparison",
+      "target": "schema:defectiveness_shame",
+      "relation_type": "activates",
+      "relation": "工作中的对比激活了担心自己不够好、需要伪装的羞耻感。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "mode:demanding_parent",
+      "target": "coping:maladaptive_delay",
+      "relation_type": "reinforces",
+      "relation": "苛刻的父母模式强化了必须等到完美时机才行动的防御机制。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "mode:demanding_parent",
+      "relation_type": "conflicts_with",
+      "relation": "脆弱儿童想要即时快乐，而苛刻父母要求必须完美、有意义。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "trigger:resource_acquisition",
+      "target": "mode:demanding_parent",
+      "relation_type": "activates",
+      "relation": "面对购买或决策情境，激活了要求完美的父母模式。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "schema:defectiveness_shame",
+      "target": "belief:approval_equals_worth",
+      "relation_type": "assumes",
+      "relation": "因为内在有缺陷感，所以假设必须通过他人的认可来证明价值。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "need:autonomy_expression",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期被压抑的自主需要，形成了屈服模式。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "belief:approval_equals_worth",
+      "target": "emotion:inadequacy",
+      "relation_type": "evokes",
+      "relation": "当无法获得认可时，信念引发了强烈的不适与匮乏感。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:joy",
+      "relation_type": "evokes",
+      "relation": "当脆弱儿童被允许做自己想做的事时，产生纯粹的快乐。",
+      "evidence_dates": [
+        "2025-05-27"
+      ]
+    }
+  ]
+}

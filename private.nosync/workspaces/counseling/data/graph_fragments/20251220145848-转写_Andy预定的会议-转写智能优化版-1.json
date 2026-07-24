@@ -1,0 +1,306 @@
+{
+  "source_file": "20251220145848-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-12-20",
+  "nodes": [
+    {
+      "id": "need:自主掌控感",
+      "type": "need",
+      "label": "自主掌控感",
+      "domain": "",
+      "description": "渴望在职业发展和个人生活中拥有决策权，不再被动等待或被他人左右。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "need:安全联结",
+      "type": "need",
+      "label": "安全联结",
+      "domain": "",
+      "description": "渴望在关系（包括职场关系）中感到安全，害怕因离开或表达需求而导致关系破裂或被抛弃。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "person:离职同事",
+      "type": "person",
+      "label": "离职同事",
+      "domain": "",
+      "description": "公司项目经理及远程支援同事，他们的离职触发了Andy对“抛弃团队”的焦虑。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "person:老板",
+      "type": "person",
+      "label": "老板/管理层",
+      "domain": "",
+      "description": "被Andy感知为通过画饼和打压进行职场PUA的对象，激发了Andy的自我怀疑。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "schema:屈服",
+      "type": "schema",
+      "label": "屈服图式",
+      "domain": "Other-Directedness",
+      "description": "过度压抑自己的需求以避免冲突或伤害他人，认为满足他人需要是自己的责任。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "schema:自主性受损",
+      "type": "schema",
+      "label": "自主性受损图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "认为自己在没有“准备好”的情况下无法独立应对挑战，需要外界许可或充足理由。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "schema:被抛弃",
+      "type": "schema",
+      "label": "被抛弃图式",
+      "domain": "Disconnection & Rejection",
+      "description": "对关系断裂有深层恐惧，将“离开”等同于“背叛”或“抛弃他人”。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "belief:如果我离开就会伤害别人",
+      "type": "belief",
+      "label": "离开即伤害",
+      "domain": "",
+      "description": "深信自己的离职会导致团队瘫痪或给他人带来麻烦，这是一种道德上的背叛。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "belief:必须有正当理由才能离职",
+      "type": "belief",
+      "label": "正当理由假设",
+      "domain": "",
+      "description": "认为离职必须有客观的“受害者”或“不公”作为理由，否则自己就是坏人。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "感到焦虑、无助、需要被安抚，害怕因为自己的决定而导致关系破裂。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内在的批判声音，指责自己想要离开是“自私”或“不负责任”的。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "mode:疏离保护者",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过理性化、压抑情感来应对压力，等待外界条件触发以便“合理”离职。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "coping:回避",
+      "type": "coping",
+      "label": "回避应对",
+      "domain": "",
+      "description": "通过拖延、等待对方犯错、不主动沟通需求来推迟面对离职的冲突。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "trigger:同事离职",
+      "type": "trigger",
+      "label": "同事离职事件",
+      "domain": "",
+      "description": "看到同事离职，激活了Andy对于团队责任和背叛感的内心冲突。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "trigger:年底调薪",
+      "type": "trigger",
+      "label": "年底调薪",
+      "domain": "",
+      "description": "作为事实验证的触发点，用来确认自己是否被重视，或作为离职的“正当理由”。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "automatic_thought:我是一个背叛者",
+      "type": "automatic_thought",
+      "label": "我是背叛者",
+      "domain": "",
+      "description": "当想到离职时，脑海中浮现出的自我定性。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "emotion:内疚",
+      "type": "emotion",
+      "label": "内疚感",
+      "domain": "",
+      "description": "因为想要离开而产生的沉重道德负担。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "emotion:焦虑",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "对未来不确定性及职场环境的持续不安。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "id": "event:薪资调整谈判排练",
+      "type": "event",
+      "label": "薪资谈判排练",
+      "domain": "",
+      "description": "Andy尝试通过排练表达需求，试图在不离开的情况下解决问题。",
+      "related_dates": [
+        "2025-12-20"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:自主掌控感",
+      "target": "schema:自主性受损",
+      "relation_type": "unmet",
+      "relation": "长期被自我怀疑和准备不足的信念阻碍，导致自主感无法实现。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "person:离职同事",
+      "target": "mode:脆弱儿童",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：被团队需要 → 对方反应(RO)：离职离开 → 自我反应(RS)：感到被抛弃与焦虑。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "schema:屈服",
+      "target": "belief:如果我离开就会伤害别人",
+      "relation_type": "assumes",
+      "relation": "屈服图式导致认为满足他人需要高于自身，派生出离职即伤害的规则。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "trigger:同事离职",
+      "target": "schema:屈服",
+      "relation_type": "activates",
+      "relation": "看到同事离开，激活了Andy内心对“抛弃团队”的屈服与内疚。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "belief:如果我离开就会伤害别人",
+      "target": "automatic_thought:我是一个背叛者",
+      "relation_type": "produces",
+      "relation": "该信念直接导致Andy将个人选择定义为背叛。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "automatic_thought:我是一个背叛者",
+      "target": "emotion:内疚",
+      "relation_type": "evokes",
+      "relation": "自我定义为背叛者引发了强烈的内疚情绪。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "emotion:内疚",
+      "target": "coping:回避",
+      "relation_type": "regulated_by",
+      "relation": "为了调节内疚，Andy选择回避冲突，等待外界条件（如调薪失败）作为借口。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "schema:自主性受损",
+      "target": "coping:回避",
+      "relation_type": "derives",
+      "relation": "因认为自己未准备好，通过回避行动来掩盖能力的焦虑。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "automatic_thought:我是一个背叛者",
+      "relation_type": "produces",
+      "relation": "内在批判者不断强化“你是背叛者”的念头。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "schema:屈服",
+      "target": "schema:被抛弃",
+      "relation_type": "co_occurs",
+      "relation": "屈服于他人需求与害怕被抛弃相互强化，形成无法离开的闭环。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "belief:必须有正当理由才能离职",
+      "target": "event:薪资调整谈判排练",
+      "relation_type": "manifested_in",
+      "relation": "Andy试图通过争取调薪来寻找离职的客观理由，体现了该信念的运作。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    },
+    {
+      "source": "person:老板",
+      "target": "mode:疏离保护者",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：被公平对待 → 对方反应(RO)：打压/画饼 → 自我反应(RS)：启动保护机制，压抑情绪等待时机。",
+      "evidence_dates": [
+        "2025-12-20"
+      ]
+    }
+  ]
+}

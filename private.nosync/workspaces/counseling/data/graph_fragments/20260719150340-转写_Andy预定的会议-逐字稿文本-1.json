@@ -1,0 +1,209 @@
+{
+  "source_file": "20260719150340-转写_Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-07-19",
+  "nodes": [
+    {
+      "id": "need:unconditional_acceptance",
+      "type": "need",
+      "label": "无条件接纳与赞赏",
+      "domain": "",
+      "description": "渴望在努力后得到认可，而非永无止境的鞭策。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "person:internal_coach",
+      "type": "person",
+      "label": "内在教练/法官",
+      "domain": "",
+      "description": "反复出现的内心声音，扮演高要求教练角色，推动自我成长但充满苛责。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "苛刻标准图式",
+      "domain": "Overvigilance & Inhibition",
+      "description": "认为必须追求利益最大化、必须完美，否则就是失败。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷感图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己如果不完美就不配被爱，能力不足导致无法达成目标。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "belief:if_not_perfect_then_failure",
+      "type": "belief",
+      "label": "完美主义假设",
+      "domain": "",
+      "description": "如果我没有做出100分的决策，我就是失败的，或者是我不够努力。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "mode:punitive_parent",
+      "type": "mode",
+      "label": "惩罚性父母模式",
+      "domain": "",
+      "description": "内化的教练，不断指出“你本可以做到”，引发内疚与自责。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "疲惫不堪的儿童，拖着重型战车努力前行，却始终无法获得满足感。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "coping:self_exploitation",
+      "type": "coping",
+      "label": "自我剥削/过度补偿",
+      "domain": "",
+      "description": "通过不断逼迫自己努力、追求利益最大化来缓解焦虑和被抛弃的恐惧。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "trigger:making_decisions",
+      "type": "trigger",
+      "label": "决策情境",
+      "domain": "",
+      "description": "面临重大选择（如跳槽、职业发展）时，必须权衡利益最大化。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_could_have_done_better",
+      "type": "automatic_thought",
+      "label": "本可以做得更好",
+      "domain": "",
+      "description": "“你明明有能力，为什么没有做到最好？”",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "内疚与心酸",
+      "domain": "",
+      "description": "面对无法达到完美标准时产生的深层自我怀疑与痛苦。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "id": "event:career_transition",
+      "type": "event",
+      "label": "职业决策与离职",
+      "domain": "",
+      "description": "近期做出的离职与接受新Offer的决策，引发了关于“对错”的反复纠结。",
+      "related_dates": [
+        "2026-07-19"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:internal_coach",
+      "target": "schema:unrelenting_standards",
+      "relation_type": "originates",
+      "relation": "渴望(W)：得到教练的认可 → 对方反应(RO)：不断提出更高要求，永不满足 → 自我反应(RS)：认为自己必须时刻努力，否则就是失败",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:if_not_perfect_then_failure",
+      "relation_type": "assumes",
+      "relation": "该图式派生出“必须追求完美决策”的中间信念",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "trigger:making_decisions",
+      "target": "mode:punitive_parent",
+      "relation_type": "activates",
+      "relation": "决策情境触发了内在法官的审视",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "automatic_thought:i_could_have_done_better",
+      "relation_type": "produces",
+      "relation": "惩罚性模式产生“本可以做得更好”的自动思维",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_could_have_done_better",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "该思维引发了深层的内疚与自我折磨",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "emotion:shame",
+      "target": "coping:self_exploitation",
+      "relation_type": "regulated_by",
+      "relation": "通过自我剥削来应对无法达成完美的羞耻感",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "need:unconditional_acceptance",
+      "target": "schema:defectiveness",
+      "relation_type": "unmet",
+      "relation": "长期缺乏无条件的认可，导致形成了“我不完美就不配被爱”的缺陷感",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "mode:punitive_parent",
+      "target": "mode:vulnerable_child",
+      "relation_type": "conflicts_with",
+      "relation": "法官的鞭策与疲惫的儿童产生剧烈内心拉扯",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "event:career_transition",
+      "relation_type": "manifested_in",
+      "relation": "在离职与新工作的决策中，脆弱儿童感受到巨大的压力与不确定性",
+      "evidence_dates": [
+        "2026-07-19"
+      ]
+    }
+  ]
+}

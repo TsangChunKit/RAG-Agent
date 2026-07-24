@@ -1,0 +1,276 @@
+{
+  "source_file": "20251102131206-转写_Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-11-02",
+  "nodes": [
+    {
+      "id": "need:belonging_connection",
+      "type": "need",
+      "label": "归属感与联结需要",
+      "domain": "",
+      "description": "渴望在亲密关系中获得深层的文化共鸣与理解，减少孤独感。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "person:singapore_girl",
+      "type": "person",
+      "label": "新加坡初恋对象",
+      "domain": "",
+      "description": "中学时期认识的异地对象，虽有好感但因现实异地最终分开，形成强迫性重复的雏形。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "person:boss",
+      "type": "person",
+      "label": "香港老板",
+      "domain": "",
+      "description": "职场中的权威人物，对工作提出高标准要求，曾触发Andy的自我怀疑。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "schema:social_isolation",
+      "type": "schema",
+      "label": "社交隔离图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己不属于香港这个环境，与本地人有文化隔阂，倾向于寻找内地背景的伴侣。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "schema:emotional_deprivation",
+      "type": "schema",
+      "label": "情感剥夺图式",
+      "domain": "Disconnection & Rejection",
+      "description": "在亲密关系中渴望极高的情感投入，容易对异地恋产生浪漫化幻想，以此回避现实接触的压力。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "belief:hk_culture_mismatch",
+      "type": "belief",
+      "label": "文化错配假设",
+      "domain": "",
+      "description": "如果我选择香港本地女生，因为文化背景差异（如梗、视频平台），我们无法建立深层联结。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "belief:distance_is_safe",
+      "type": "belief",
+      "label": "异地恋安全假设",
+      "domain": "",
+      "description": "异地恋因为距离产生美感，且能避免日常琐碎带来的直接冲突与压力，是更安全的选择。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童模式",
+      "domain": "",
+      "description": "在关系中渴望被理解、被接纳，当感受到文化隔阂或被拒绝时会感到焦虑。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人模式",
+      "domain": "",
+      "description": "能够客观评估现实，处理职场反馈，识别并挑战自己的非理性信念。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "通过理性分析、合理化自己的“舍近求远”行为，以此回避深入探索内心真正的不安。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "trigger:dating_hk_girls",
+      "type": "trigger",
+      "label": "接触香港本地女生",
+      "domain": "",
+      "description": "触发对“不属于这里”的身份认同焦虑，导致自动回避。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "trigger:boss_feedback",
+      "type": "trigger",
+      "label": "老板提出批评意见",
+      "domain": "",
+      "description": "触发对“被指责/不够好”的恐惧，但目前已被健康成人模式有效调节。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "在面对本地潜在伴侣或异地恋现实困难时产生的内心冲突感。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "emotion:relief",
+      "type": "emotion",
+      "label": "释然",
+      "domain": "",
+      "description": "在能够自我调节职场情绪或理解异地恋局限后感到的轻松。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_dont_belong_here",
+      "type": "automatic_thought",
+      "label": "我不属于这里",
+      "domain": "",
+      "description": "在香港生活多年但依然认为自己是局外人，难以融入本地社交圈。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "id": "event:work_meeting_incident",
+      "type": "event",
+      "label": "职场会议反馈事件",
+      "domain": "",
+      "description": "老板对会议准备的批评，Andy成功通过自我调节化解了情绪，未陷入自我否定。",
+      "related_dates": [
+        "2025-11-02"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:singapore_girl",
+      "target": "schema:emotional_deprivation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：建立深刻联结 → 对方反应(RO)：异地导致关系中断 → 自我反应(RS)：对异地恋形成强迫性重复与浪漫化执念。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "person:boss",
+      "target": "mode:healthy_adult",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：获得胜任感与认可 → 对方反应(RO)：提出批评与高要求 → 自我反应(RS)：理性分析现状，接纳落差，不再自我攻击。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "need:belonging_connection",
+      "target": "schema:social_isolation",
+      "relation_type": "unmet",
+      "relation": "长期未能获得深层的文化归属感，导致形成了对本地人的疏离感。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "schema:social_isolation",
+      "target": "belief:hk_culture_mismatch",
+      "relation_type": "assumes",
+      "relation": "因核心图式认为自己“不属于这里”，进而派生出“香港女生无法理解我”的假设。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "schema:emotional_deprivation",
+      "target": "belief:distance_is_safe",
+      "relation_type": "assumes",
+      "relation": "因害怕深度联结带来的被抛弃感，派生出“异地恋更安全/浪漫”的假设。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "belief:hk_culture_mismatch",
+      "target": "mode:detached_protector",
+      "relation_type": "derives",
+      "relation": "驱动疏离保护者模式，通过合理化偏好内地女生来回避与本地女生的接触。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "trigger:dating_hk_girls",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "触发脆弱儿童模式，产生“我无法融入”的焦虑。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "mode:vulnerable_child",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "诱发关于身份归属与关系失败的焦虑情绪。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "automatic_thought:i_dont_belong_here",
+      "relation_type": "produces",
+      "relation": "疏离保护者通过此思维来解释为何回避本地女生。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "event:work_meeting_incident",
+      "target": "mode:healthy_adult",
+      "relation_type": "manifested_in",
+      "relation": "在职场事件中，健康成人模式成功运作，处理了情绪并识别了老板的需求。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "emotion:relief",
+      "relation_type": "evokes",
+      "relation": "成功调节后产生的释然与自我效能感。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "mode:healthy_adult",
+      "relation_type": "conflicts_with",
+      "relation": "疏离保护者的回避策略与健康成人寻求整合、消除偏见的意愿产生冲突。",
+      "evidence_dates": [
+        "2025-11-02"
+      ]
+    }
+  ]
+}

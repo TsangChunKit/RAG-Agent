@@ -1,0 +1,296 @@
+{
+  "source_file": "20260516150025-转写_Andy预定的会议-逐字稿文本-1.txt",
+  "session_date": "2026-05-16",
+  "nodes": [
+    {
+      "id": "need:胜任感",
+      "type": "need",
+      "label": "胜任感与自主性",
+      "domain": "",
+      "description": "渴望能够通过自己的努力达成目标，体验到跳跃（成长）的满足感，而非被动应对压力。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "need:被无条件接纳",
+      "type": "need",
+      "label": "被无条件接纳",
+      "domain": "",
+      "description": "渴望在表现不完美或失败时，依然能被他人（特别是母亲/权威）接纳，不被指责。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "person:母亲",
+      "type": "person",
+      "label": "母亲",
+      "domain": "",
+      "description": "早年重要的依附对象，其对学业失败的反应是来访者恐惧他人评价的源头。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "schema:失败图式",
+      "type": "schema",
+      "label": "失败图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "深信自己在工作或学业上必然会失败或表现不如人，导致对任务的灾难化想象。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "schema:缺陷/羞耻图式",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己内在是有缺陷的，若被他人发现未准备好或失败，就会被排斥或轻视。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "belief:不做准备就是世界末日",
+      "type": "belief",
+      "label": "不做准备就是世界末日",
+      "domain": "",
+      "description": "若没有充分准备，就会导致毁灭性的后果（灾难化假设）。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "belief:如果不完美表现就会被指责",
+      "type": "belief",
+      "label": "如果不完美表现就会被指责",
+      "domain": "",
+      "description": "认为他人的评价基于自己的表现，若表现不好，必然会招致指责。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "mode:脆弱儿童",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感到沉重、被石头压住、喘不过气，对未来充满恐惧的状态。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "mode:惩罚性父母",
+      "type": "mode",
+      "label": "惩罚性父母",
+      "domain": "",
+      "description": "内化了外界的批评声音，在表现不佳时对自己进行严苛的审判。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "mode:健康成人",
+      "type": "mode",
+      "label": "健康成人",
+      "domain": "",
+      "description": "试图接受焦虑共存、关注当下、通过自主跳跃获得满足感的部分。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "coping:过度补偿",
+      "type": "coping",
+      "label": "过度补偿（完美主义）",
+      "domain": "",
+      "description": "通过熬夜、疯狂准备、分析问题来试图消除焦虑，以避免被指责。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "coping:回避",
+      "type": "coping",
+      "label": "回避（顺从/放弃）",
+      "domain": "",
+      "description": "在压力过大时选择睡觉、不再准备，以逃避面对焦虑和可能的评价。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "trigger:演讲/任务挑战",
+      "type": "trigger",
+      "label": "演讲/任务挑战",
+      "domain": "",
+      "description": "需要公开展示或完成工作的具体情境，容易激活表现焦虑。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "trigger:他人评价",
+      "type": "trigger",
+      "label": "他人评价",
+      "domain": "",
+      "description": "感受到他人注视或潜在的批评时，触发对被指责的恐惧。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "automatic_thought:他们会指责我为什么没准备好",
+      "type": "automatic_thought",
+      "label": "他们会指责我",
+      "domain": "",
+      "description": "在任务前夕出现的念头，认为他人会因为自己没准备好而质疑自己的能力。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "emotion:焦虑",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "表现为胸闷、心慌、沉重感，是应对压力时的核心情绪。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "emotion:沉重/压抑",
+      "type": "emotion",
+      "label": "沉重/压抑",
+      "domain": "",
+      "description": "被“石头”压住的感觉，身体感到沉重、乏力。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "id": "event:大一挂科经历",
+      "type": "event",
+      "label": "大一挂科经历",
+      "domain": "",
+      "description": "早年经历，来访者恐惧的不是挂科本身，而是母亲的指责。",
+      "related_dates": [
+        "2026-05-16"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:母亲",
+      "target": "schema:失败图式",
+      "relation_type": "originates",
+      "relation": "渴望(W)：获得学业上的认可与接纳 → 对方反应(RO)：母亲可能会指责我不上进 → 自我反应(RS)：感到恐惧与羞耻，形成了失败图式。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "schema:失败图式",
+      "target": "belief:不做准备就是世界末日",
+      "relation_type": "assumes",
+      "relation": "图式导致了灾难化的假设，认为表现不佳即意味着毁灭。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "schema:缺陷/羞耻图式",
+      "target": "belief:如果不完美表现就会被指责",
+      "relation_type": "assumes",
+      "relation": "因认为自己本质有缺陷，故推导出必须通过完美表现来防御外界指责。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "trigger:演讲/任务挑战",
+      "target": "mode:脆弱儿童",
+      "relation_type": "activates",
+      "relation": "演讲任务直接激活了脆弱儿童模式，感到胸闷和心慌。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "mode:脆弱儿童",
+      "target": "emotion:焦虑",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式产生强烈的焦虑情绪。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "emotion:焦虑",
+      "target": "coping:过度补偿",
+      "relation_type": "regulated_by",
+      "relation": "试图通过过度准备来调节焦虑。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "coping:过度补偿",
+      "target": "coping:回避",
+      "relation_type": "conflicts_with",
+      "relation": "在过度准备无效或太累时，转而采取回避（睡觉）来应对，两者在内心拉扯。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "mode:健康成人",
+      "target": "need:胜任感",
+      "relation_type": "derives",
+      "relation": "健康成人模式渴望通过自主的跳跃（尝试）来获得胜任感。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "mode:惩罚性父母",
+      "target": "automatic_thought:他们会指责我为什么没准备好",
+      "relation_type": "produces",
+      "relation": "惩罚性父母模式产生对他人的批评性投射。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "mode:脆弱儿童",
+      "target": "emotion:沉重/压抑",
+      "relation_type": "evokes",
+      "relation": "脆弱儿童模式表现为身体上的沉重感和压抑。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "event:大一挂科经历",
+      "target": "schema:失败图式",
+      "relation_type": "manifested_in",
+      "relation": "该事件是失败图式的典型体现与强化场景。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    },
+    {
+      "source": "mode:脆弱儿童",
+      "target": "mode:健康成人",
+      "relation_type": "conflicts_with",
+      "relation": "沉重的石头（恐惧）与轻盈的跳跃（自主）在当下同时存在，形成内在张力。",
+      "evidence_dates": [
+        "2026-05-16"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "source_file": "20250920131622-转写_Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-09-20",
+  "nodes": [
+    {
+      "id": "need:intimacy",
+      "type": "need",
+      "label": "深层情感联结",
+      "domain": "",
+      "description": "渴望在关系中获得灵魂交流、深度理解与支持，而非仅仅是外在条件的匹配。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望按照自己的意愿选择伴侣，而非为了满足父母的期待或外部标准而妥协。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "将婚姻视为满足家庭期待的任务，是当事人完美主义择偶观的源头。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "person:hk_mentor",
+      "type": "person",
+      "label": "香港导师",
+      "domain": "",
+      "description": "强调关系中的技巧训练与进步，主张保留关系以获得成长，引发了当事人的冲突感。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "schema:unrelenting_standards",
+      "type": "schema",
+      "label": "不懈的标准图式",
+      "domain": "Impaired Autonomy & Performance",
+      "description": "对伴侣有完美主义要求，认为必须找到符合所有条件的伴侣才算成功，否则就是浪费时间。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷感图式",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己不够完美，因此配不上完美的伴侣，导致在理想对象面前感到自卑。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "belief:perfect_partner",
+      "type": "belief",
+      "label": "完美伴侣信念",
+      "domain": "",
+      "description": "如果找不到完美的伴侣，婚姻就会后悔，因此必须极其挑剔。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "belief:no_waste_time",
+      "type": "belief",
+      "label": "拒绝浪费时间规则",
+      "domain": "",
+      "description": "如果对方不是理想对象，进入关系就是浪费时间，应该立即止损。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "mode:demanding_parent",
+      "type": "mode",
+      "label": "要求性父母模式",
+      "domain": "",
+      "description": "内化了导师或社会的标准，不断鞭策自己要进步、要精准投球、要保留关系。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "mode:detached_protector",
+      "type": "mode",
+      "label": "疏离保护者模式",
+      "domain": "",
+      "description": "为了避免在不完美的、无意义的关系中受挫或浪费时间，选择保持距离或放弃进入。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "回避应对",
+      "domain": "",
+      "description": "通过不进入不符合标准的潜在关系，来回避可能的痛苦、失败或时间浪费。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "trigger:mentor_conflict",
+      "type": "trigger",
+      "label": "导师观点冲突",
+      "domain": "",
+      "description": "两位敬重导师的建议截然相反（保留 vs 追求喜欢），导致内心产生剧烈冲突。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "trigger:non_perfect_girl",
+      "type": "trigger",
+      "label": "遇到非理想对象",
+      "domain": "",
+      "description": "在遇到喜欢但不完美、或无感但被建议保留的女生时，触发了完美主义焦虑。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "automatic_thought:wasting_time",
+      "type": "automatic_thought",
+      "label": "这是浪费时间",
+      "domain": "",
+      "description": "面对不完美的女生时，脑中闪过这会浪费我的时间，我应该追求更好的。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "automatic_thought:not_worthy",
+      "type": "automatic_thought",
+      "label": "我配不上她",
+      "domain": "",
+      "description": "面对真正完美的理想对象时，认为自己不够好，无法匹配对方。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "在择偶与自我评价之间感到的持续紧张感。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "emotion:conflict",
+      "type": "emotion",
+      "label": "冲突感",
+      "domain": "",
+      "description": "在理智（技巧进步）与情感（不想浪费时间）之间的拉扯。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "id": "event:past_relationship",
+      "type": "event",
+      "label": "失败的过去关系",
+      "domain": "",
+      "description": "以“花瓶”标准开始，因内在不合而忍受，最终分手的关系经历。",
+      "related_dates": [
+        "2025-09-20"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:parents",
+      "target": "schema:unrelenting_standards",
+      "relation_type": "originates",
+      "relation": "渴望(W)：希望获得父母认可与满足期待 → 对方反应(RO)：要求我找符合标准的儿媳 → 自我反应(RS)：将完美主义内化为择偶标准",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "person:hk_mentor",
+      "target": "mode:demanding_parent",
+      "relation_type": "triggers",
+      "relation": "渴望(W)：希望追求者能进步与成功 → 对方反应(RO)：督促我不断练习与保留关系 → 自我反应(RS)：感到被逼迫、焦虑与冲突",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "belief:perfect_partner",
+      "relation_type": "assumes",
+      "relation": "图式派生出必须找到完美伴侣才能避免后悔的假设",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "belief:no_waste_time",
+      "target": "coping:avoidance",
+      "relation_type": "derives",
+      "relation": "因为不想浪费时间，直接采取回避进入不完美关系的策略",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "trigger:mentor_conflict",
+      "target": "emotion:conflict",
+      "relation_type": "evokes",
+      "relation": "导师观点的分歧直接引发内心的剧烈冲突感",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "trigger:non_perfect_girl",
+      "target": "mode:detached_protector",
+      "relation_type": "activates",
+      "relation": "遇到不完美对象时，保护者模式被激活以防御潜在的挫败感",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "mode:demanding_parent",
+      "target": "automatic_thought:wasting_time",
+      "relation_type": "produces",
+      "relation": "要求性父母模式产生必须高效、不浪费时间的自动思维",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "mode:detached_protector",
+      "target": "coping:avoidance",
+      "relation_type": "regulated_by",
+      "relation": "通过回避来调节不完美关系带来的焦虑与不适",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "coping:avoidance",
+      "target": "mode:demanding_parent",
+      "relation_type": "conflicts_with",
+      "relation": "回避行为与要求性父母模式倡导的“进步练习”产生拉扯",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "automatic_thought:not_worthy",
+      "target": "emotion:anxiety",
+      "relation_type": "evokes",
+      "relation": "觉得自己配不上对方的想法引发了焦虑",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "schema:unrelenting_standards",
+      "target": "event:past_relationship",
+      "relation_type": "manifested_in",
+      "relation": "过去关系中先追求外在（花瓶），后因不合而忍受，正是该图式的典型体现",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    },
+    {
+      "source": "need:intimacy",
+      "target": "schema:unrelenting_standards",
+      "relation_type": "unmet",
+      "relation": "核心情感需要长期未满足，导致通过建立完美主义标准来补偿",
+      "evidence_dates": [
+        "2025-09-20"
+      ]
+    }
+  ]
+}

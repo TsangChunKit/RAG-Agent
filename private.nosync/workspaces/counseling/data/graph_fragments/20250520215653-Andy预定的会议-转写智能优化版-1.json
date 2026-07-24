@@ -1,0 +1,275 @@
+{
+  "source_file": "20250520215653-Andy预定的会议-转写智能优化版-1.txt",
+  "session_date": "2025-05-20",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与掌控感",
+      "domain": "",
+      "description": "渴望能够自己做决定、掌控时间，摆脱被外界规则（父母、工作、咨询）强迫的感觉。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "need:acceptance",
+      "type": "need",
+      "label": "被接纳与认可",
+      "domain": "",
+      "description": "渴望通过表现得“乖”来获得他人的认可，避免被抛弃或被视为“坏人”。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "person:parents",
+      "type": "person",
+      "label": "父母",
+      "domain": "",
+      "description": "早期依附对象，通过要求“听话、乖”来塑造Andy的行为，是“好小孩”规则的源头。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "服从图式",
+      "domain": "Other-Directedness",
+      "description": "过度压抑自己的需求以满足他人，害怕如果表现出自我主张（攻击性）会被惩罚或抛弃。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷/羞耻图式",
+      "domain": "Disconnection & Rejection",
+      "description": "深层恐惧自己如果表现出“坏小孩”的一面（不听话、有攻击性），就会变得不可爱且会被抛弃。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "belief:compliance_is_safe",
+      "type": "belief",
+      "label": "顺从即安全",
+      "domain": "",
+      "description": "如果我表现得言听计从（乖），我就能获得认可，不会被抛弃。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "belief:autonomy_is_bad",
+      "type": "belief",
+      "label": "自主即叛逆",
+      "domain": "",
+      "description": "如果我按照自己的意愿行事（不听话），我就是坏的、有攻击性的，会伤害别人。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrender",
+      "type": "mode",
+      "label": "顺从的“好小孩”模式",
+      "domain": "",
+      "description": "为了维持人际关系和安全感，压抑自我，表现得礼让、听话、甚至过度顺从。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "mode:angry_rebellious_child",
+      "type": "mode",
+      "label": "愤怒的叛逆儿童模式",
+      "domain": "",
+      "description": "在感到被控制、被强迫时激活，通过消极对抗（迟到、拖延）来夺回一点点控制权。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "coping:passive_aggression",
+      "type": "coping",
+      "label": "消极对抗/拖延",
+      "domain": "",
+      "description": "通过迟到、拖延来对抗外界的要求，以此获得心理上的“自主感”，即使代价是金钱损失或内疚。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "trigger:external_demand",
+      "type": "trigger",
+      "label": "外界要求/规则",
+      "domain": "",
+      "description": "当被告知“必须在某时间做某事”时，触发被控制感。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "emotion:resentment",
+      "type": "emotion",
+      "label": "怨恨/不爽",
+      "domain": "",
+      "description": "在不得不顺从外界要求时，内心产生的愤怒和委屈。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "emotion:guilt",
+      "type": "emotion",
+      "label": "内疚",
+      "domain": "",
+      "description": "在迟到后或意识到自己“不乖”时，对产生的后果（如金钱损失、他人评价）感到自责。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "event:chronic_lateness",
+      "type": "event",
+      "label": "慢性迟到",
+      "domain": "",
+      "description": "在咨询、工作、上学中反复发生的迟到行为，是内心对抗与顺从拉扯的具象化。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "id": "event:driving_test_failure",
+      "type": "event",
+      "label": "路考失败",
+      "domain": "",
+      "description": "因过度礼让（不想表现出攻击性）导致路考失败，体现了“好小孩”模式带来的现实功能受损。",
+      "related_dates": [
+        "2025-05-20"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "person:parents",
+      "target": "schema:subjugation",
+      "relation_type": "originates",
+      "relation": "渴望(W)：被认可 → 对方反应(RO)：要求听话/乖 → 自我反应(RS)：压抑自我，形成服从倾向。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "need:autonomy",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期无法表达自主需求，导致形成了服从图式。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "belief:compliance_is_safe",
+      "relation_type": "assumes",
+      "relation": "因为需要服从，所以衍生出顺从即安全的信念。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:autonomy_is_bad",
+      "relation_type": "assumes",
+      "relation": "因为害怕被视为坏人，所以将自主定义为坏的。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "trigger:external_demand",
+      "target": "mode:angry_rebellious_child",
+      "relation_type": "activates",
+      "relation": "外界要求触发了被控制感，从而激活叛逆模式。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "mode:angry_rebellious_child",
+      "target": "coping:passive_aggression",
+      "relation_type": "derives",
+      "relation": "叛逆模式驱动了消极对抗的应对方式。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "coping:passive_aggression",
+      "target": "event:chronic_lateness",
+      "relation_type": "manifested_in",
+      "relation": "消极对抗具体体现在慢性迟到行为中。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrender",
+      "target": "event:driving_test_failure",
+      "relation_type": "manifested_in",
+      "relation": "过度礼让导致路考因不敢行使先行权而失败。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "belief:compliance_is_safe",
+      "target": "mode:compliant_surrender",
+      "relation_type": "derives",
+      "relation": "顺从信念支撑了顺从模式。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "mode:compliant_surrender",
+      "target": "mode:angry_rebellious_child",
+      "relation_type": "conflicts_with",
+      "relation": "顺从的“好小孩”与叛逆的“坏小孩”在内心互相拉扯。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "trigger:external_demand",
+      "target": "emotion:resentment",
+      "relation_type": "evokes",
+      "relation": "外界要求引发了被压迫的怨恨感。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "emotion:resentment",
+      "target": "coping:passive_aggression",
+      "relation_type": "regulated_by",
+      "relation": "用迟到来调节内心对被控制的不满。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    },
+    {
+      "source": "event:chronic_lateness",
+      "target": "emotion:guilt",
+      "relation_type": "evokes",
+      "relation": "迟到导致的后果引发了内疚。",
+      "evidence_dates": [
+        "2025-05-20"
+      ]
+    }
+  ]
+}

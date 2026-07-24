@@ -1,0 +1,306 @@
+{
+  "source_file": "20250906130113-Transcription_Andy_s Scheduled Meeting-转写智能优化版-1.txt",
+  "session_date": "2025-09-06",
+  "nodes": [
+    {
+      "id": "need:autonomy",
+      "type": "need",
+      "label": "自主与自我表达",
+      "domain": "",
+      "description": "渴望在关系中表达真实愿望，不被他人支配。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "need:connection",
+      "type": "need",
+      "label": "安全稳定的联结",
+      "domain": "",
+      "description": "渴望与他人建立基于真实自我而非讨好的联结。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "person:dating_partner",
+      "type": "person",
+      "label": "约会对象",
+      "domain": "",
+      "description": "近期发生争吵与重新约会的女性，是Andy反复投射拒绝感的对象。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "schema:defectiveness",
+      "type": "schema",
+      "label": "缺陷感/羞耻感",
+      "domain": "Disconnection & Rejection",
+      "description": "认为自己不够高、不够帅、不够成熟，本质上不配被爱或被接纳。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "schema:subjugation",
+      "type": "schema",
+      "label": "屈从/讨好",
+      "domain": "Other-Directedness",
+      "description": "为了避免冲突或被抛弃，倾向于压抑自己需求去迎合他人。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "belief:rejection_personal",
+      "type": "belief",
+      "label": "拒绝即个人否定",
+      "domain": "",
+      "description": "如果对方拒绝我，那一定是因为我这个人不好（不够好/奇怪）。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "belief:self_worth_conditional",
+      "type": "belief",
+      "label": "条件化自我价值",
+      "domain": "",
+      "description": "如果我不能表现得完美、高大、帅气、熟练，我就不配拥有这段关系。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "belief:narcissistic_control",
+      "type": "belief",
+      "label": "全能自恋控制感",
+      "domain": "",
+      "description": "潜意识认为自己能主导他人所有决定，对方的拒绝是我的责任。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "mode:vulnerable_child",
+      "type": "mode",
+      "label": "脆弱儿童",
+      "domain": "",
+      "description": "感到被拒绝、恐惧、羞耻，觉得自己不够好的内在部分。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "mode:compliant_surrender",
+      "type": "mode",
+      "label": "顺从/讨好模式",
+      "domain": "",
+      "description": "为了适应他人而牺牲自我、压抑真实愿望的防御状态。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "mode:healthy_adult",
+      "type": "mode",
+      "label": "健康成人",
+      "domain": "",
+      "description": "试图表达真实愿望、建立平等关系、理性分析现实的自我部分。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "coping:pleasing",
+      "type": "coping",
+      "label": "讨好/附和",
+      "domain": "",
+      "description": "通过迎合他人需求来换取安全感，避免被拒绝。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "coping:avoidance",
+      "type": "coping",
+      "label": "社交回避",
+      "domain": "",
+      "description": "因为恐惧被评价而不敢去搭讪或表达意见。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "trigger:rejection",
+      "type": "trigger",
+      "label": "被拒绝情境",
+      "domain": "",
+      "description": "在约会搭讪、工作反馈中遭遇拒绝或冷落。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "trigger:social_evaluation",
+      "type": "trigger",
+      "label": "社交评价情境",
+      "domain": "",
+      "description": "需要表达意见或与他人互动时，担心被评价为不成熟或奇怪。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "automatic_thought:i_am_weird",
+      "type": "automatic_thought",
+      "label": "我是怪人/我不够好",
+      "domain": "",
+      "description": "当被拒绝时，一闪而过的念头：我太奇怪了，我不够帅，我不够成熟。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "emotion:shame",
+      "type": "emotion",
+      "label": "羞耻感",
+      "domain": "",
+      "description": "源于觉得自己不配被接纳的深层情绪。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "emotion:anxiety",
+      "type": "emotion",
+      "label": "焦虑",
+      "domain": "",
+      "description": "面对不确定社交结果时的紧张感。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "id": "event:restaurant_conflict",
+      "type": "event",
+      "label": "餐厅名争吵事件",
+      "domain": "",
+      "description": "Andy坚持不提供餐厅名，导致与约会对象争吵，后成功重新约会。",
+      "related_dates": [
+        "2025-09-06"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "need:autonomy",
+      "target": "schema:subjugation",
+      "relation_type": "unmet",
+      "relation": "长期压抑自主需求导致形成了屈从图式。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "person:dating_partner",
+      "target": "schema:defectiveness",
+      "relation_type": "originates",
+      "relation": "渴望(W)：希望在关系中被接纳与认可 → 对方反应(RO)：对方拒绝或表现出不耐烦 → 自我反应(RS)：感到自己不够好、被否定，产生羞耻感。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "belief:rejection_personal",
+      "relation_type": "assumes",
+      "relation": "图式派生出拒绝即个人否定的信念。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "schema:subjugation",
+      "target": "coping:pleasing",
+      "relation_type": "derives",
+      "relation": "屈从图式驱动了讨好行为。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "trigger:rejection",
+      "target": "mode:vulnerable_child",
+      "relation_type": "activates",
+      "relation": "拒绝情境激活了感到脆弱的儿童模式。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "belief:rejection_personal",
+      "target": "automatic_thought:i_am_weird",
+      "relation_type": "produces",
+      "relation": "信念导致产生我是怪人的自动思维。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "automatic_thought:i_am_weird",
+      "target": "emotion:shame",
+      "relation_type": "evokes",
+      "relation": "自动思维引发了羞耻感。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "emotion:shame",
+      "target": "coping:pleasing",
+      "relation_type": "regulated_by",
+      "relation": "通过讨好来调节羞耻感。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "mode:healthy_adult",
+      "target": "mode:compliant_surrender",
+      "relation_type": "conflicts_with",
+      "relation": "健康成人试图表达自我，与讨好模式产生内在拉扯。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "coping:pleasing",
+      "target": "event:restaurant_conflict",
+      "relation_type": "manifested_in",
+      "relation": "在餐厅名事件中，Andy尝试打破讨好模式，体现了模式的冲突。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "schema:defectiveness",
+      "target": "schema:subjugation",
+      "relation_type": "co_occurs",
+      "relation": "两个图式常同时被激活，相互强化不配得感。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    },
+    {
+      "source": "trigger:social_evaluation",
+      "target": "coping:avoidance",
+      "relation_type": "activates",
+      "relation": "评价恐惧导致了回避行为。",
+      "evidence_dates": [
+        "2025-09-06"
+      ]
+    }
+  ]
+}
