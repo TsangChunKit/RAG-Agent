@@ -11,7 +11,7 @@ import logging
 
 import streamlit as st
 
-from config import CHAT_MEMORY_PATH
+from config import CHAT_MEMORY_PATH, RERANKER_MIN_KEEP, RERANKER_MIN_SCORE
 from scripts import index_records, index_settings, settings
 from scripts.ask import (
     answer,
@@ -262,6 +262,7 @@ def index_settings_dialog():
             "| batch_size | ❌ 不需要 | 只影响 ingest 速度，不影响已存数据 |\n"
             "| device (mps/cpu) | ❌ 不需要 | 只影响计算设备（换 embedding device 需重启服务）|\n"
             "| Reranker 开关 / rerank_top_k / final_top_k | ❌ 不需要 | 纯后处理，改完立即生效 |\n"
+            "| Reranker min_score / min_keep（相关性阈值） | ❌ 不需要 | 纯后处理，改完立即生效 |\n"
             "| Reranker model / device / fp16 | ❌ 不需要 | 不动向量库，但需重启服务生效 |\n"
             "| 心智地图证据片段（证据日数 / 每日段数 / 扩展 / 摘要） | ❌ 不需要 | 纯查询期后处理，改完立即生效 |\n"
             "| RRF 或其他 fusion 方式 | ❌ 不需要 | 查询时逻辑 |\n"
@@ -301,8 +302,9 @@ def index_settings_dialog():
 
     st.markdown("##### 🎯 Reranker 精排（cross-encoder）")
     st.caption(
-        "hybrid 先取候选 → bge-reranker 逐对精排取最终数量 → 父块扩展。**开关 / 候选数 / 保留数**是查询期"
-        "后处理，改完下一次问答立即生效、无需重建；**model / device / fp16** 同 embedding，改完需重启服务生效。"
+        "hybrid 先取候选 → bge-reranker 逐对精排取最终数量 → 相关性阈值过滤 → 父块扩展。**开关 / 候选数 / "
+        "保留数 / 阈值 / 保底条数**是查询期后处理，改完下一次问答立即生效、无需重建；**model / device / fp16** "
+        "同 embedding，改完需重启服务生效。"
     )
     rr = cur["reranker"]
     rr_on = st.checkbox("启用 reranker（关掉退回纯 hybrid，取上面的 top_k）", value=bool(rr["use_reranker"]), key="rr_on")
@@ -310,6 +312,18 @@ def index_settings_dialog():
     rr_cand = rc1.number_input("候选数 rerank_top_k（hybrid 先取）", 1, 200, int(rr["rerank_top_k"]), 1, key="rr_cand",
                                help="开 rerank 时 hybrid 先取多少候选交给精排；应 ≥ 最终保留数")
     rr_final = rc2.number_input("最终保留数 final_top_k（精排后进父块扩展）", 1, 50, int(rr["final_top_k"]), 1, key="rr_final")
+    rc3, rc4 = st.columns(2)
+    rr_min_score = rc3.number_input(
+        "相关性阈值 min_score（0 = 关掉）", 0.0, 1.0, float(rr.get("min_score", RERANKER_MIN_SCORE)), 0.005,
+        format="%.3f", key="rr_min_score",
+        help="精排分数低于它的片段不进上下文。⚠️ 量级按本项目实测定标：完全无关的问题 top1 ≈ 0.003，"
+             "相关的 ≈ 0.05–0.18，所以阈值在 0.01 量级——不要照搬通用的 0.5，那会把所有片段都滤掉。",
+    )
+    rr_min_keep = rc4.number_input(
+        "保底条数 min_keep", 0, 20, int(rr.get("min_keep", RERANKER_MIN_KEEP)), 1, key="rr_min_keep",
+        help="只有「一条都没过线」时才退回这么多条最相关的，并在 prompt 里明说「相关性都很低、不要硬套」。"
+             "宁可给几条弱材料 + 一句警告，也不要让模型在零材料下凭记忆编；只要有片段过线就不会凑数。",
+    )
     rr_model = st.text_input("模型 model", value=rr["model"], key="rr_model",
                              help="如 BAAI/bge-reranker-v2-m3；换模型需重启服务生效（进程内单例缓存）")
     rr_dev_idx = _EMBED_DEVICES.index(rr["device"]) if rr["device"] in _EMBED_DEVICES else 0
@@ -340,6 +354,7 @@ def index_settings_dialog():
             embedding={"model": e_model.strip(), "device": e_dev, "batch_size": int(e_batch), "use_fp16": bool(e_fp16)},
             fts={"base_tokenizer": f_tok.strip(), "ngram_min": int(f_min), "ngram_max": int(f_max)},
             reranker={"use_reranker": bool(rr_on), "rerank_top_k": int(rr_cand), "final_top_k": int(rr_final),
+                      "min_score": float(rr_min_score), "min_keep": int(rr_min_keep),
                       "model": rr_model.strip(), "device": rr_dev, "use_fp16": bool(rr_fp16)},
             graph_evidence={"max_dates": int(ge_dates), "fragments_per_date": int(ge_frags),
                             "window_expand": int(ge_win), "include_summary": bool(ge_sum)},
@@ -585,7 +600,17 @@ def _render_meta(sources: list, token_usage: Optional[dict], matched_graph_nodes
                     tag = "📄 完整逐字稿"
                 else:
                     tag = "🔍 片段"
-                st.caption(f"{tag} ｜ {s['session_date']} ｜ {s['source_file']} ｜ {s['start_ts']}-{s['end_ts']}")
+                # 精排分数只有开了 reranker 才有（None = 没得比，不显示）；低于阈值的保底片段
+                # 明确标出来，免得使用者以为 AI 引用的都是强相关材料。
+                extra = ""
+                score = s.get("score")
+                if score is not None:
+                    extra = f" ｜ 相关性 {score:.3f}"
+                    if s.get("below_threshold"):
+                        extra += "（低相关·保底）"
+                st.caption(
+                    f"{tag} ｜ {s['session_date']} ｜ {s['source_file']} ｜ {s['start_ts']}-{s['end_ts']}{extra}"
+                )
 
 
 for msg in st.session_state.messages:

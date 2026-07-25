@@ -98,7 +98,8 @@ def retrieve(
     k: Optional[int] = None
 ) -> list[dict]:
     """
-    混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排 → 父块/窗口扩展。
+    混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排
+    → 相关性阈值过滤 → 父块/窗口扩展。
 
     注意：本函数没有 workspace_id 参数，使用当前 workspace（由 index_settings 决定）。
     注意：query 进来后先过 text_norm.to_simplified()（繁→简），embed / FTS / reranker
@@ -118,8 +119,29 @@ def retrieve(
                 "chunk_index_range": tuple,  # (起始 chunk_index, 结束 chunk_index)
                 "text": str,                 # 片段文本（父块/窗口扩展后）
                 "rank": int,                 # 排序（越小越相关）
+                "score": Optional[float],    # 窗口内最高的精排分数；关了 reranker 时为 None
+                "below_threshold": bool,     # 有分数且低于 min_score（= 保底片段）
             }
         ]
+    """
+```
+
+**相关性阈值（`min_score` / `min_keep`）**：精排之后再过一道 `_filter_by_score()`，
+分数低于 `min_score` 的候选不进上下文；**只有"一条都没过线"时**才退回分数最高的
+`min_keep` 条，并由 `_format_retrieved()` 在 prompt 最前面加一句"相关性都很低、不要硬套"。
+两个参数都在「⚙️ 索引设置」→ Reranker 里热调，`min_score = 0` 即关掉整个机制
+（行为回到改动前）。分数量级见下方 `scripts/reranker.py` 一节。
+
+> `score is None` 表示"没有分数可比"（关了 reranker，或走的是心智地图证据日那条内存检索
+> 通路），**不等于"不相关"**——下游不要把 None 当成低分处理。
+
+#### `_filter_by_score()`（内部）
+```python
+def _filter_by_score(hits: pd.DataFrame, min_score: float, min_keep: int) -> pd.DataFrame:
+    """
+    丢掉 rerank_score < min_score 的候选（hits 已按分数降序）。
+    一条都没过线时退回 hits.head(min_keep)。
+    min_score <= 0、没有 rerank_score 列、或空表 → 原样返回（= 关掉这个机制）。
     """
 ```
 
@@ -403,16 +425,23 @@ def rerank_candidates(query: str, hits: pd.DataFrame, top_k: int) -> pd.DataFram
 > 曾经的 bug：多 sigmoid 一次 → 无关片段（logit ≈ -11 → 1.6e-5）被挤到 0.500004、彼此只差
 > 1e-6，fp16 下直接相等 → 排序全是 tie，精排退化成 hybrid 原序。
 
-**分数量级参考**（实测本项目语料，chunk 是长段落对话，绝对分数偏低）：
+**分数量级参考**（2026-07-25 实测本项目语料，chunk 是长段落对话，绝对分数偏低）：
 
-| query | top1 rerank_score |
-|------|------------------|
-| 「我喜歡抽水煙」（相关） | 0.18 |
-| 「抽水烟排解焦虑」（相关） | 0.047 |
-| 「今天天氣不錯我想吃拉麵」（完全无关） | 0.0032 |
+| query | top1 rerank_score | 说明 |
+|------|------------------|------|
+| 「我和妈妈的关系」 | 0.87 | 切题且语料覆盖厚 |
+| 「工作压力」 | 0.79 | 同上 |
+| 「我對伴侶的依戀模式」 | 0.42 | 切题（繁体，归一化后命中）|
+| 「我喜歡抽水煙」 | 0.18 | 切题但语料里只提过两次 |
+| 「怎么修理汽车引擎」 | 0.10 | ⚠️ 无关却不低——重叠区 |
+| 「最近的焦虑和睡眠」 | 0.035 | ⚠️ 切题却不高——语料覆盖少 |
+| 「今天天氣不錯我想吃拉麵」 | 0.0035 | 完全无关 |
+| 「巴黎奥运会金牌榜」 | 0.0003 | 完全无关 |
 
-> 相关/无关差约两个数量级，但**绝对值都远低于 0.5**——将来加相关性阈值要按 0.01 量级定标，
-> 不要照搬通用的 0.5。
+> **绝对值都远低于 0.5**，相关性阈值必须按 0.01 量级定标，不要照搬通用的 0.5。
+> 而且相关/无关**存在重叠区**（0.03–0.10），所以阈值只用来砍掉 0.001 量级的噪音尾巴，
+> 模糊区交给 `min_keep` 保底 + prompt 里的低相关警告，见 `retrieve()` 与 `config.py`
+> 的 `RERANKER_MIN_SCORE`。
 
 ---
 

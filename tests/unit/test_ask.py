@@ -1271,6 +1271,206 @@ class TestFullDayTranscripts:
             assert result[0]["is_full_transcript"] is True
 
 
+class TestRelevanceThreshold:
+    """精排分数阈值：分数太低的片段不进上下文，但保底留几条并明确标注"不相关"。
+
+    背景：reranker 修好之后分数才有区分度（无关 query top1 ≈ 0.003，相关 ≈ 0.05–0.18），
+    所以阈值按 0.01 量级定标，不是通用的 0.5。
+    """
+
+    @staticmethod
+    def _sample_df(n=4):
+        # chunk_index 故意隔开（0/2/4/…），这样 window_expand=0 时窗口不会被 _merge_windows
+        # 合并成一条，测试才数得清"留了几条片段"。
+        return pd.DataFrame(
+            {
+                "text": [f"片段{i}" for i in range(n)],
+                "raw_text": [f"片段{i}" for i in range(n)],
+                "source_file": ["test.txt"] * n,
+                "session_date": ["2026-01-01"] * n,
+                "chunk_index": [i * 2 for i in range(n)],
+                "speakers": ["User"] * n,
+                "start_ts": [f"0{i}:00" for i in range(n)],
+                "end_ts": [f"0{i+1}:00" for i in range(n)],
+                "vector": [np.random.rand(8) for _ in range(n)],
+            }
+        )
+
+    def _run_retrieve(self, scores, min_score, min_keep):
+        """跑一次 retrieve()，reranker 打出指定分数（已降序），返回窗口列表。"""
+        from scripts.ask import retrieve
+
+        sample = self._sample_df(len(scores))
+        ranked = sample.copy()
+        ranked["rerank_score"] = scores
+
+        mock_search_result = MagicMock()
+        mock_search_result.to_pandas.return_value = sample
+        builder = MagicMock()
+        builder.vector.return_value = builder
+        builder.text.return_value = builder
+        builder.rerank.return_value = builder
+        builder.limit.return_value = mock_search_result
+        table = MagicMock()
+        table.search.return_value = builder
+
+        with patch("scripts.ask._get_table", return_value=table), patch(
+            "scripts.ask._load_all_chunks", return_value=sample
+        ), patch("scripts.ask.embed_one", return_value=np.random.rand(8)), patch(
+            "scripts.ask.rerank_candidates", return_value=ranked
+        ), patch(
+            "scripts.ask.index_settings.retrieval_params",
+            return_value={"top_k": 10, "window_expand": 0},
+        ), patch(
+            "scripts.ask.index_settings.reranker_params",
+            return_value={
+                "use_reranker": True,
+                "rerank_top_k": 10,
+                "final_top_k": len(scores),
+                "min_score": min_score,
+                "min_keep": min_keep,
+            },
+        ):
+            return retrieve("测试问题")
+
+    def test_drops_hits_below_min_score(self):
+        """低于阈值的片段被丢掉，高于阈值的全部保留"""
+        windows = self._run_retrieve([0.18, 0.047, 0.0032, 0.0005], min_score=0.01, min_keep=1)
+
+        kept = sorted(w["chunk_index_range"][0] for w in windows)
+        assert kept == [0, 2]
+        assert all(w["below_threshold"] is False for w in windows)
+
+    def test_keeps_min_keep_when_everything_is_irrelevant(self):
+        """全都低于阈值时不能一条不给：保底留 min_keep 条，并标记 below_threshold"""
+        windows = self._run_retrieve([0.0032, 0.0021, 0.0009, 0.0004], min_score=0.01, min_keep=3)
+
+        assert len(windows) == 3
+        assert all(w["below_threshold"] is True for w in windows)
+        assert windows[0]["score"] == pytest.approx(0.0032)
+
+    def test_does_not_pad_to_min_keep_when_something_passes(self):
+        """只要有片段过线就不该再凑低分片段——保底只在"一条都没过线"时生效，凑数只会稀释注意力"""
+        windows = self._run_retrieve([0.18, 0.047, 0.0032, 0.0005], min_score=0.01, min_keep=3)
+
+        assert len(windows) == 2
+        assert all(w["below_threshold"] is False for w in windows)
+
+    def test_min_score_zero_disables_filtering(self):
+        """阈值设 0 = 关掉这个机制，行为回到改动之前"""
+        windows = self._run_retrieve([0.18, 0.0032, 0.0005, 0.0001], min_score=0.0, min_keep=1)
+
+        assert len(windows) == 4
+        assert all(w["below_threshold"] is False for w in windows)
+
+    @patch("scripts.ask._get_table")
+    @patch("scripts.ask._load_all_chunks")
+    @patch("scripts.ask.embed_one")
+    @patch("scripts.ask.index_settings.retrieval_params")
+    @patch("scripts.ask.index_settings.reranker_params")
+    def test_no_score_when_reranker_off(
+        self, mock_rk, mock_rp, mock_embed, mock_load_all, mock_table
+    ):
+        """关掉 reranker 就没有分数可比：score 为 None，不能误判成低相关"""
+        from scripts.ask import retrieve
+
+        sample = self._sample_df(2)
+        mock_rp.return_value = {"top_k": 2, "window_expand": 0}
+        mock_rk.return_value = {"use_reranker": False, "rerank_top_k": 10, "final_top_k": 2}
+        mock_embed.return_value = np.random.rand(8)
+        mock_load_all.return_value = sample
+
+        mock_search_result = MagicMock()
+        mock_search_result.to_pandas.return_value = sample
+        builder = MagicMock()
+        builder.vector.return_value = builder
+        builder.text.return_value = builder
+        builder.rerank.return_value = builder
+        builder.limit.return_value = mock_search_result
+        table = MagicMock()
+        table.search.return_value = builder
+        mock_table.return_value = table
+
+        windows = retrieve("测试问题")
+
+        assert len(windows) == 2
+        assert all(w["score"] is None for w in windows)
+        assert all(w["below_threshold"] is False for w in windows)
+
+    def test_format_retrieved_shows_score(self):
+        """片段头部带相关性分数，方便 LLM 和使用者判断权重"""
+        from scripts.ask import _format_retrieved
+
+        block = _format_retrieved(
+            [
+                {
+                    "text": "片段内容",
+                    "source_file": "t.txt",
+                    "session_date": "2026-01-01",
+                    "start_ts": "00:00",
+                    "end_ts": "01:00",
+                    "rank": 0,
+                    "score": 0.1834,
+                    "below_threshold": False,
+                }
+            ]
+        )
+
+        assert "相关性 0.183" in block
+        assert "相关性都很低" not in block
+
+    def test_format_retrieved_warns_when_all_below_threshold(self):
+        """保底片段必须带一句明确的低相关警告，否则 LLM 会硬套无关材料"""
+        from scripts.ask import _format_retrieved
+
+        block = _format_retrieved(
+            [
+                {
+                    "text": "无关片段",
+                    "source_file": "t.txt",
+                    "session_date": "2026-01-01",
+                    "start_ts": "00:00",
+                    "end_ts": "01:00",
+                    "rank": 0,
+                    "score": 0.0032,
+                    "below_threshold": True,
+                }
+            ]
+        )
+
+        assert "相关性都很低" in block
+        assert "无关片段" in block
+
+    def test_format_retrieved_no_warning_when_one_hit_is_relevant(self):
+        """只要有一条过线就不该警告（保底片段混在后面是正常的）"""
+        from scripts.ask import _format_retrieved
+
+        block = _format_retrieved(
+            [
+                {"text": "相关", "source_file": "t.txt", "session_date": "2026-01-01",
+                 "start_ts": "00:00", "end_ts": "01:00", "rank": 0, "score": 0.12,
+                 "below_threshold": False},
+                {"text": "凑数", "source_file": "t.txt", "session_date": "2026-01-01",
+                 "start_ts": "01:00", "end_ts": "02:00", "rank": 1, "score": 0.001,
+                 "below_threshold": True},
+            ]
+        )
+
+        assert "相关性都很低" not in block
+
+    def test_format_retrieved_tolerates_missing_score(self):
+        """老调用方（图谱证据片段、旧测试）没有 score 字段也不能炸"""
+        from scripts.ask import _format_retrieved
+
+        block = _format_retrieved(
+            [{"text": "片段", "source_file": "t.txt", "session_date": "2026-01-01",
+              "start_ts": "00:00", "end_ts": "01:00", "rank": 0}]
+        )
+
+        assert "片段" in block
+        assert "相关性" not in block
+
+
 # Pytest 配置
 @pytest.fixture(autouse=True)
 def mock_workspace():

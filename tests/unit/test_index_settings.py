@@ -291,6 +291,28 @@ class TestRerankerParams:
         result = index_settings.reranker_params()
         assert result["use_reranker"] is False
 
+    def test_reranker_params_relevance_threshold_defaults(self, tmp_path, monkeypatch):
+        """相关性阈值默认值必须在 0.01 量级：本项目实测无关片段 ≈ 0.003、相关 ≈ 0.05–0.18，
+        照搬通用的 0.5 会把所有片段都滤掉，所以这里把量级钉死当回归保护。"""
+        from config import RERANKER_MIN_KEEP, RERANKER_MIN_SCORE
+
+        fake_path = tmp_path / "index_settings.json"
+        monkeypatch.setattr("scripts.index_settings.INDEX_SETTINGS_PATH", fake_path)
+
+        result = index_settings.reranker_params()
+        assert result["min_score"] == RERANKER_MIN_SCORE
+        assert result["min_keep"] == RERANKER_MIN_KEEP
+        assert 0 < RERANKER_MIN_SCORE < 0.05
+        assert RERANKER_MIN_KEEP >= 1
+
+    def test_reranker_params_min_score_zero_preserved(self, tmp_path, monkeypatch):
+        """min_score=0 是"关掉这个机制"的开关，不能被当成缺失而回退到默认值。"""
+        fake_path = tmp_path / "index_settings.json"
+        fake_path.write_text(json.dumps({"reranker": {"min_score": 0}}), encoding="utf-8")
+        monkeypatch.setattr("scripts.index_settings.INDEX_SETTINGS_PATH", fake_path)
+
+        assert index_settings.reranker_params()["min_score"] == 0
+
 
 class TestGraphEvidenceParams:
     """测试心智地图证据片段参数加载。"""

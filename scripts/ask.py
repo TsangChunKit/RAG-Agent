@@ -20,6 +20,8 @@ from config import (
     GRAPH_JSON_PATH,
     LANCEDB_TABLE_NAME,
     LONG_TERM_MEMORY_PATH,
+    RERANKER_MIN_KEEP,
+    RERANKER_MIN_SCORE,
     SYSTEM_INSTRUCTION_HISTORY_PATH,
     SYSTEM_INSTRUCTION_PATH,
 )
@@ -288,9 +290,13 @@ def _load_all_chunks(force: bool = False) -> pd.DataFrame:
     return _all_chunks_cache
 
 
-def _merge_windows(by_file: dict, needed: set, hit_rank: dict) -> list[dict]:
+def _merge_windows(by_file: dict, needed: set, hit_rank: dict, hit_score: Optional[dict] = None) -> list[dict]:
     """把命中块 + 其前后扩展块，在同一份逐字稿内按 chunk_index 合并成连续区间（窗口）。
     相邻/重叠的窗口自动合并去重；每个窗口带上其中最靠前（最相关）命中的 rank，用于排序。
+
+    hit_score: {(source_file, chunk_index): 精排分数}，只有开了 reranker 时才有。窗口取其中
+    最高的分数放进 score 字段；没有分数来源（关了 reranker、或图谱证据那条内存检索通路）时
+    score 为 None——None 表示"没得比"，不能被下游当成"不相关"。
     """
     per_file = defaultdict(set)
     for f, ci in needed:
@@ -316,6 +322,8 @@ def _merge_windows(by_file: dict, needed: set, hit_rank: dict) -> list[dict]:
                 continue
             rows = file_df.loc[valid]
             best_rank = min(hit_rank.get((f, ci), 10**9) for ci in valid)
+            scores = [hit_score.get((f, ci)) for ci in valid] if hit_score else []
+            scores = [s for s in scores if s is not None]
             windows.append(
                 {
                     "source_file": f,
@@ -325,11 +333,29 @@ def _merge_windows(by_file: dict, needed: set, hit_rank: dict) -> list[dict]:
                     "chunk_index_range": (valid[0], valid[-1]),
                     "text": "\n".join(rows["raw_text"].tolist()),
                     "rank": best_rank,
+                    "score": max(scores) if scores else None,
                 }
             )
 
     windows.sort(key=lambda w: w["rank"])
     return windows
+
+
+def _filter_by_score(hits: pd.DataFrame, min_score: float, min_keep: int) -> pd.DataFrame:
+    """丢掉精排分数低于 min_score 的候选（hits 已按分数降序）。
+
+    只有"一条都没过线"时才退回保底的 min_keep 条——这是优雅降级：LLM 拿到几条弱材料
+    + 一句"相关性都很低"的警告，比拿到零材料然后凭记忆编要安全。反过来说，只要有片段过线，
+    就不再往里凑低分片段（凑数只会稀释注意力）。min_score<=0 或没有 rerank_score 列时原样
+    返回（= 关掉这个机制），所以出问题时把阈值调回 0 就能立刻回退。"""
+    if min_score <= 0 or "rerank_score" not in hits.columns or len(hits) == 0:
+        return hits
+    keep = hits[hits["rerank_score"] >= min_score]
+    if len(keep) == 0:
+        keep = hits.head(min_keep)
+    if len(keep) < len(hits):
+        print(f"    相关性阈值 {min_score}：{len(hits)} 条候选里过滤掉 {len(hits) - len(keep)} 条")
+    return keep
 
 
 def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
@@ -363,20 +389,35 @@ def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
     # cross-encoder 精排：对候选逐对打分，取最高的 final_top_k 条。失败会内部 fallback 回 hybrid 顺序。
     if use_reranker and len(hits) > 0:
         hits = rerank_candidates(query, hits, top_k=int(rk["final_top_k"]))
+        hits = _filter_by_score(
+            hits,
+            min_score=float(rk.get("min_score", RERANKER_MIN_SCORE) or 0),
+            min_keep=int(rk.get("min_keep", RERANKER_MIN_KEEP) or 0),
+        )
 
     all_df = _load_all_chunks()
     by_file = {f: g.set_index("chunk_index") for f, g in all_df.groupby("source_file")}
 
     needed = set()
     hit_rank = {}
+    hit_score = {}
     for rank, row in enumerate(hits.itertuples()):
         center = row.chunk_index
         for offset in range(-window_expand, window_expand + 1):
             needed.add((row.source_file, center + offset))
         key = (row.source_file, center)
         hit_rank[key] = min(hit_rank.get(key, 10**9), rank)
+        score = getattr(row, "rerank_score", None)
+        if score is not None:
+            hit_score[key] = max(hit_score.get(key, float("-inf")), float(score))
 
-    return _merge_windows(by_file, needed, hit_rank)
+    windows = _merge_windows(by_file, needed, hit_rank, hit_score)
+    # 标注"这条其实不相关"——只有开了 reranker 才有分数可比；标记在这里算一次，
+    # 下游（_format_retrieved / UI）就不用各自再去读设置。
+    min_score = float(rk.get("min_score", RERANKER_MIN_SCORE) or 0)
+    for w in windows:
+        w["below_threshold"] = w["score"] is not None and min_score > 0 and w["score"] < min_score
+    return windows
 
 
 def _retrieve_within_date(anchor_vec, date: str, k: int, window_expand: int) -> list[dict]:
@@ -631,12 +672,26 @@ def _rank_evidence_dates(scored_dates: list[tuple[int, str]], exclude: set[str],
 
 
 def _format_retrieved(windows: list[dict]) -> str:
+    """把窗口渲染成 prompt 里的片段块。有精排分数时写进头部（让 LLM 自己判断该给多少权重），
+    并且当"有分数的片段全部低于阈值"时，在最前面加一句明确的低相关警告——保底片段是为了
+    避免零材料，不是为了让模型硬套；不说清楚它就会把无关内容当成来访者的真实经历引用。"""
     if not windows:
         return "（未检索到相关历史咨询片段。）"
     blocks = []
     for w in windows:
-        header = f"[{w['session_date']} 咨询｜{w['source_file']}｜{w['start_ts']}-{w['end_ts']}]"
-        blocks.append(f"{header}\n{w['text']}")
+        header = f"[{w['session_date']} 咨询｜{w['source_file']}｜{w['start_ts']}-{w['end_ts']}"
+        score = w.get("score")
+        if score is not None:
+            header += f"｜相关性 {score:.3f}"
+        blocks.append(f"{header}]\n{w['text']}")
+
+    scored = [w for w in windows if w.get("score") is not None]
+    if scored and all(w.get("below_threshold") for w in scored):
+        blocks.insert(
+            0,
+            "⚠️ 本轮检索没有找到明显相关的历史片段——以下片段的相关性都很低（仅作保底列出）。"
+            "请不要硬套它们的内容，如果确实无法从中找到依据，就直说没有相关的咨询记录。",
+        )
     return "\n\n".join(blocks)
 
 
@@ -1057,6 +1112,10 @@ def answer(question: str, history: Optional[list[dict]] = None, k: Optional[int]
             "start_ts": w["start_ts"],
             "end_ts": w["end_ts"],
             "full_transcript": False,
+            # 精排分数 + 是否低于阈值：让 UI 的「引用来源」能标出"这条其实不太相关"。
+            # 关了 reranker 时 score 为 None（没得比），UI 不显示分数即可。
+            "score": w.get("score"),
+            "below_threshold": bool(w.get("below_threshold")),
         }
         for w in windows
     ]

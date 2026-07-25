@@ -368,7 +368,7 @@ def validate_input(text: str) -> bool:
 | **整體項目** | 70% | 85% | 🟢 當前 73%（已過 hook 閾值）|
 
 **核心業務邏輯現狀**：
-- `scripts/ask.py` - 問答核心（當前 75% 🟡）
+- `scripts/ask.py` - 問答核心（當前 79% 🟡）
 - `scripts/chunk.py` - 分塊邏輯（當前 89% ✅）
 - `scripts/ingest.py` - 入庫邏輯（當前 85% ✅）
 - `scripts/build_graph.py` - 圖譜構建（當前 54% 🟡）
@@ -564,7 +564,7 @@ git commit --no-verify -m "emergency fix: ..."
 - ✅ **批處理/看門狗**：update_memory 89%、update_chat_memory 92%、ingest_new 83%、
   chat_memory_watcher 82%、raw_ingest_watcher 80%、check_code_patterns 99%
   （2026-07-25 Round 4，未覆蓋部分只有 `__main__` 進程入口）
-- 🟡 **scripts/ask.py** 77%（接近 80% 目標，補齊歷史壓縮/GraphRAG 分支即可達標）
+- 🟡 **scripts/ask.py** 79%（接近 80% 目標，補齊歷史壓縮/GraphRAG 分支即可達標）
 - 🟡 **scripts/session_graph.py** 78%
 
 ### 優先級 P0（拉高整體到 80%）
@@ -576,7 +576,7 @@ git commit --no-verify -m "emergency fix: ..."
 
 ### 優先級 P1
 
-3. **scripts/ask.py** (77% → 80%)
+3. **scripts/ask.py** (79% → 80%)
 4. **scripts/build_graph.py** (54% → 60%)
 5. **scripts/graph_schema_loader.py** (71% → 80%)
 

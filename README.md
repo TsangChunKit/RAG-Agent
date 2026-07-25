@@ -439,13 +439,15 @@ Time Machine 开着且盘在，就已经有一份本地备份。
 | **本地 Embedding：模型 / 设备(CPU/MPS/CUDA) / 批大小 / fp16** | 「⚙️ 索引设置」→ Embedding（模型 / 设备改动需**重启服务**才生效，因模型进程内缓存为单例）|
 | **FTS 关键词分词器 / ngram 范围** | 「⚙️ 索引设置」→ 关键词检索分词（改完需**重建索引**生效）|
 | **Reranker 开关 / 候选数 rerank_top_k / 最终保留数 final_top_k** | 「⚙️ 索引设置」→ Reranker（纯查询期后处理，改完下一次问答立即生效，无需重建）|
+| **相关性阈值 min_score / 保底条数 min_keep** | 「⚙️ 索引设置」→ Reranker（低于阈值的片段不进上下文；`min_score = 0` 关掉这个机制。纯查询期后处理，改完立即生效）|
 | **Reranker 模型 / 设备 / fp16** | 「⚙️ 索引设置」→ Reranker（模型 / 设备 / fp16 改动需**重启服务**才生效，因模型进程内缓存为单例）|
 | **心智地图证据片段：证据日数 / 每日段数 / 片段扩展 / 是否附摘要** | 「⚙️ 索引设置」→ 心智地图证据片段（纯查询期后处理，改完下一次问答立即生效；调大=上下文更丰富、token 更多，证据日数设 0 可关掉这条通路）|
 
 Gemini / provider 参数存在 `private.nosync/gemini_settings.json`（含 Gemini / xAI API Key + provider 选择 +
 Hermes base_url，是凭证，已被 `.gitignore` 排除）；索引参数存在 `private.nosync/index_settings.json`。
 两个文件都是**删掉 = 恢复对应的默认值**（默认值就是 `config.py` 里的 `GEMINI_*` / `HERMES_*` /
-`CHUNK_*` / `RETRIEVAL_*` / `EMBEDDING_*` / `FTS_*` / `RERANKER_*` / `USE_RERANKER` / `FINAL_TOP_K` /
+`CHUNK_*` / `RETRIEVAL_*` / `EMBEDDING_*` / `FTS_*` / `RERANKER_*`（含 `RERANKER_MIN_SCORE` /
+`RERANKER_MIN_KEEP`）/ `USE_RERANKER` / `FINAL_TOP_K` /
 `GRAPH_EVIDENCE_*` 常量；
 「恢复默认参数」按钮会保留 API Key / provider 选择）。API Key 也可以继续放 `private.nosync/.env`
 （UI 里没填时会回退读它：`GEMINI_API_KEY` / `XAI_API_KEY` / `HERMES_API_KEY`）。
@@ -523,6 +525,7 @@ thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_valu
 | **batch_size** | ❌ 不需要 | 只影响 ingest 速度，不影响已存数据 |
 | **device (mps/cpu)** | ❌ 不需要 | 只影响计算设备（换 embedding device 需重启服务）|
 | **Reranker 开关 / rerank_top_k / final_top_k** | ❌ 不需要 | 纯后处理，改完立即生效 |
+| **Reranker min_score / min_keep**（相关性阈值） | ❌ 不需要 | 纯后处理，改完立即生效 |
 | **Reranker model / device / fp16** | ❌ 不需要 | 不动向量库，但需重启服务生效 |
 | **心智地图证据片段（证据日数 / 每日段数 / 扩展 / 摘要）** | ❌ 不需要 | 纯查询期后处理，改完立即生效 |
 | **RRF 或其他 fusion 方式** | ❌ 不需要 | 查询时逻辑 |
@@ -566,7 +569,8 @@ thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_valu
 > 只作为默认值（删掉 `private.nosync/index_settings.json` 即恢复它们）。
 >
 > 检索流程：**hybrid（dense + FTS + RRF）取 `rerank_top_k` 候选 → `bge-reranker-v2-m3`
-> cross-encoder 精排取 `final_top_k` → 父块扩展（±窗口）→ 合并连续窗口**。reranker 本地跑（mps），
+> cross-encoder 精排取 `final_top_k` → 相关性阈值过滤（`min_score` / `min_keep`）→ 父块扩展
+> （±窗口）→ 合并连续窗口**。reranker 本地跑（mps），
 > 不出网，首次使用会自动下载模型（约 2GB+）；精排失败会自动 fallback 回 hybrid 排序，不影响可用性。
 > 关掉 reranker 开关就退回纯 hybrid（取「⚙️ 索引设置」里的 `top_k`）。开关 / 候选数 / 保留数改完
 > 下一次问答立即生效；模型 / 设备 / fp16 因进程内单例缓存，改完需重启服务生效。
@@ -581,8 +585,20 @@ thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_valu
 > config 自带的 `activation_fn`（bge-reranker-v2-m3 是 `Sigmoid`）先归一化，`predict()` 返回的已经是
 > 0–1。之前代码又 sigmoid 了一遍，结果无关片段（logit ≈ -11 → 1.6e-5）全被挤到 0.500004、彼此只差
 > 1e-6，fp16 下直接相等 → 排序全是 tie，**精排等于白跑、退化成 hybrid 原序**。现在按 `activation_fn`
-> 判断只补"缺失的那一次"。修好后实测：无关 query 的 top1 只有 0.0032，相关 query 0.047–0.18 ——
-> 注意绝对值都远低于 0.5（chunk 是长段落对话），将来加相关性阈值要按 **0.01 量级**定标。
+> 判断只补"缺失的那一次"。修好后实测：切题 query 的 top1 有 0.42–0.87，完全无关的（「今天天气」
+> 「巴黎奥运会金牌榜」）掉到 0.0003–0.0035 —— 注意绝对值整体偏低（chunk 是长段落对话），
+> 相关性阈值要按 **0.01 量级**定标，照搬通用的 0.5 会把真实片段全滤掉。
+
+> **相关性阈值（不引用不相关的碎片）**：精排之后加一道 `min_score`（默认 **0.01**）过滤——
+> 分数低于它的片段直接不进上下文，免得 8 条里 6 条是噪音、把注意力稀释掉，AI 反而绕过检索
+> 内容凭记忆答。**只有"一条都没过线"时**才退回分数最高的 `min_keep`（默认 3）条，并在 prompt
+> 最前面加一句"以下片段相关性都很低，不要硬套，找不到依据就直说没有相关记录"——宁可给弱材料
+> + 明确警告，也不要让模型在零材料下编。片段头部还会写上 `｜相关性 0.183`，UI 的「引用来源」
+> 里也会标出「低相关·保底」。
+>
+> ⚠️ 相关/无关**存在重叠区**：实测「怎么修理汽车引擎」能拿到 0.10，而切题的「最近的焦虑和睡眠」
+> top1 只有 0.035（语料本身覆盖少）。所以阈值只负责砍掉 0.001 量级的噪音尾巴，不做硬判；
+> 想更严就把 `min_score` 调到 0.03–0.05，想完全关掉就设 **0**（行为回到改动前）。
 
 > **繁简统一（检索层不变量）**：语料库全是简体（转写工具输出），但你常打繁体。ngram FTS 靠字符
 > 重叠，「水煙」和「水烟」零重叠，dense 也会漏——实测繁体 query 检索不到语料里唯一提到「水烟」的

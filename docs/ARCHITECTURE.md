@@ -72,6 +72,7 @@ ParsedSession
     ├─ 向量检索 (LanceDB)
     ├─ FTS 检索（ngram，靠字符重叠 → 繁简必须先对齐）
     ├─ 重排序 (reranker.py，输出 0–1 相关性分数)
+    ├─ 相关性阈值 (_filter_by_score：< min_score 的丢掉；全不过线才留 min_keep 条保底)
     └─ 窗口扩展（父块，文本取 raw_text = 原文字形）
     ↓
 检索片段 + 长期记忆 + 图谱
@@ -99,6 +100,25 @@ ParsedSession
 
 落点只有三处（见 `docs/API_REFERENCE.md` 的 `to_simplified()`）。ingest 侧那一处对现有简体语料是
 幂等 no-op，所以这条不变量是**追加**上去的，不需要重建索引或迁移数据。
+
+#### 相关性分数在数据流里的传递
+
+精排分数不只用于排序，还一路带到 UI，让"这条到底有多相关"全程可见：
+
+```
+rerank_score（reranker.py）
+    → _filter_by_score() 过滤（min_score / min_keep）
+    → hit_score{(file, chunk_index): score}
+    → _merge_windows() 取窗口内最高分 → window["score"]
+    → retrieve() 打上 window["below_threshold"]
+    → _format_retrieved() 写进片段头部「｜相关性 0.183」+ 全低时加一句警告
+    → answer() 的 sources[i]["score"] / ["below_threshold"]
+    → app.py「引用来源」显示「相关性 0.183（低相关·保底）」
+```
+
+`score is None` = **没有分数可比**（关了 reranker，或走心智地图证据日那条内存检索通路），
+和"分数低"是两件事，下游一律按"不显示、不判低相关"处理。这条区分是刻意的：让失败/降级
+可见，而不是用 0 或 -1 之类的哨兵值混进真实分数里。
 
 ---
 

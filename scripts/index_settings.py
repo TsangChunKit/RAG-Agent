@@ -41,6 +41,8 @@ from config import (
     GRAPH_EVIDENCE_WINDOW_EXPAND,
     INDEX_SETTINGS_PATH,
     RERANKER_DEVICE,
+    RERANKER_MIN_KEEP,
+    RERANKER_MIN_SCORE,
     RERANKER_MODEL_NAME,
     RERANKER_TOP_K,
     RERANKER_USE_FP16,
@@ -71,6 +73,8 @@ _DEFAULT_RERANKER = {
     "use_reranker": USE_RERANKER,       # A/B 开关：关掉退回纯 hybrid（查询期，立即生效）
     "rerank_top_k": RERANKER_TOP_K,     # 开 rerank 时 hybrid 先取的候选数（查询期，立即生效）
     "final_top_k": FINAL_TOP_K,         # rerank 后最终保留、进入父块扩展的数量（查询期，立即生效）
+    "min_score": RERANKER_MIN_SCORE,    # 相关性阈值，低于它的片段不进上下文（0=关掉；查询期，立即生效）
+    "min_keep": RERANKER_MIN_KEEP,      # 一条都没过线时的保底条数（查询期，立即生效）
     "model": RERANKER_MODEL_NAME,       # 换模型需重启（进程内单例缓存）
     "device": RERANKER_DEVICE,          # 改设备需重启
     "use_fp16": RERANKER_USE_FP16,      # 改精度需重启
@@ -119,9 +123,12 @@ def fts_params() -> dict:
 
 
 def reranker_params() -> dict:
-    """Reranker 精排参数：{use_reranker, rerank_top_k, final_top_k, model, device, use_fp16}。
-    前三个（开关/候选数/保留数）是查询期后处理，改完下一次问答立即生效；后三个（model/device/
-    use_fp16）因模型进程内缓存为单例，改完需重启服务生效。"""
+    """Reranker 精排参数：{use_reranker, rerank_top_k, final_top_k, min_score, min_keep,
+    model, device, use_fp16}。前五个（开关/候选数/保留数/相关性阈值/保底条数）是查询期后处理，
+    改完下一次问答立即生效；后三个（model/device/use_fp16）因模型进程内缓存为单例，改完需重启服务生效。
+
+    min_score 的量级见 config.py 的注释：本项目实测无关片段 ≈ 0.003、相关 ≈ 0.05–0.18，
+    所以阈值在 0.01 量级，不是通用的 0.5。"""
     return _merge(_DEFAULT_RERANKER, _load_raw().get("reranker"))
 
 
