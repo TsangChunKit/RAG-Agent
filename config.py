@@ -105,6 +105,16 @@ def INDEX_CHANGELOG_PATH(workspace_id: Optional[str] = None) -> Path:
     return get_workspace_dir(workspace_id) / "data" / "index_changelog.jsonl"
 
 
+def SYSTEM_INSTRUCTION_HISTORY_PATH(workspace_id: Optional[str] = None) -> Path:
+    """System Instruction 版本历史（workspace 独立）。
+
+    append-only JSONL：每次保存（内容有变化时）或恢复都追加一条记录（时间、完整内容、
+    变更摘要——保存时由 LLM 生成，恢复时是固定文案），供 Streamlit「⚙️ System Instruction
+    设置」弹窗的版本历史列表 + 恢复功能使用。永久保留，不做清理（文本很小，编辑频率低）。
+    """
+    return get_workspace_dir(workspace_id) / "data" / "system_instruction_history.jsonl"
+
+
 # ---- 全局共享的路径（不随 workspace 变化）----
 ENV_PATH = PRIVATE_DIR / ".env"          # GEMINI_API_KEY（由 scripts/llm.py 加载）
 EVAL_QUESTIONS_PATH = BASE_DIR / "eval" / "eval_questions.yaml"

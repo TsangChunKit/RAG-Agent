@@ -111,29 +111,202 @@ class TestSystemInstruction:
 
         si_file = tmp_path / "system_instruction.md"
         si_file.parent.mkdir(parents=True, exist_ok=True)  # 确保父目录存在
+        history_file = tmp_path / "system_instruction_history.jsonl"
 
         with patch("scripts.ask.SYSTEM_INSTRUCTION_PATH", si_file), \
-             patch("scripts.ask.load_workspace_config", return_value={}):  # Mock workspace config
+             patch("scripts.ask.SYSTEM_INSTRUCTION_HISTORY_PATH") as mock_hist_path, \
+             patch("scripts.ask.load_workspace_config", return_value={}), \
+             patch("scripts.ask.ask_llm") as mock_llm:  # Mock workspace config + LLM（外部依赖不能真调）
+            mock_hist_path.return_value = history_file
+            mock_llm.return_value = MagicMock(text="总结：切换到新的 system instruction")
             new_content = "新的 system instruction"
             save_system_instruction(new_content, workspace_id=None)
 
             assert si_file.read_text() == new_content
 
     def test_reset_system_instruction(self, tmp_path):
-        """测试重置 system instruction"""
+        """测试重置 system instruction（合并后单一签名，workspace_id 默认 None）"""
         from scripts.ask import DEFAULT_SYSTEM_INSTRUCTION, reset_system_instruction
 
         si_file = tmp_path / "system_instruction.md"
         si_file.parent.mkdir(parents=True, exist_ok=True)
         si_file.write_text("旧内容")
+        history_file = tmp_path / "system_instruction_history.jsonl"
 
-        # reset_system_instruction 有两个签名，测试不带参数的版本
         with patch("scripts.ask.SYSTEM_INSTRUCTION_PATH", si_file), \
-             patch("scripts.ask.load_workspace_config", return_value={}):
+             patch("scripts.ask.SYSTEM_INSTRUCTION_HISTORY_PATH") as mock_hist_path, \
+             patch("scripts.ask.load_workspace_config", return_value={}), \
+             patch("scripts.ask.ask_llm") as mock_llm:
+            mock_hist_path.return_value = history_file
+            mock_llm.return_value = MagicMock(text="总结：恢复默认")
             result = reset_system_instruction()  # 不带参数
 
             assert si_file.read_text() == DEFAULT_SYSTEM_INSTRUCTION
             assert result == DEFAULT_SYSTEM_INSTRUCTION
+
+    def test_reset_system_instruction_accepts_workspace_id(self, tmp_path):
+        """合并两个重复定义后，reset_system_instruction 必须接受 workspace_id 参数"""
+        from scripts.ask import DEFAULT_SYSTEM_INSTRUCTION, reset_system_instruction
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.parent.mkdir(parents=True, exist_ok=True)
+        history_file = tmp_path / "system_instruction_history.jsonl"
+
+        with patch("scripts.ask.SYSTEM_INSTRUCTION_PATH", si_file), \
+             patch("scripts.ask.SYSTEM_INSTRUCTION_HISTORY_PATH") as mock_hist_path, \
+             patch("scripts.ask.load_workspace_config", return_value={}), \
+             patch("scripts.ask.ask_llm") as mock_llm:
+            mock_hist_path.return_value = history_file
+            mock_llm.return_value = MagicMock(text="总结")
+            result = reset_system_instruction(workspace_id="some-workspace")
+
+            assert result == DEFAULT_SYSTEM_INSTRUCTION
+
+
+class TestSystemInstructionHistory:
+    """System Instruction 版本历史：保存自动记录 / LLM 摘要降级 / 查询 / 恢复"""
+
+    def _patch_paths(self, si_file, history_file):
+        return (
+            patch("scripts.ask.SYSTEM_INSTRUCTION_PATH", si_file),
+            patch("scripts.ask.SYSTEM_INSTRUCTION_HISTORY_PATH", return_value=history_file),
+            patch("scripts.ask.load_workspace_config", return_value={}),
+        )
+
+    def test_save_appends_history_entry_with_llm_summary(self, tmp_path):
+        from scripts.ask import list_system_instruction_history, save_system_instruction
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.write_text("旧内容")
+        history_file = tmp_path / "history.jsonl"
+
+        p1, p2, p3 = self._patch_paths(si_file, history_file)
+        with p1, p2, p3, patch("scripts.ask.ask_llm") as mock_llm:
+            mock_llm.return_value = MagicMock(text="把语气从正式改为口语化")
+            save_system_instruction("新内容", workspace_id=None)
+
+            entries = list_system_instruction_history(workspace_id=None)
+        assert len(entries) == 1
+        assert entries[0]["content"] == "新内容"
+        assert entries[0]["summary"] == "把语气从正式改为口语化"
+        assert "ts" in entries[0]
+
+    def test_save_noop_when_content_unchanged_does_not_append_or_call_llm(self, tmp_path):
+        from scripts.ask import list_system_instruction_history, save_system_instruction
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.write_text("一样的内容")
+        history_file = tmp_path / "history.jsonl"
+
+        p1, p2, p3 = self._patch_paths(si_file, history_file)
+        with p1, p2, p3, patch("scripts.ask.ask_llm") as mock_llm:
+            save_system_instruction("一样的内容", workspace_id=None)
+            mock_llm.assert_not_called()
+            entries = list_system_instruction_history(workspace_id=None)
+
+        assert entries == []
+
+    def test_save_llm_failure_falls_back_but_still_saves_and_records(self, tmp_path):
+        from scripts.ask import list_system_instruction_history, save_system_instruction
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.write_text("旧内容")
+        history_file = tmp_path / "history.jsonl"
+
+        p1, p2, p3 = self._patch_paths(si_file, history_file)
+        with p1, p2, p3, patch("scripts.ask.ask_llm", side_effect=RuntimeError("未设置 API key")):
+            save_system_instruction("新内容", workspace_id=None)
+            entries = list_system_instruction_history(workspace_id=None)
+
+        assert si_file.read_text() == "新内容"  # 保存本身不受 LLM 失败影响
+        assert len(entries) == 1
+        assert "新内容" == entries[0]["content"]
+        assert entries[0]["summary"]  # 有降级文案，不是空字符串
+
+    def test_list_history_returns_newest_first_and_respects_limit(self, tmp_path):
+        from scripts.ask import list_system_instruction_history, save_system_instruction
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.write_text("v0")
+        history_file = tmp_path / "history.jsonl"
+
+        p1, p2, p3 = self._patch_paths(si_file, history_file)
+        with p1, p2, p3, patch("scripts.ask.ask_llm") as mock_llm:
+            mock_llm.return_value = MagicMock(text="摘要")
+            for v in ["v1", "v2", "v3"]:
+                save_system_instruction(v, workspace_id=None)
+            entries = list_system_instruction_history(workspace_id=None)
+
+        assert [e["content"] for e in entries] == ["v3", "v2", "v1"]
+
+        with patch("scripts.ask.SYSTEM_INSTRUCTION_HISTORY_PATH", return_value=history_file):
+            limited = list_system_instruction_history(limit=2, workspace_id=None)
+        assert len(limited) == 2
+
+    def test_get_version_found_and_not_found(self, tmp_path):
+        from scripts.ask import (
+            get_system_instruction_version,
+            list_system_instruction_history,
+            save_system_instruction,
+        )
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.write_text("旧内容")
+        history_file = tmp_path / "history.jsonl"
+
+        p1, p2, p3 = self._patch_paths(si_file, history_file)
+        with p1, p2, p3, patch("scripts.ask.ask_llm") as mock_llm:
+            mock_llm.return_value = MagicMock(text="摘要")
+            save_system_instruction("新内容", workspace_id=None)
+            ts = list_system_instruction_history(workspace_id=None)[0]["ts"]
+
+        with patch("scripts.ask.SYSTEM_INSTRUCTION_HISTORY_PATH", return_value=history_file):
+            found = get_system_instruction_version(ts, workspace_id=None)
+            missing = get_system_instruction_version("not-a-real-ts", workspace_id=None)
+
+        assert found["content"] == "新内容"
+        assert missing is None
+
+    def test_restore_writes_content_back_and_appends_fixed_summary_without_llm(self, tmp_path):
+        from scripts.ask import (
+            list_system_instruction_history,
+            restore_system_instruction_version,
+            save_system_instruction,
+        )
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.write_text("v0")
+        history_file = tmp_path / "history.jsonl"
+
+        p1, p2, p3 = self._patch_paths(si_file, history_file)
+        with p1, p2, p3, patch("scripts.ask.ask_llm") as mock_llm:
+            mock_llm.return_value = MagicMock(text="摘要")
+            save_system_instruction("v1", workspace_id=None)  # 历史里现在有一条 v1
+            old_ts = list_system_instruction_history(workspace_id=None)[0]["ts"]
+
+        q1, q2, q3 = self._patch_paths(si_file, history_file)
+        with q1, q2, q3, patch("scripts.ask.ask_llm") as mock_llm_restore:
+            result = restore_system_instruction_version(old_ts, workspace_id=None)
+            mock_llm_restore.assert_not_called()  # 恢复不应该调 LLM
+            entries = list_system_instruction_history(workspace_id=None)
+
+        assert result == "v1"
+        assert si_file.read_text() == "v1"
+        assert len(entries) == 2
+        assert entries[0]["content"] == "v1"
+        assert old_ts in entries[0]["summary"]
+
+    def test_restore_unknown_timestamp_raises(self, tmp_path):
+        from scripts.ask import restore_system_instruction_version
+
+        si_file = tmp_path / "system_instruction.md"
+        si_file.write_text("v0")
+        history_file = tmp_path / "history.jsonl"
+
+        p1, p2, p3 = self._patch_paths(si_file, history_file)
+        with p1, p2, p3:
+            with pytest.raises(ValueError):
+                restore_system_instruction_version("2000-01-01T00:00:00+00:00", workspace_id=None)
 
 
 class TestSanitize:

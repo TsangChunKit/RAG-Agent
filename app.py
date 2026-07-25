@@ -13,7 +13,14 @@ import streamlit as st
 
 from config import CHAT_MEMORY_PATH
 from scripts import index_records, index_settings, settings
-from scripts.ask import answer, load_system_instruction, reset_system_instruction, save_system_instruction
+from scripts.ask import (
+    answer,
+    list_system_instruction_history,
+    load_system_instruction,
+    reset_system_instruction,
+    restore_system_instruction_version,
+    save_system_instruction,
+)
 from scripts.chat_store import delete_session, list_sessions, load_session, make_title, new_session_id, save_session
 
 # 开了热重载（.streamlit/config.toml 的 runOnSave + watchdog）后，Streamlit 的 LocalSourcesWatcher
@@ -48,11 +55,42 @@ def system_instruction_dialog():
     if col1.button("保存", type="primary", use_container_width=True):
         save_system_instruction(edited)
         st.toast("已保存，下一轮问答立即生效")
+        st.session_state.pop("si_pending_restore", None)
         st.rerun()
     if col2.button("恢复默认", use_container_width=True):
         reset_system_instruction()
         st.toast("已恢复默认")
+        st.session_state.pop("si_pending_restore", None)
         st.rerun()
+
+    st.markdown("##### 🕓 版本历史")
+    history = list_system_instruction_history(limit=30)
+    if not history:
+        st.caption("还没有版本记录。保存过一次修改后会出现在这里。")
+    else:
+        st.caption("每次保存（内容有变化时）或恢复都会自动记一条，摘要由 AI 生成，可展开查看全文或恢复到该版本。")
+        pending_ts = st.session_state.get("si_pending_restore")
+        for entry in history:
+            ts = entry["ts"]
+            with st.expander(f"{ts} ｜ {entry.get('summary', '')}"):
+                st.text_area(
+                    "该版本内容", value=entry["content"], height=200,
+                    disabled=True, key=f"si_hist_content_{ts}",
+                )
+                if pending_ts == ts:
+                    st.warning("确认要恢复到这个版本吗？当前内容会被覆盖（但当前内容本身已经在历史里，随时能再恢复回来）。")
+                    cc1, cc2 = st.columns(2)
+                    if cc1.button("确认恢复", key=f"si_confirm_{ts}", type="primary", use_container_width=True):
+                        restore_system_instruction_version(ts)
+                        st.session_state.pop("si_pending_restore", None)
+                        st.toast("已恢复该版本")
+                        st.rerun()
+                    if cc2.button("取消", key=f"si_cancel_{ts}", use_container_width=True):
+                        st.session_state.pop("si_pending_restore", None)
+                        st.rerun()
+                elif st.button("恢复此版本", key=f"si_restore_{ts}", use_container_width=True):
+                    st.session_state["si_pending_restore"] = ts
+                    st.rerun()
 
 
 _THINKING_LEVELS = ["minimal", "low", "medium", "high"]

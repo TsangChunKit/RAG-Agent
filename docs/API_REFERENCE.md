@@ -140,6 +140,87 @@ def load_system_instruction(workspace_id: Optional[str] = None) -> str:
     """
 ```
 
+#### `save_system_instruction()`
+```python
+def save_system_instruction(text: str, workspace_id: Optional[str] = None) -> None:
+    """
+    保存 system instruction（workspace 感知）。
+
+    内容相对当前版本有实际变化时，自动追加一条版本历史记录（见下方
+    `list_system_instruction_history()`），摘要由 LLM 生成（profile="summary"）；
+    LLM 调用失败会降级为占位摘要（不阻塞保存本身）。内容未变（原样点保存）
+    不产生新记录，也不调用 LLM。
+
+    Args:
+        text: 新的 system instruction 内容
+        workspace_id: Workspace ID（None = 当前）
+    """
+```
+
+#### `reset_system_instruction()`
+```python
+def reset_system_instruction(workspace_id: Optional[str] = None) -> str:
+    """
+    重置 system instruction 为默认值（workspace 感知），内部走 save_system_instruction()，
+    因此同样会追加一条版本历史记录。
+
+    Returns:
+        重置后的默认文本（DEFAULT_SYSTEM_INSTRUCTION）
+    """
+```
+
+#### `list_system_instruction_history()`
+```python
+def list_system_instruction_history(limit: int = 50, workspace_id: Optional[str] = None) -> list[dict]:
+    """
+    读取 system instruction 版本历史（workspace 感知），最新的在前。
+
+    Args:
+        limit: 最多返回几条
+        workspace_id: Workspace ID（None = 当前）
+
+    Returns:
+        [{"ts": str, "content": str, "summary": str}, ...]
+        ts 为 ISO 8601 时间戳（含时区），content 为该版本的完整内容，
+        summary 为 LLM 生成的变更摘要（保存触发）或固定文案（恢复触发）。
+    """
+```
+
+#### `get_system_instruction_version()`
+```python
+def get_system_instruction_version(ts: str, workspace_id: Optional[str] = None) -> Optional[dict]:
+    """
+    按时间戳取某条历史版本的完整记录（workspace 感知）。
+
+    Returns:
+        找到则返回 {"ts", "content", "summary"}，找不到返回 None。
+    """
+```
+
+#### `restore_system_instruction_version()`
+```python
+def restore_system_instruction_version(ts: str, workspace_id: Optional[str] = None) -> str:
+    """
+    把 system instruction 恢复到 ts 对应的历史版本（workspace 感知）。
+
+    恢复动作本身也会追加一条历史记录（摘要固定为「已恢复至 {ts} 版本」，不调用 LLM）。
+
+    Args:
+        ts: 目标版本的时间戳（来自 list_system_instruction_history() 的 "ts" 字段）
+        workspace_id: Workspace ID（None = 当前）
+
+    Returns:
+        恢复后的内容
+
+    Raises:
+        ValueError: 找不到对应时间戳的历史版本
+    """
+```
+
+版本历史存储在 `SYSTEM_INSTRUCTION_HISTORY_PATH(workspace_id)`（`data/system_instruction_history.jsonl`，
+append-only、永久保留，不做清理）。Streamlit「⚙️ System Instruction 设置」弹窗内的
+「🕓 版本历史」区块基于这四个函数实现：列表展示 + 展开查看全文 + 恢复（恢复前需二次确认）。
+
 ### 辅助函数
 
 | 函数 | 作用 | 返回类型 |

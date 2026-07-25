@@ -248,11 +248,25 @@ private.nosync/
         │   ├── graph.json          # 合并后的主图谱
         │   ├── chat_graph.json     # AI 对话图谱
         │   ├── index_changelog.jsonl  # 索引变更记录
+        │   ├── system_instruction_history.jsonl  # System Instruction 版本历史（见下）
         │   └── chat_sessions/      # 对话会话
         │       └── {session_id}.json
         └── db/
             └── sessions.lance/     # LanceDB 向量库
 ```
+
+### System Instruction 版本历史
+
+`scripts/ask.py` 的 `save_system_instruction()` 每次保存（内容有变化时）都会向
+`system_instruction_history.jsonl`（append-only，workspace 独立）追加一条
+`{ts, content, summary}` 记录：`content` 是变更后的完整文本，`summary` 是调用 LLM
+（`profile="summary"`）生成的一句话摘要——LLM 调用失败会降级为占位摘要，不阻塞保存
+本身。`restore_system_instruction_version()` 恢复到某条历史版本时，同样会追加一条记录
+（摘要固定为「已恢复至 {ts} 版本」，不调用 LLM，因为恢复前的内容已经在上一次保存时
+进了历史）。所有版本永久保留，不做清理（文本很小、编辑频率低）。
+
+Explicit Cache（`context_cache.py`）按内容做 fingerprint，恢复/保存后内容一变就自动
+失效重建，版本历史功能不需要额外处理缓存失效。
 
 ### 向量库 Schema
 

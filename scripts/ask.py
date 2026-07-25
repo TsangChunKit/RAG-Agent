@@ -5,6 +5,7 @@ CLI 与 Streamlit 前端共用 answer() 这一个入口，不重复实现检索/
 import json
 import re
 from collections import Counter, defaultdict
+from datetime import datetime
 from typing import Optional
 
 import lancedb
@@ -19,6 +20,7 @@ from config import (
     GRAPH_JSON_PATH,
     LANCEDB_TABLE_NAME,
     LONG_TERM_MEMORY_PATH,
+    SYSTEM_INSTRUCTION_HISTORY_PATH,
     SYSTEM_INSTRUCTION_PATH,
 )
 from scripts import index_settings, session_resolver
@@ -148,8 +150,8 @@ def load_system_instruction(workspace_id: Optional[str] = None) -> str:
     return DEFAULT_SYSTEM_INSTRUCTION
 
 
-def save_system_instruction(text: str, workspace_id: Optional[str] = None) -> None:
-    """保存 system instruction（workspace 感知）。"""
+def _write_system_instruction_file(text: str, workspace_id: Optional[str] = None) -> None:
+    """把 text 写到当前 workspace 对应的 system instruction 文件（不涉及版本历史）。"""
     config = load_workspace_config(workspace_id)
     persona = config.get("persona", {})
     si_file = persona.get("system_instruction_file")
@@ -164,14 +166,99 @@ def save_system_instruction(text: str, workspace_id: Optional[str] = None) -> No
         SYSTEM_INSTRUCTION_PATH.write_text(text, encoding="utf-8")
 
 
-def reset_system_instruction(workspace_id: Optional[str] = None) -> None:
-    """重置 system instruction 为默认值（workspace 感知）。"""
+def _generate_system_instruction_change_summary(old_text: str, new_text: str) -> str:
+    """调用摘要模型，用一句话概括这次改动；调用失败则降级为占位摘要，绝不阻塞保存本身。"""
+    prompt = (
+        "以下是同一份 system instruction 修改前后的版本，请用一句话（20-40 字）概括这次改动的重点，"
+        "不要逐字复述内容：\n\n【修改前】\n" + old_text + "\n\n【修改后】\n" + new_text
+    )
+    try:
+        resp = ask_llm(prompt, profile="summary")
+        return resp.text.strip() or "（无摘要）"
+    except Exception as e:  # noqa: BLE001 —— 摘要失败不能影响保存这个主流程
+        return f"（摘要生成失败：{type(e).__name__}）"
+
+
+def _append_system_instruction_history_record(
+    content: str, summary: str, workspace_id: Optional[str] = None
+) -> dict:
+    """追加一条版本历史记录（append-only JSONL，workspace 感知）。"""
+    rec = {
+        "ts": datetime.now().astimezone().isoformat(timespec="seconds"),
+        "content": content,
+        "summary": summary,
+    }
+    history_path = SYSTEM_INSTRUCTION_HISTORY_PATH(workspace_id)
+    history_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(history_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    return rec
+
+
+def save_system_instruction(text: str, workspace_id: Optional[str] = None) -> None:
+    """保存 system instruction（workspace 感知）。
+
+    内容有实际变化时，自动追加一条版本历史记录（含 LLM 生成的变更摘要，失败会降级、
+    不影响保存本身）；内容未变（比如原样点了保存）不产生新记录，也不调用 LLM。
+    """
+    old_text = load_system_instruction(workspace_id)
+    _write_system_instruction_file(text, workspace_id)
+    if text != old_text:
+        summary = _generate_system_instruction_change_summary(old_text, text)
+        _append_system_instruction_history_record(text, summary, workspace_id)
+
+
+def reset_system_instruction(workspace_id: Optional[str] = None) -> str:
+    """重置 system instruction 为默认值（workspace 感知），返回默认文本。"""
     save_system_instruction(DEFAULT_SYSTEM_INSTRUCTION, workspace_id)
-
-
-def reset_system_instruction() -> str:
-    save_system_instruction(DEFAULT_SYSTEM_INSTRUCTION)
     return DEFAULT_SYSTEM_INSTRUCTION
+
+
+def list_system_instruction_history(limit: int = 50, workspace_id: Optional[str] = None) -> list[dict]:
+    """读取 system instruction 版本历史（workspace 感知），最新的在前。
+
+    每条记录：{ts, content, summary}。
+    """
+    history_path = SYSTEM_INSTRUCTION_HISTORY_PATH(workspace_id)
+    if not history_path.exists():
+        return []
+    entries: list[dict] = []
+    with open(history_path, encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                entries.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+    entries.reverse()
+    return entries[:limit]
+
+
+def get_system_instruction_version(ts: str, workspace_id: Optional[str] = None) -> Optional[dict]:
+    """按时间戳取某条历史版本的完整记录（workspace 感知），找不到返回 None。"""
+    for entry in list_system_instruction_history(limit=10_000, workspace_id=workspace_id):
+        if entry.get("ts") == ts:
+            return entry
+    return None
+
+
+def restore_system_instruction_version(ts: str, workspace_id: Optional[str] = None) -> str:
+    """把 system instruction 恢复到 ts 对应的历史版本（workspace 感知），返回恢复后的内容。
+
+    恢复动作本身也会追加一条历史记录（摘要固定为「已恢复至 {ts} 版本」，不调用 LLM——
+    恢复前的内容早已在上一次保存时进了历史，不会丢失，无需再花一次摘要成本去描述它）。
+
+    Raises:
+        ValueError: 找不到对应时间戳的历史版本
+    """
+    entry = get_system_instruction_version(ts, workspace_id)
+    if entry is None:
+        raise ValueError(f"未找到版本记录：{ts}")
+    content = entry["content"]
+    _write_system_instruction_file(content, workspace_id)
+    _append_system_instruction_history_record(content, f"已恢复至 {ts} 版本", workspace_id)
+    return content
 
 
 _table = None
