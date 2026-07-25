@@ -197,21 +197,24 @@ RERANKER_USE_FP16 = True
 RERANKER_TOP_K = 20              # 开启 rerank 时 hybrid 先取的候选数（交给 reranker 精排）
 FINAL_TOP_K = 8                  # rerank 后最终保留、进入父块扩展的数量
 
-# ---- Gemini（这些都是"默认值"；实际运行值由 scripts/settings.py 从 GEMINI_SETTINGS_PATH
+# ---- LLM 运行参数（这些都是"默认值"；实际运行值由 scripts/settings.py 从 GEMINI_SETTINGS_PATH
 #      读取，可在 Streamlit「⚙️ Gemini 设置」里改，改完下一次调用即生效、无需重启）----
-# 对话（问答）参数：
-# 2026-07 联网核对（ai.google.dev/gemini-api/docs/whats-new-gemini-3.5）：
-# gemini-3.5-flash 已 GA，支持 thinking_level（low/medium/high，默认 medium）。
-GEMINI_MODEL = "gemini-3.5-flash"
+# ⚠️ 常量名保留历史的 GEMINI_ 前缀，但它们是"当前 provider 的默认参数"，不专属 Gemini。
+# 2026-07-25：gemini provider 暂时停用（见 scripts/settings.py 的 DISABLED_PROVIDERS），
+# 所以默认模型改成 hermes/grok 吃得下的模型名——否则删掉设置文件恢复默认后，会拿 gemini 模型名
+# 去打 hermes，报一个莫名其妙的 404。恢复 gemini 时把这两个模型名换回：
+#   GEMINI_MODEL = "gemini-3.5-flash"、GEMINI_SUMMARY_MODEL = "gemini-3.1-flash-lite"
+# 对话（问答）参数：grok-4.5 支持 reasoning_effort low/medium/high（thinking_level 会映射过去）。
+GEMINI_MODEL = "grok-4.5"
 GEMINI_THINKING_LEVEL = "high"
 GEMINI_TEMPERATURE = 0.6
 # thinking_level=high 时，思考 token 也计入这个预算（实测过 high thinking 消耗
 # 100–250+ token），2048 偏紧，调大到 4096 给深度共情式回答留够空间。
 GEMINI_MAX_OUTPUT_TOKENS = 4096
 
-# 摘要/长期记忆/心智地图/聊天记忆这类批量提炼任务，用更便宜的 flash-lite（2026-07 联网核对：
-# gemini-3.1-flash-lite 已 GA，是当前最省成本的稳定模型），不需要 gemini-3.5-flash 的推理深度。
-GEMINI_SUMMARY_MODEL = "gemini-3.1-flash-lite"
+# 摘要/长期记忆/心智地图/聊天记忆这类批量提炼任务用更便宜的模型（grok-4.3 的 in/out 单价约为
+# grok-4.5 的 6 折 / 4 折），不需要对话模型的推理深度。
+GEMINI_SUMMARY_MODEL = "grok-4.3"
 GEMINI_SUMMARY_THINKING_LEVEL = "high"
 GEMINI_SUMMARY_TEMPERATURE = 0.6
 # summary 类任务的 max_output_tokens 按"输出体量"分三档（图谱要输出大段结构化 JSON，需要高上限）：

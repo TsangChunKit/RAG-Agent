@@ -18,7 +18,11 @@ class TestSettingsDialogs:
     """设置弹窗功能测试"""
 
     def test_load_gemini_settings(self, tmp_path):
-        """测试加载 Gemini 设置"""
+        """测试加载 Gemini 设置
+
+        注意 provider：设置文件里残留的 "gemini" 已停用（见 settings.DISABLED_PROVIDERS），
+        load_for_ui() 会回退到 DEFAULT_PROVIDER，但 dialogue/summary 参数照读不误。
+        """
         from scripts import settings
 
         settings_file = tmp_path / "gemini_settings.json"
@@ -42,7 +46,8 @@ class TestSettingsDialogs:
         with patch("scripts.settings.GEMINI_SETTINGS_PATH", settings_file):
             result = settings.load_for_ui()
 
-            assert result["provider"] == "gemini"
+            assert result["provider"] == settings.DEFAULT_PROVIDER  # gemini 停用 → 回退
+            assert "gemini" in result["disabled_providers"]
             assert result["dialogue"]["model"] == "gemini-2.0-flash-exp"
             assert result["dialogue"]["thinking_level"] == "high"
 
@@ -63,13 +68,14 @@ class TestSettingsDialogs:
                 summary={"model": "gemini-3.0", "thinking_level": "low", "temperature": 0.2},
                 summary_max={"text": 2048, "chat_graph": 4096, "therapy_graph": 8192},
                 api_key="new-api-key",
-                provider="gemini",
+                provider="hermes",
             )
 
             # 验证设置文件
             saved = json.loads(settings_file.read_text())
             assert saved["dialogue"]["model"] == "gemini-3.0"
             assert saved["dialogue"]["thinking_level"] == "medium"
+            assert saved["provider"] == "hermes"
 
     def test_load_system_instruction(self, tmp_path):
         """测试加载 System Instruction"""

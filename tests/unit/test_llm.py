@@ -750,3 +750,26 @@ class TestEndToEnd:
         assert resp.text == "Gemini mocked response"
         assert params["model"] == "gemini-3.5-flash"
         assert provider == "gemini"
+
+
+# ── gemini 停用后的分派行为 ──────────────────────────────────────────
+
+
+class TestGeminiDisabled:
+    """gemini 已在 settings 层停用（见 settings.DISABLED_PROVIDERS）。
+
+    _ask_gemini() 的代码保留、也仍被上面的单元测试覆盖（那些测试直接 mock get_provider 绕过
+    settings 闸门），但真实运行路径进不去——settings.provider() 不可能返回 "gemini"。
+    """
+
+    def test_settings_gemini_dispatches_to_hermes(self, mock_openai_client):
+        """设置文件里写 provider=gemini 时，实际走 hermes（OpenAI 兼容）而不是 Gemini SDK。"""
+        from scripts import llm
+
+        with patch("scripts.settings._load_raw", return_value={"provider": "gemini"}), \
+             patch("scripts.llm.genai.Client") as mock_genai_cls:
+            resp = llm.ask_llm("Hello")
+
+        assert resp.text == "OpenAI mocked response"
+        mock_genai_cls.assert_not_called()  # 完全没碰 Gemini SDK
+        assert mock_openai_client.call_count == 1

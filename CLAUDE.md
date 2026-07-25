@@ -357,15 +357,15 @@ def validate_input(text: str) -> bool:
 
 #### 覆蓋率目標（強制執行）
 
-> 數據更新於 2026-07-24（實測 `pytest --cov=scripts --cov=app`）。
+> 數據更新於 2026-07-25（實測 `pytest tests/unit/ --cov=scripts --cov=app`，即 pre-commit hook 用的同一條命令）。
 
 | 模塊類型 | 最低覆蓋率 | 推薦覆蓋率 | 狀態 |
 |---------|----------|-----------|-----|
 | **核心業務邏輯** | 80% | 90% | 🟡 當前 54-100%（多數達標）|
 | **配置/工具類** | 60% | 80% | 🟢 當前 71-100% |
-| **UI 代碼** | 50% | 70% | 🔴 當前 app.py 33% |
-| **批處理腳本** | 40% | 60% | 🔴 當前 0-43%（watcher/ingest_new 未測）|
-| **整體項目** | 70% | 85% | 🟡 當前 60% |
+| **UI 代碼** | 50% | 70% | 🔴 當前 app.py 31% |
+| **批處理腳本** | 40% | 60% | 🟢 當前 80-99%（未覆蓋的只有 `__main__` 進程入口）|
+| **整體項目** | 70% | 85% | 🟢 當前 73%（已過 hook 閾值）|
 
 **核心業務邏輯現狀**：
 - `scripts/ask.py` - 問答核心（當前 75% 🟡）
@@ -374,7 +374,9 @@ def validate_input(text: str) -> bool:
 - `scripts/build_graph.py` - 圖譜構建（當前 54% 🟡）
 - `scripts/graph_utils.py` - 圖譜工具（當前 100% ✅）
 
-**當前缺口**：仍有多個批處理/看門狗腳本（`auto_fix.py`、`chat_memory_watcher.py`、`raw_ingest_watcher.py`、`ingest_new.py`、`update_memory.py`、`check_code_patterns.py`）覆蓋率為 0%，以及 `app.py` 僅 33%——是拉低整體到 60% 的主因。
+**當前缺口**：`app.py` 僅 31%（Streamlit 佈局代碼為主），以及兩個一次性工具腳本
+（`auto_fix.py`、`migrate_from_old_project.py`）仍為 0%。批處理/看門狗腳本已於 2026-07-25 補齊
+（見 `docs/COVERAGE_BOOST_ROUND4.md`），整體從 60% 拉到 73%。
 
 #### 新功能開發檢查清單
 
@@ -552,29 +554,36 @@ git commit --no-verify -m "emergency fix: ..."
 
 ## 提升覆蓋率行動計劃
 
-> 數據更新於 2026-07-24。早期 P0 目標（ask.py / graph_utils.py / chunk.py）已基本達成，
-> 剩餘缺口集中在批處理/看門狗腳本與 UI。
+> 數據更新於 2026-07-25。整體已達 73%，越過 hook 的 70% 閾值；剩餘缺口集中在 UI（app.py）
+> 與兩個一次性工具腳本。
 
 ### 已達成（保持不回退）
 
-- ✅ **scripts/graph_utils.py** 100%
-- ✅ **scripts/chunk.py** 89%
-- 🟡 **scripts/ask.py** 75%（接近 80% 目標，補齊歷史壓縮/GraphRAG 分支即可達標）
-- ✅ **scripts/ingest.py** 85%
+- ✅ **scripts/graph_utils.py** 100%、**index_records.py** 100%、**settings.py** 100%
+- ✅ **scripts/chunk.py** 90%、**ingest.py** 85%
+- ✅ **批處理/看門狗**：update_memory 89%、update_chat_memory 92%、ingest_new 83%、
+  chat_memory_watcher 82%、raw_ingest_watcher 80%、check_code_patterns 99%
+  （2026-07-25 Round 4，未覆蓋部分只有 `__main__` 進程入口）
+- 🟡 **scripts/ask.py** 77%（接近 80% 目標，補齊歷史壓縮/GraphRAG 分支即可達標）
 - 🟡 **scripts/session_graph.py** 78%
 
-### 優先級 P0（0% 覆蓋，風險最高）
+### 優先級 P0（拉高整體到 80%）
 
-1. **scripts/update_memory.py** (0% → 60%)
-2. **scripts/ingest_new.py** (0% → 40%)
-3. **scripts/auto_fix.py** (0% → 40%)
-4. 看門狗腳本 **chat_memory_watcher.py / raw_ingest_watcher.py** (0% → 40%)
+1. **app.py** (31% → 50%)：正確做法是把「按鈕點下去之後做什麼」抽成 `scripts/` 裡的純函數再測，
+   而不是給 `st.*` 佈局代碼硬寫測試
+2. **集成測試腐化**：`pytest tests/integration/ --integration` 有 35 個既有失敗
+   （測試寫死了已改名的 API + 污染真實 workspace 目錄），詳見 `docs/TESTING_COVERAGE_PLAN.md` 任務 14
 
-### 優先級 P1（拉高整體到 70%）
+### 優先級 P1
 
-5. **app.py** (33% → 50%)：UI 主流程
-6. **scripts/index_records.py** (20% → 60%)
-7. **scripts/build_graph.py** (54% → 60%)
+3. **scripts/ask.py** (77% → 80%)
+4. **scripts/build_graph.py** (54% → 60%)
+5. **scripts/graph_schema_loader.py** (71% → 80%)
+
+### 不計劃測（一次性腳本）
+
+- ⚪ **scripts/auto_fix.py** 0%、**scripts/migrate_from_old_project.py** 0%：跑過就不再用，
+  硬編碼路徑，測了拿不到回歸保護
 
 ### 如何快速提升？
 

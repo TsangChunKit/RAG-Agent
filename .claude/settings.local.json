@@ -57,6 +57,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); cmd=$(printf '%s' \"$input\" | jq -r '.tool_input.command // empty'); if printf '%s' \"$cmd\" | grep -qE 'git (commit|push)'; then (lsof -ti:8502 | xargs kill 2>/dev/null; sleep 1; cd /Users/andytsang/Documents/Project/RAG-Agent && nohup .venv/bin/streamlit run app.py --server.port=8502 --server.headless=true >/tmp/streamlit_ragagent.log 2>&1 & disown); echo \"$(date): restarted streamlit (8502) after git commit/push\" >> /tmp/streamlit_ragagent_restart.log; fi",
+            "statusMessage": "Restarting Streamlit (8502) after git commit/push…"
+          }
+        ]
+      }
     ]
   }
 }

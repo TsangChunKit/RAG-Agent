@@ -101,6 +101,8 @@ def retrieve(
     混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排 → 父块/窗口扩展。
 
     注意：本函数没有 workspace_id 参数，使用当前 workspace（由 index_settings 决定）。
+    注意：query 进来后先过 text_norm.to_simplified()（繁→简），embed / FTS / reranker
+          三条腿共用归一化后的文本。索引侧的 Chunk.text 也是简体，两边对齐。
     
     Args:
         query: 查询文本
@@ -317,8 +319,8 @@ class Chunk:
     speakers: str          # 发言人（逗号分隔，去重）
     start_ts: str          # 起始时间戳
     end_ts: str            # 结束时间戳
-    raw_text: str          # 原始拼接文本（不含上下文前缀）
-    text: str              # raw_text 前加上下文化前缀，供 embedding + FTS
+    raw_text: str          # 原始拼接文本（不含上下文前缀），字形保持原样 → 展示/喂 LLM 用
+    text: str              # 上下文前缀 + raw_text，再过繁→简归一化，供 embedding + FTS
     prev_chunk_id: Optional[str] = None  # 前一个 chunk 的 id
     next_chunk_id: Optional[str] = None  # 后一个 chunk 的 id
 ```
@@ -344,6 +346,73 @@ def chunk_session(
         Chunk 对象列表
     """
 ```
+
+---
+
+## scripts/text_norm.py
+
+检索层的繁→简归一化。**系统不变量：所有进入检索/语义匹配的文本一律先过 `to_simplified()`，
+展示用的原文（`Chunk.raw_text`、prompt 里的使用者问题）不动。**
+
+### `to_simplified()`
+```python
+def to_simplified(text: str) -> str:
+    """
+    繁体 → 简体。已是简体则原样返回（幂等），非中文字符不受影响。
+
+    Args:
+        text: 任意文本（query / chunk 文本 / 图谱节点文本）
+
+    Returns:
+        简体化后的文本；zhconv 未安装或转换抛异常时返回原文（降级，不抛错）
+    """
+```
+
+**调用点（只有三处）**：
+
+| 位置 | 归一化对象 | 为什么 |
+|-----|-----------|-------|
+| `chunk.py::chunk_session()` | `Chunk.text`（索引字段） | 让索引侧统一简体；对现有简体语料是 no-op，**无需重建索引** |
+| `ask.py::retrieve()` | query | 覆盖 embed + FTS + reranker 三条腿 |
+| `ask.py::find_relevant_graph_nodes()` | question | 图谱节点标签/描述是简体 |
+
+**为什么必须做**：ngram FTS 靠字符重叠，「水煙」和「水烟」零重叠；dense 也会漏。实测繁体
+query「我喜歡抽水煙」检索不到语料里唯一提到「水烟」的两个块，归一化后两个都能命中。
+
+依赖 `zhconv`（纯 Python，无编译依赖）。缺失时降级为原样返回。
+
+---
+
+## scripts/reranker.py
+
+### `rerank_candidates()`
+```python
+def rerank_candidates(query: str, hits: pd.DataFrame, top_k: int) -> pd.DataFrame:
+    """
+    对 hybrid 候选做 cross-encoder（bge-reranker-v2-m3）精排。
+
+    Returns:
+        列结构和输入一致，额外多一列 rerank_score（0–1，越大越相关）；
+        按 rerank_score 降序、截断到 top_k。任何一步失败 → 回退为输入顺序的前 top_k 条。
+    """
+```
+
+> ⚠️ **只归一化一次**：sentence-transformers 5.x 的 `CrossEncoder` 会按模型 config 自带的
+> `activation_fn` 归一化（bge-reranker-v2-m3 配的是 `Sigmoid`），`predict()` 返回的已经是 0–1。
+> 所以 `rerank_candidates()` 先检查 `model.activation_fn`，只补上"缺失的那一次" sigmoid。
+> 曾经的 bug：多 sigmoid 一次 → 无关片段（logit ≈ -11 → 1.6e-5）被挤到 0.500004、彼此只差
+> 1e-6，fp16 下直接相等 → 排序全是 tie，精排退化成 hybrid 原序。
+
+**分数量级参考**（实测本项目语料，chunk 是长段落对话，绝对分数偏低）：
+
+| query | top1 rerank_score |
+|------|------------------|
+| 「我喜歡抽水煙」（相关） | 0.18 |
+| 「抽水烟排解焦虑」（相关） | 0.047 |
+| 「今天天氣不錯我想吃拉麵」（完全无关） | 0.0032 |
+
+> 相关/无关差约两个数量级，但**绝对值都远低于 0.5**——将来加相关性阈值要按 0.01 量级定标，
+> 不要照搬通用的 0.5。
 
 ---
 
@@ -389,6 +458,70 @@ def parse_transcript(path: Path) -> ParsedSession:
     
     Raises:
         ValueError: 文件名格式不正确
+    """
+```
+
+---
+
+## scripts/settings.py
+
+运行期可调参数 + LLM 后端选择的读写口。每次调用都重读 `GEMINI_SETTINGS_PATH`，改完下一次调用即生效。
+
+### Provider 常量
+
+```python
+VALID_PROVIDERS = ("grok", "hermes")   # 可选后端（UI 选项直接读这个，不要在 app.py 里写死）
+DEFAULT_PROVIDER = "hermes"            # 非法/缺失/已停用时的回退值，必须 ∈ VALID_PROVIDERS
+DISABLED_PROVIDERS = {"gemini": "……停用原因（UI 会显示）"}  # 与 VALID_PROVIDERS 不相交
+```
+
+> `gemini` 当前停用：Python 3.9 能装的最高版 `google-genai`（1.47.0）的 `ThinkingConfig` 不支持
+> `thinking_level`。原因与恢复步骤见 README §七「gemini 为什么停用」。
+
+### `provider()`
+
+```python
+def provider() -> str:
+    """
+    当前 LLM 后端。
+
+    Returns:
+        VALID_PROVIDERS 之一；设置文件里的值非法、缺失或已停用（在 DISABLED_PROVIDERS 里）
+        时返回 DEFAULT_PROVIDER。
+    """
+```
+
+### `load_for_ui()`
+
+```python
+def load_for_ui() -> dict:
+    """
+    给设置 UI 用的当前生效值（不回传 key 明文）。
+
+    Returns:
+        {
+          "provider": str,                 # 当前后端
+          "disabled_providers": dict,      # {provider 名: 停用原因}，UI 用来显示"为什么没这个选项"
+          "dialogue": dict,                # {model, thinking_level, temperature, max_output_tokens}
+          "summary": dict,                 # {model, thinking_level, temperature}
+          "summary_max_tokens": dict,      # {text, chat_graph, therapy_graph}
+          "api_key_set": bool,
+          "xai_api_key_set": bool,
+          "hermes_base_url": str,
+        }
+    """
+```
+
+### `save()`
+
+```python
+def save(dialogue: dict, summary: dict, summary_max: dict,
+         api_key: Optional[str] = None, provider: Optional[str] = None,
+         xai_api_key: Optional[str] = None, hermes_api_key: Optional[str] = None,
+         hermes_base_url: Optional[str] = None) -> None:
+    """
+    写回设置。各 key 传空/None = 保留原值，传非空 = 覆盖。
+    provider 只在 ∈ VALID_PROVIDERS 时写入——非法值和已停用值都会被忽略（不报错）。
     """
 ```
 
@@ -458,6 +591,28 @@ build_graph()  # 使用默认 workspace
 
 # ✅ 推荐：明确传递
 build_graph(workspace_id=current_workspace)
+```
+
+### 5. ThinkingConfig: thinking_level Extra inputs are not permitted
+
+```
+1 validation error for ThinkingConfig
+thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_value='high']
+```
+
+**原因**：Gemini 3.x 用 `thinking_level` 取代了 `thinking_budget`，但 Python 3.9 能装的最高版
+`google-genai`（1.47.0）的 `ThinkingConfig` 只有 `include_thoughts` / `thinking_budget` 两个字段；
+支持 `thinking_level` 的 `google-genai` 2.x 要求 Python ≥ 3.10，所以 `pip install -U` 也拿不到。
+
+**现状**：`gemini` provider 已停用（`settings.DISABLED_PROVIDERS`），默认走 hermes，
+不会再触发这个错误。要用回 Gemini 得先升 Python ≥ 3.10 + google-genai 2.x，
+恢复步骤见 README §七「gemini 为什么停用」。
+
+**排查用**：
+
+```python
+from google.genai import types
+print(list(types.ThinkingConfig.model_fields))  # 装的 SDK 到底支持哪些字段
 ```
 
 ---

@@ -95,9 +95,10 @@ private.nosync/
 map-reduce 心智地图）、**问答**（问题 → 混合检索 + GraphRAG 引导 → LLM）、**可视化**（两张图合并渲染）。
 只有调 LLM 出网，索引 / 向量化 / 归并 / 精排都在本机跑。
 
-> **LLM 后端可切换**（见 §七「LLM 后端 provider」）：默认 **Gemini**；也可切到 **Grok**（xAI 直连）
-> 或 **Hermes**（本地 Agent Gateway 代理，转发到 xAI grok）。下文和图里凡写「Gemini」处，除
-> Explicit Cache（Gemini 专有，切走后自动退回内联）外都同样适用于当前选中的后端。
+> **LLM 后端可切换**（见 §七「LLM 后端 provider」）：默认 **Hermes**（本地 Agent Gateway 代理，
+> 转发到 xAI grok）；也可切到 **Grok**（xAI 直连）。**Gemini 后端 2026-07-25 起暂时停用**
+> （原因见 §七）。下文和图里凡写「Gemini」处，除 Explicit Cache（Gemini 专有，停用期间问答一律
+> 退回内联）外都同样适用于当前选中的后端。
 
 ```mermaid
 flowchart TB
@@ -326,8 +327,8 @@ python -m scripts.ingest
 
 **索引跑在哪：全程本地。** 分块是纯 Python，向量化用本地 BGE-M3 模型（跑在 Apple GPU / MPS 上，
 见 `config.py` 的 `EMBEDDING_DEVICE`），向量库是本机 LanceDB 文件（`private.nosync/db/`）——
-建索引和检索都**不出网**。唯一出网的是问答 / 摘要时调 LLM（默认 Gemini；用 grok 时走 xAI，用 hermes
-时走本地代理再转 xAI，见 §七）。侧边栏「📚 已索引的咨询记录」
+建索引和检索都**不出网**。唯一出网的是问答 / 摘要时调 LLM（默认 hermes：走本地代理再转 xAI；
+用 grok 时直连 xAI，见 §七）。侧边栏「📚 已索引的咨询记录」
 可以看当前索引了哪些逐字稿（日期 / 片段数 / 是否已生成摘要）+ 最近的变更记录；
 「⚙️ 索引设置」可以像「⚙️ Gemini 设置」一样在 UI 里直接调检索 / 分块 / 向量化 / 分词 / Reranker 精排参数
 （弹窗顶部还有一张「哪些参数改完需要全量重建」的速查表）。
@@ -374,13 +375,13 @@ pip install -r requirements.txt
 # curl -s "https://raw.githubusercontent.com/messense/jieba-rs/main/jieba/src/data/dict.txt" \
 #   -o "$(python -c 'import lance; print(lance.download.LANGUAGE_MODEL_HOME)')/jieba/default/dict.txt"
 
-# 3. 个人数据放在 private.nosync/ 里。先建目录，把 Gemini API key 写进去
+# 3. 个人数据放在 private.nosync/ 里。先建目录，把 LLM 后端的 key 写进去
 #    （这是凭证，已被 .gitignore 排除，别提交进 git——见第九节）：
 mkdir -p private.nosync/data
-echo "GEMINI_API_KEY=你的key" > private.nosync/.env
-#    （用其它 LLM 后端时按需追加：XAI_API_KEY=... 或 HERMES_API_KEY=...；hermes 走本地代理，
-#     key 任意，且 base_url 默认 http://127.0.0.1:8645/v1，见 §七「LLM 后端 provider」。
-#     provider 选择本身也可以直接在 UI「⚙️ Gemini 设置」里切，无需写进 .env）
+# 默认后端 hermes 走本地代理（key 任意、base_url 默认 http://127.0.0.1:8645/v1），这步可省；
+# 用 grok 直连 xAI 时写 XAI_API_KEY。gemini 当前停用（见 §七），GEMINI_API_KEY 暂时用不上。
+echo "XAI_API_KEY=你的key" > private.nosync/.env
+#    （provider 选择本身也可以直接在 UI「⚙️ Gemini 设置」里切，无需写进 .env）
 #    （务必确认没有设 ANTHROPIC_API_KEY 环境变量，否则 Claude Code 会改走 API 计费而不是
 #     Pro 订阅——见 PROJECT_SPEC.md §4.3）
 
@@ -425,8 +426,8 @@ Time Machine 开着且盘在，就已经有一份本地备份。
 
 | 想调整什么 | 在哪改 |
 |---|---|
-| **LLM 后端 provider（gemini / grok / hermes）** | Streamlit 侧边栏「⚙️ Gemini 设置」→ 🔀 LLM 后端 provider（见下方「LLM 后端 provider」小节）|
-| **Gemini API Key** | 「⚙️ Gemini 设置」→ API Key（留空=保留现有，填入=覆盖）|
+| **LLM 后端 provider（grok / hermes；gemini 停用中）** | Streamlit 侧边栏「⚙️ Gemini 设置」→ 🔀 LLM 后端 provider（见下方「LLM 后端 provider」小节）|
+| **Gemini API Key** | 「⚙️ Gemini 设置」→ API Key（留空=保留现有，填入=覆盖；provider 停用中，仅保留备用）|
 | **xAI（Grok）API Key** | 「⚙️ Gemini 设置」→ API Key 区（用 provider=grok 时）|
 | **Hermes Base URL / API Key** | 「⚙️ Gemini 设置」→ Hermes 区（用 provider=hermes 时；key 任意，代理自己夹 OAuth）|
 | **对话（问答）的 模型 / 思考深度 / 温度 / 最大输出 token** | 「⚙️ Gemini 设置」左栏（切到 grok/hermes 后「模型」框填对应模型名，如 grok-4.5）|
@@ -454,32 +455,56 @@ Hermes base_url，是凭证，已被 `.gitignore` 排除）；索引参数存在
 > 因为模型在进程内缓存成单例，要重启 Streamlit 服务、下次加载模型时才会读到新值（批大小在下次建 rows
 > 时即生效）。UI 里每处都标了这个区别。
 
-### LLM 后端 provider（gemini / grok / hermes）
+### LLM 后端 provider（grok / hermes；gemini 暂时停用）
 
-所有对 LLM 的调用都收口在 [scripts/llm.py](scripts/llm.py) 的 `ask_llm()`，通过一个 provider 开关在三个
+所有对 LLM 的调用都收口在 [scripts/llm.py](scripts/llm.py) 的 `ask_llm()`，通过一个 provider 开关在
 后端间切换（在「⚙️ Gemini 设置」→ 🔀 LLM 后端 provider 里选，**下一次调用即生效、无需重启**）：
 
 | provider | 是什么 | key / 端点 | 备注 |
 |---|---|---|---|
-| **gemini**（默认） | Google Gemini 直连 | `GEMINI_API_KEY` | 唯一支持 **Explicit Cache**（骨干/长期记忆进缓存，见 §四）|
-| **grok** | xAI 直连（OpenAI 兼容 `api.x.ai/v1`）| `XAI_API_KEY` | 需 xAI 账号有额度；模型填 `grok-4` 等 |
-| **hermes** | 本地 **Hermes Agent Gateway** 代理（OpenAI 兼容，转发到 xAI grok、自己夹 OAuth）| Base URL 默认 `http://127.0.0.1:8645/v1`，key 任意（默认 `sk-unused`）| 模型填 `grok-4.5`；走本地代理、不用自己管 xAI 额度 |
+| **hermes**（默认） | 本地 **Hermes Agent Gateway** 代理（OpenAI 兼容，转发到 xAI grok、自己夹 OAuth）| Base URL 默认 `http://127.0.0.1:8645/v1`，key 任意（默认 `sk-unused`）| 模型填 `grok-4.5`（摘要用更便宜的 `grok-4.3`）；走本地代理、不用自己管 xAI 额度 |
+| **grok** | xAI 直连（OpenAI 兼容 `api.x.ai/v1`）| `XAI_API_KEY` | 需 xAI 账号有额度；模型填 `grok-4.5` 等 |
+| ~~**gemini**~~ | Google Gemini 直连（唯一支持 **Explicit Cache**）| `GEMINI_API_KEY` | ⛔ **2026-07-25 起暂时停用**，见下方「gemini 为什么停用」|
 
 要点：
 
 - **切后端后记得同步改「模型」框**：provider 只决定走哪个后端，对话/摘要各自的模型名仍在
-  「⚙️ Gemini 设置」左右两栏的「模型」框里填（如切到 hermes 就填 `grok-4.5`；切回 gemini 填
-  `gemini-3.5-flash`）。
+  「⚙️ Gemini 设置」左右两栏的「模型」框里填（hermes/grok 填 `grok-4.5` / `grok-4.3`）。
 - **grok / hermes 是 OpenAI 兼容后端，共用同一套代码**（`scripts/llm.py` 的 `_OPENAI_PROVIDERS`
   注册表 + `_ask_openai_compatible()`）。要再加任何 OpenAI 兼容网关，只需在注册表加一行 +
   在 `scripts/settings.py` 的 `VALID_PROVIDERS` 加个名字。
 - **`thinking_level` 映射**：Gemini 的 minimal/low/medium/high → OpenAI 兼容后端的 `reasoning_effort`
   （minimal→low，其余同名），放在请求的 `extra_body` 里。少数模型（如 grok-4）不接受该参数时会
   自动去掉重试。`grok-4.5` 支持 low/medium/high 且默认 high、不能关。
-- **Explicit Cache 仅 gemini 有**：切到 grok/hermes 时 `scripts/context_cache.get_cache_name()`
+- **Explicit Cache 仅 gemini 有**：用 grok/hermes 时 `scripts/context_cache.get_cache_name()`
   直接返回 None，问答自动退回把 system instruction + 长期记忆 + 骨干图内联进上下文（功能不变，
-  只是省不到那部分缓存费）。
+  只是省不到那部分缓存费）。gemini 停用期间这条通路一直是内联。
 - **依赖**：grok/hermes 走 `openai` SDK（已在 `requirements.txt`）指向对应 base_url。
+
+#### gemini 为什么停用
+
+Gemini 3.x 已用 `thinking_level` 取代 `thinking_budget`，而本项目跑在 **Python 3.9** 上——能装的最高版
+`google-genai` 是 **1.47.0**，它的 `ThinkingConfig` 不认 `thinking_level`，调用会被 pydantic 直接拒：
+
+```
+1 validation error for ThinkingConfig
+thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_value='high']
+```
+
+支持该参数的 `google-genai` **2.x 要求 Python ≥ 3.10**，所以在当前环境里 `pip install -U` 也拿不到；
+退回旧的 `thinking_budget` 同样不行（Gemini 3.x 模型不再接受它）。
+
+因此 `gemini` 从可选 provider 里摘掉，登记在 [`scripts/settings.py`](scripts/settings.py) 的
+`DISABLED_PROVIDERS`（UI 的 provider 选区会显示这条原因）：`provider()` 读到 `gemini` 会回退 hermes，
+`save()` 也拒绝把它写回设置文件。`scripts/llm.py` 的 `_ask_gemini()` 与 Explicit Caching 代码**原样保留**。
+
+**恢复步骤**（三步，改回来即生效）：
+
+1. 环境换到 Python ≥ 3.10，`pip install -U google-genai`（2.x）。
+2. `scripts/settings.py`：把 `"gemini"` 加回 `VALID_PROVIDERS`、从 `DISABLED_PROVIDERS` 删掉
+   （需要的话把 `DEFAULT_PROVIDER` 改回 `"gemini"`）。
+3. `config.py`：把默认模型名换回 `GEMINI_MODEL = "gemini-3.5-flash"`、
+   `GEMINI_SUMMARY_MODEL = "gemini-3.1-flash-lite"`。
 
 ### 参数改动是否需要「全量重建」速查
 
@@ -549,8 +574,22 @@ Hermes base_url，是凭证，已被 `.gitignore` 排除）；索引参数存在
 > 实现细节（给接手的 agent）：`scripts/reranker.py` 用的是 **sentence-transformers 的 `CrossEncoder`**
 > 而不是 `FlagEmbedding.FlagReranker`——因为本机 `transformers 5.x` 与 `FlagEmbedding 1.4.0` 的
 > reranker 不兼容（后者调用已移除的 `tokenizer.prepare_for_model()`，会抛 AttributeError）。
-> 模型是同一个，行为等价，分数经 sigmoid 归一化到 0–1。如果哪天把 transformers 降到 4.x，才可以
+> 模型是同一个，行为等价，分数归一化到 0–1。如果哪天把 transformers 降到 4.x，才可以
 > 换回 FlagReranker。
+>
+> ⚠️ **分数只能 sigmoid 一次**（2026-07-25 修）：sentence-transformers 5.x 的 `CrossEncoder` 会按模型
+> config 自带的 `activation_fn`（bge-reranker-v2-m3 是 `Sigmoid`）先归一化，`predict()` 返回的已经是
+> 0–1。之前代码又 sigmoid 了一遍，结果无关片段（logit ≈ -11 → 1.6e-5）全被挤到 0.500004、彼此只差
+> 1e-6，fp16 下直接相等 → 排序全是 tie，**精排等于白跑、退化成 hybrid 原序**。现在按 `activation_fn`
+> 判断只补"缺失的那一次"。修好后实测：无关 query 的 top1 只有 0.0032，相关 query 0.047–0.18 ——
+> 注意绝对值都远低于 0.5（chunk 是长段落对话），将来加相关性阈值要按 **0.01 量级**定标。
+
+> **繁简统一（检索层不变量）**：语料库全是简体（转写工具输出），但你常打繁体。ngram FTS 靠字符
+> 重叠，「水煙」和「水烟」零重叠，dense 也会漏——实测繁体 query 检索不到语料里唯一提到「水烟」的
+> 两个块。所以约定：**进检索/匹配的文本一律先过 `scripts/text_norm.to_simplified()`，展示用的原文
+> 不动**（`Chunk.raw_text`、prompt 里你的原问题都保留原字形）。落点三处：`chunk.py` 生成
+> `Chunk.text`、`retrieve()` 的 query、图谱锚点匹配的 question。对现有简体语料是幂等 no-op，
+> **不需要重建索引**。依赖 `zhconv`（纯 Python）；没装会降级成原样返回，只是繁体 query 会漏。
 
 ## 八、目录结构速查
 
@@ -574,6 +613,7 @@ scripts/settings.py         # Gemini 运行时参数 + API key 的读写（供�
 scripts/index_settings.py   # 索引运行时参数（检索/分块/embedding/FTS/reranker）读写（供「⚙️ 索引设置」用）
 scripts/index_records.py    # 已索引记录清单 + 索引变更记录（供「📚 已索引的咨询记录」用）
 scripts/reranker.py         # bge-reranker-v2-m3 cross-encoder 精排（本地，供 ask.retrieve 用）
+scripts/text_norm.py        # 繁→简归一化（检索层不变量：索引字段与 query 都转简体，展示原文不动）
 scripts/launchd/            # launchd 常驻服务的 plist 源文件
 scripts/counseling_agent_ctl.sh  # start/stop/status 服务开关（配合 ~/.zshrc 别名）
 eval/eval_questions.yaml    # 检索质量评估问题集
@@ -603,7 +643,7 @@ private.nosync/data/chat_graph.json    # AI 对话记忆心智地图（便宜，
   **切勿提交 / 推送**（尤其公开仓库 = 密钥外泄）。hermes 用的是本地代理、key 任意（`sk-unused`），本身不算敏感，
   但它转发到的 xAI OAuth 凭证由代理自己管，同样别外泄。
 - 代码 / 配置（`*.py`、`system_instruction.md`、`eval/`）不含个人内容，本来就在根目录、可正常进 git。
-- **唯一的出网调用是 LLM API**（问答 / 摘要；默认 Gemini，可切 grok/hermes 见 §七），且只发送检索到的
+- **唯一的出网调用是 LLM API**（问答 / 摘要；默认 hermes→xAI，可切 grok 直连，见 §七），且只发送检索到的
   片段，不整份上传逐字稿。索引这侧（分块 / BGE-M3 向量化 / LanceDB / reranker）全程本地、不出网。
 - 对外访问走 Tailscale 私网，没做公网部署（Vercel / Streamlit Cloud）——单人本地使用，本地网页 +
   私网就够。

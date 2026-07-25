@@ -17,6 +17,11 @@ OpenAI 兼容后端（grok / hermes）时 scripts/context_cache.get_cache_name()
 
 OpenAI 兼容后端（grok = xAI 直连；hermes = 本地 Hermes Agent Gateway 代理，转发到 xAI grok、
 自己夹 OAuth）共用同一套 _ask_openai_compatible()，只是 base_url / key 来源不同（见 _OPENAI_PROVIDERS）。
+
+⚠️ 2026-07-25 起 gemini provider 暂时停用（原因和恢复方式见 scripts/settings.DISABLED_PROVIDERS）：
+settings.provider() 不会再返回 "gemini"，所以下面 _ask_gemini() / Explicit Caching 那条分支在真实
+运行路径上进不去。代码原样保留（恢复 gemini 只需改 settings.VALID_PROVIDERS 一行），单元测试也仍
+覆盖它——测试直接 mock get_provider，绕过 settings 这道闸门。
 """
 from dataclasses import dataclass
 from typing import Optional

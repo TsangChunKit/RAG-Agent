@@ -105,21 +105,24 @@ def gemini_settings_dialog():
     )
 
     st.markdown("##### 🔀 LLM 后端 provider")
-    _PROVIDERS = ["gemini", "grok", "hermes"]
+    # 选项直接取自 settings.VALID_PROVIDERS，不写死——停用某个后端只改 settings 一处。
+    _PROVIDERS = list(settings.VALID_PROVIDERS)
     prov = st.radio(
-        "选用哪个后端（切到 grok / hermes 后，下面的「模型」框请填对应模型名，如 grok-4 / grok-4.5）",
+        "选用哪个后端（下面的「模型」框请填对应模型名，如 grok-4.5 / grok-4.3）",
         _PROVIDERS,
-        index=_PROVIDERS.index(cur.get("provider", "gemini")),
+        index=_PROVIDERS.index(cur["provider"]) if cur.get("provider") in _PROVIDERS else 0,
         horizontal=True, key="llm_provider",
-        help="gemini = Google Gemini（支持 Explicit Cache）；grok = xAI 直连；"
-             "hermes = 本地 Hermes Agent Gateway 代理（转发到 xAI grok，自己夹 OAuth）。"
-             "grok / hermes 都是 OpenAI 兼容、无显式缓存、自动退回内联。",
+        help="grok = xAI 直连；hermes = 本地 Hermes Agent Gateway 代理（转发到 xAI grok，自己夹 "
+             "OAuth）。两者都是 OpenAI 兼容、无显式缓存，问答会自动退回内联 system instruction。",
     )
+    for _name, _why in (cur.get("disabled_providers") or {}).items():
+        st.caption(f"⛔ **{_name}** 暂时停用：{_why}")
 
     st.markdown("##### 🔑 API Key")
     kc1, kc2 = st.columns(2)
     with kc1:
-        st.caption("Gemini：已设置 ✅" if cur["api_key_set"] else "Gemini：⚠️ 尚未设置")
+        st.caption(("Gemini：已设置 ✅" if cur["api_key_set"] else "Gemini：⚠️ 尚未设置")
+                   + "（provider 停用中，key 仅保留备用）")
         api_key = st.text_input(
             "Gemini API Key", value="", type="password",
             placeholder="留空 = 保留现有 key；填入 = 覆盖", help="申请地址：aistudio.google.com/apikey",
@@ -152,7 +155,7 @@ def gemini_settings_dialog():
         st.markdown("##### 💬 对话（问答）")
         d = cur["dialogue"]
         d_model = st.text_input("模型", value=d["model"], key="d_model",
-                                help="如 gemini-3.5-flash / gemini-3.1-flash-lite；模型名会更新，用文本框而非写死下拉")
+                                help="如 grok-4.5 / grok-4.3；模型名会更新，用文本框而非写死下拉")
         d_think = st.selectbox("思考深度 thinking_level", _THINKING_LEVELS, index=_thinking_index(d["thinking_level"]), key="d_think")
         d_temp = st.slider("温度 temperature", 0.0, 2.0, float(d["temperature"]), 0.05, key="d_temp")
         d_max = st.number_input("最大输出 token", 256, 65000, int(d["max_output_tokens"]), 256, key="d_max",

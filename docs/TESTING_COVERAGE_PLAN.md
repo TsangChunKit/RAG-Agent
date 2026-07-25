@@ -1,42 +1,57 @@
 # 测试覆盖率提升计划
 
-> ⚠️ 本文档为最初的提升计划。数据已更新到最新实测值（2026-07-24，
-> `pytest --cov=scripts --cov=app`）。最新逐文件覆盖率以 `COVERAGE_BOOST_ROUND3.md` 为准。
+> ⚠️ 本文档为最初的提升计划。数据已更新到最新实测值（2026-07-25 第二次，
+> `pytest tests/unit/ --cov=scripts --cov=app`）。最新逐文件覆盖率以 `COVERAGE_BOOST_ROUND4.md` 为准。
 
 ## 当前状态
 
-### 整体覆盖率：60% 🟡
+### 整体覆盖率：73% 🟢
 
 ```
 目标：70% → 85%
-当前：60%
-差距：-10%（距最低目标 70%）
+当前：72.53%（scripts + app.py，723 个单元测试）
+状态：已越过最低目标 70%，距推荐值 85% 还差 12%
 ```
+
+> ✅ pre-commit hook 的第 4 项检查（`--cov-fail-under=70`）**已能通过**（2026-07-25 起）。
+> 清掉它靠的正是下面 P2/P3 那批 0% 的批处理脚本（update_memory / ingest_new / index_records /
+> 两个 watcher / check_code_patterns），不是继续加核心模块的测试——见 `COVERAGE_BOOST_ROUND4.md`。
+> 剩下的 0%（`auto_fix.py`、`migrate_from_old_project.py`）是一次性工具脚本，优先级最低。
 
 ### 文件级别覆盖率
 
 | 文件 | 行数 | 当前覆盖率 | 目标 | 优先级 | 状态 |
 |------|------|-----------|------|--------|------|
 | **核心业务逻辑** ||||
-| ask.py | 579 | 77% | 80% | P0 | 🟢 接近 |
+| ask.py | 581 | 77% | 80% | P0 | 🟢 接近 |
 | graph_utils.py | 99 | 100% | 80% | P0 | ✅ 达标 |
 | session_graph.py | 76 | 78% | 80% | P0 | 🟢 接近 |
-| chunk.py | 133 | 89% | 80% | P0 | ✅ 达标 |
+| chunk.py | 134 | 90% | 80% | P0 | ✅ 达标 |
 | ingest.py | 39 | 85% | 80% | P0 | ✅ 达标 |
+| reranker.py | 34 | 100% | 80% | P0 | ✅ 达标 |
 | build_graph.py | 24 | 54% | 80% | P0 | 🟡 需要 |
 | **配置/工具类** ||||
+| text_norm.py | 12 | 83% | 80% | P1 | ✅ 达标（未覆盖的 2 行是 zhconv 缺失分支，装了包就跑不到）|
 | graph_schema_loader.py | 73 | 71% | 80% | P1 | 🟢 接近 |
 | parse.py | 80 | 88% | 80% | P1 | ✅ 达标 |
 | index_settings.py | 46 | 100% | 80% | P1 | ✅ 达标 |
+| index_records.py | 49 | 100% | 60% | P1 | ✅ 达标 |
 | workspace_manager.py | 142 | 80% | 80% | P1 | ✅ 达标 |
-| settings.py | 66 | 100% | 60% | P1 | ✅ 达标 |
+| settings.py | 67 | 100% | 60% | P1 | ✅ 达标 |
 | **批处理脚本** ||||
-| update_memory.py | 35 | 0% | 40% | P2 | 🔴 无测试 |
-| update_chat_memory.py | 51 | 43% | 40% | P2 | ✅ 达标 |
-| ingest_new.py | 69 | 0% | 40% | P2 | 🔴 无测试 |
+| update_memory.py | 35 | 89% | 40% | P2 | ✅ 达标（未覆盖的只有 `__main__`）|
+| update_chat_memory.py | 51 | 92% | 40% | P2 | ✅ 达标（同上）|
+| ingest_new.py | 69 | 83% | 40% | P2 | ✅ 达标（同上）|
+| chat_memory_watcher.py | 62 | 82% | 40% | P2 | ✅ 达标（未覆盖的是常驻 while 循环）|
+| raw_ingest_watcher.py | 59 | 80% | 40% | P2 | ✅ 达标（同上）|
 | **工具脚本（低优先级）** ||||
-| auto_fix.py | 79 | 0% | - | P3 | ⚪ 可选 |
-| check_code_patterns.py | 90 | 0% | - | P3 | ⚪ 可选 |
+| check_code_patterns.py | 90 | 99% | - | P3 | ✅ 达标（它是 hook 第一道闸门，自己必须可信）|
+| auto_fix.py | 79 | 0% | - | P3 | ⚪ 可选（一次性修复脚本）|
+| migrate_from_old_project.py | 120 | 0% | - | P3 | ⚪ 可选（一次性迁移脚本，跑过就不再用）|
+
+> **`__main__` 块不测**：批处理脚本/看门狗的 `if __name__ == "__main__":`（含 `while True` +
+> `time.sleep`）是进程入口，测它等于测 launchd。所以这几个文件的实际上限就在 80–92%，
+> 逻辑部分已全覆盖。
 
 ---
 
@@ -131,11 +146,29 @@
 
 **预计工作量**：2-3 天
 
-#### 任务 11-13: 批处理脚本
+#### 任务 11-13: 批处理脚本 ✅ 已完成（2026-07-25）
 
-- update_memory.py, update_chat_memory.py, ingest_new.py
+- update_memory.py (0% → 89%)、update_chat_memory.py (43% → 92%)、ingest_new.py (0% → 83%)
+- 附带完成：index_records.py (20% → 100%)、chat_memory_watcher.py (0% → 82%)、
+  raw_ingest_watcher.py (0% → 80%)、check_code_patterns.py (0% → 99%)
+- 结果：整体 61% → 73%，pre-commit hook 的覆盖率闸门首次通过。详见 `COVERAGE_BOOST_ROUND4.md`
 
-**预计工作量**：1-2 天
+**实际工作量**：约 0.5 天（7 个测试文件，126 个新测试：597 → 723）
+
+#### 任务 14: 修复集成测试腐化（2026-07-25 新增，优先级 P0）
+
+`pytest tests/integration/ --integration` 当前 **34 个失败，与被测代码无关**，两类原因：
+
+1. **测试写死了已改名/已改签名的 API** —— 例如 `index_settings.load()`（不存在）、
+   `parse_transcript(str)`（实参必须是 `Path`）。属于测试没跟上重构。
+2. **测试污染真实数据目录** —— `test_full_workflow.py` 等直接调 `create_workspace("ws1", ...)`，
+   建在真实的 `private.nosync/workspaces/` 下。上一轮跑完不清理，下一轮就撞
+   `ValueError: Workspace already exists: ws1`；`test-workspace/` 甚至已被误提交进 git。
+   修法：fixture 里 monkeypatch `WORKSPACES_ROOT` 到 `tmp_path`，一次性切断。
+
+**做完之前，不要把整体覆盖率的锅算在集成测试头上**——它们现在跑不完，覆盖率数据只反映单元测试。
+
+**预计工作量**：0.5-1 天
 
 ### Phase 3: 卓越品质（持续）
 

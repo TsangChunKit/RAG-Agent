@@ -598,11 +598,13 @@ class TestConstants:
     """Test module constants are correctly defined."""
 
     def test_valid_providers(self):
-        """Test VALID_PROVIDERS contains expected values."""
-        assert "gemini" in settings.VALID_PROVIDERS
+        """Test VALID_PROVIDERS contains expected values.
+
+        gemini 2026-07-25 起停用（见 TestDisabledProviders），所以只剩两个 OpenAI 兼容后端。
+        """
         assert "grok" in settings.VALID_PROVIDERS
         assert "hermes" in settings.VALID_PROVIDERS
-        assert len(settings.VALID_PROVIDERS) >= 3
+        assert len(settings.VALID_PROVIDERS) >= 2
 
     def test_default_provider(self):
         """Test DEFAULT_PROVIDER is valid."""
@@ -668,3 +670,59 @@ class TestEdgeCases:
 
                 # Empty string is falsy, should preserve existing key
                 assert written_data["api_key"] == "existing-key"
+
+
+class TestDisabledProviders:
+    """gemini 暂时停用后的行为（见 settings.DISABLED_PROVIDERS 的原因说明）。
+
+    背景：Gemini 3.x 用 thinking_level 取代了 thinking_budget，但 Python 3.9 能装的最高版
+    google-genai（1.47.0）的 ThinkingConfig 不认 thinking_level，调用直接被 pydantic 拒。
+    所以 gemini 从可选 provider 里摘掉，默认走 hermes。
+    """
+
+    def test_gemini_not_selectable(self):
+        """gemini 不在可选 provider 里，但登记在 DISABLED_PROVIDERS（带原因）。"""
+        assert "gemini" not in settings.VALID_PROVIDERS
+        assert "gemini" in settings.DISABLED_PROVIDERS
+        assert settings.DISABLED_PROVIDERS["gemini"].strip()  # 原因非空，UI 要显示
+
+    def test_disabled_and_valid_are_disjoint(self):
+        """停用集合和可选集合不能重叠（否则 UI/回退逻辑会互相打脸）。"""
+        assert not set(settings.DISABLED_PROVIDERS) & set(settings.VALID_PROVIDERS)
+
+    def test_default_provider_is_enabled(self):
+        """默认 provider 必须是可选的那几个之一（当前 hermes）。"""
+        assert settings.DEFAULT_PROVIDER == "hermes"
+        assert settings.DEFAULT_PROVIDER in settings.VALID_PROVIDERS
+
+    def test_provider_falls_back_when_disabled_configured(self):
+        """设置文件里残留 provider=gemini 时，回退到默认 provider 而不是照用。"""
+        with patch('scripts.settings._load_raw', return_value={"provider": "gemini"}):
+            assert settings.provider() == settings.DEFAULT_PROVIDER
+
+    def test_save_ignores_disabled_provider(self):
+        """save(provider="gemini") 不写入停用值，保留原有选择。"""
+        mock_path = MagicMock()
+        mock_path.parent = MagicMock()
+
+        with patch('scripts.settings._load_raw', return_value={"provider": "hermes"}):
+            with patch('scripts.settings.GEMINI_SETTINGS_PATH', mock_path):
+                settings.save({"model": "m"}, {"model": "s"}, {"text": 5000}, provider="gemini")
+
+                written_data = json.loads(mock_path.write_text.call_args[0][0])
+                assert written_data["provider"] == "hermes"
+
+    def test_default_models_usable_by_enabled_providers(self):
+        """默认模型名必须是当前可选 provider 吃得下的。
+
+        gemini 停用后，默认模型若还是 gemini-* ，删掉设置文件（= 恢复默认）就会拿 gemini 模型名
+        去打 hermes/grok，报一个莫名其妙的 404。
+        """
+        assert not settings._DEFAULT_DIALOGUE["model"].startswith("gemini")
+        assert not settings._DEFAULT_SUMMARY["model"].startswith("gemini")
+
+    def test_load_for_ui_exposes_disabled_providers(self):
+        """UI 需要知道哪些 provider 被停用、为什么——否则用户只会发现选项凭空消失。"""
+        with patch('scripts.settings._load_raw', return_value={}):
+            result = settings.load_for_ui()
+            assert result["disabled_providers"] == settings.DISABLED_PROVIDERS

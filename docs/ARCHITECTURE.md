@@ -26,7 +26,7 @@
 
 **关键模块依赖**：
 - `parse.py` → 独立（只依赖标准库）
-- `chunk.py` → `parse.py`, `workspace_manager.py`
+- `chunk.py` → `parse.py`, `text_norm.py`, `workspace_manager.py`
 - `embedder.py` → BGE-M3 模型
 - `ingest.py` → `chunk.py`, `embedder.py`, LanceDB
 
@@ -66,17 +66,19 @@ ParsedSession
 ```
 用户问题
     ↓
+[text_norm.py:to_simplified()] 繁→简归一化（只影响检索，原问题原样进 prompt）
+    ↓
 [ask.py:retrieve()] 混合检索
     ├─ 向量检索 (LanceDB)
-    ├─ FTS 检索
-    ├─ 重排序 (reranker.py)
-    └─ 窗口扩展（父块）
+    ├─ FTS 检索（ngram，靠字符重叠 → 繁简必须先对齐）
+    ├─ 重排序 (reranker.py，输出 0–1 相关性分数)
+    └─ 窗口扩展（父块，文本取 raw_text = 原文字形）
     ↓
 检索片段 + 长期记忆 + 图谱
     ↓
 [ask.py:answer()] 组装上下文
     ├─ 加载记忆
-    ├─ GraphRAG（图谱引导检索）
+    ├─ GraphRAG（图谱引导检索，question 同样先归一化）
     ├─ 上下文压缩
     └─ 调用 LLM
     ↓
@@ -84,7 +86,19 @@ ParsedSession
 ```
 
 **关键模块依赖**：
-- `ask.py` → `embedder.py`, `llm.py`, `graph_utils.py`, `reranker.py`, `workspace_manager.py`
+- `ask.py` → `embedder.py`, `llm.py`, `graph_utils.py`, `reranker.py`, `text_norm.py`, `workspace_manager.py`
+
+#### 简繁归一化（系统不变量）
+
+语料库全是简体（转写工具输出），使用者常打繁体。规则：
+
+| 用途 | 字段 / 数据 | 字形 |
+|-----|------------|-----|
+| 索引 / 匹配 | `Chunk.text`、retrieve() 的 query、图谱锚点匹配的 question | **一律简体** |
+| 展示 / 喂 LLM | `Chunk.raw_text`、prompt 里的使用者问题、逐字稿全文 | **保留原文** |
+
+落点只有三处（见 `docs/API_REFERENCE.md` 的 `to_simplified()`）。ingest 侧那一处对现有简体语料是
+幂等 no-op，所以这条不变量是**追加**上去的，不需要重建索引或迁移数据。
 
 ---
 
@@ -105,6 +119,7 @@ Layer 1: 外部服务
 
 Layer 2: 数据处理
 ├─ parse.py           # 逐字稿解析
+├─ text_norm.py       # 繁→简归一化（检索层不变量，无项目内依赖）
 ├─ chunk.py           # 分块
 └─ session_resolver.py  # 会话解析
 
@@ -388,9 +403,24 @@ UI 状态存储在 `st.session_state`：
 
 ### 添加新 LLM Provider
 
-1. 在 `scripts/llm.py` 添加新 provider 逻辑
-2. 更新 `scripts/settings.py` 支持新 provider 配置
-3. 在 UI `gemini_settings_dialog()` 添加配置选项
+1. 在 `scripts/llm.py` 添加新 provider 逻辑（OpenAI 兼容网关只需在 `_OPENAI_PROVIDERS` 注册表加一行）
+2. 更新 `scripts/settings.py` 的 `VALID_PROVIDERS` 支持新 provider 配置
+3. UI 无需改动：`gemini_settings_dialog()` 的 provider 选项直接读 `settings.VALID_PROVIDERS`
+
+### 停用 / 恢复某个 Provider
+
+provider 的可选集合只有一个真相来源：`scripts/settings.py`。
+
+- `VALID_PROVIDERS` = 可选后端；`DISABLED_PROVIDERS` = {已停用 provider: 原因}（两者不相交）。
+- `settings.provider()` 读到停用值（或非法值）时回退 `DEFAULT_PROVIDER`，`settings.save()` 拒绝把
+  停用值写进设置文件 → 停用的 provider 在真实运行路径上进不去，对应的调用代码可以原样保留。
+- `load_for_ui()` 把 `disabled_providers` 一并返回，UI 在 provider 选区显示停用原因（避免选项凭空消失）。
+- 停用某个后端时，`config.py` 里的默认模型名要一起换成仍启用的后端吃得下的值——否则"删掉设置文件 =
+  恢复默认"会把不可用的模型名塞回去。
+
+**当前状态**：`gemini` 停用（Python 3.9 → google-genai 1.47 的 `ThinkingConfig` 不支持 `thinking_level`；
+细节与恢复步骤见 README §七「gemini 为什么停用」）。`scripts/llm.py` 的 `_ask_gemini()` 与
+`scripts/context_cache.py` 的 Explicit Caching 因此处于休眠状态（代码保留、单元测试仍覆盖）。
 
 ---
 
@@ -404,8 +434,8 @@ UI 状态存储在 `st.session_state`：
    - 优化：批量调用
 
 2. **LLM 调用**
-   - Gemini API：500ms - 5s（取决于 thinking_level）
-   - 优化：使用 Explicit Cache
+   - 500ms - 5s（取决于 thinking_level / reasoning_effort）
+   - 优化：Explicit Cache（仅 gemini；当前停用，改由 OpenAI 兼容后端的隐式 prompt cache 承担）
 
 3. **向量检索**
    - LanceDB 查询：10-100ms（取决于数据量）

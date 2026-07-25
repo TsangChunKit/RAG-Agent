@@ -7,8 +7,10 @@
 - 文件不存在或缺某个字段时，回退到 config.py 里的默认值——删掉这个文件 = 完全恢复默认。
 - API key 优先用这个文件里的；没有则回退 .env / 环境变量（向后兼容旧的 .env 用法）。
   文件在 private.nosync/（gitignore + iCloud 不同步），和 .env 同级别的本地私密存储。
-- provider（"gemini" / "grok"）是 LLM 后端的手动开关，见 scripts/llm.py。选 grok 时用 xai_api_key
-  （回退环境变量 XAI_API_KEY），模型名在对话/摘要的「模型」框里填 grok 系列（如 grok-4）。
+- provider（"grok" / "hermes"）是 LLM 后端的手动开关，见 scripts/llm.py。选 grok 时用 xai_api_key
+  （回退环境变量 XAI_API_KEY），模型名在对话/摘要的「模型」框里填 grok 系列（如 grok-4.5）。
+- 2026-07-25 起 "gemini" 暂时停用（原因和恢复方式见下方 DISABLED_PROVIDERS），默认 provider 改为
+  hermes；config.py 里的默认模型名也跟着换成了 grok 系列。
 """
 import json
 import os
@@ -34,10 +36,22 @@ from config import (
 # 兼容旧的 .env 存 key 方式：导入时把 private.nosync/.env 读进环境变量，作为 API key 的回退来源。
 load_dotenv(ENV_PATH)
 
-# LLM 后端 provider：默认 gemini。grok = xAI（OpenAI 兼容端点）；hermes = 本地 Hermes Agent
+# LLM 后端 provider：默认 hermes。grok = xAI（OpenAI 兼容端点）；hermes = 本地 Hermes Agent
 # Gateway（OpenAI 兼容代理，转发到 xAI grok，见 scripts/llm.py）。grok / hermes 共用同一套调用代码。
-VALID_PROVIDERS = ("gemini", "grok", "hermes")
-DEFAULT_PROVIDER = "gemini"
+VALID_PROVIDERS = ("grok", "hermes")
+DEFAULT_PROVIDER = "hermes"
+
+# 暂时停用的 provider → 停用原因（UI 会显示，README §七 有同样说明）。
+# provider() 读到停用值时回退 DEFAULT_PROVIDER，save() 也拒绝把停用值写进设置文件，
+# 所以 scripts/llm.py 里 _ask_gemini() 那条分支在真实运行路径上进不去（代码保留、便于恢复）。
+DISABLED_PROVIDERS = {
+    "gemini": (
+        "Gemini 3.x 已用 thinking_level 取代 thinking_budget，但本项目跑在 Python 3.9 上，"
+        "能装的最高版 google-genai（1.47.0）的 ThinkingConfig 不认 thinking_level，调用会被 "
+        "pydantic 直接拒（extra_forbidden）。支持该参数的 google-genai 2.x 要求 Python ≥ 3.10。"
+        "恢复方式：升级到 Python ≥ 3.10 + google-genai 2.x，然后把 \"gemini\" 加回 VALID_PROVIDERS。"
+    ),
+}
 
 SUMMARY_MAX_TASKS = {
     "text": "文本摘要类（每份摘要 / 长期记忆 / AI 对话记忆）",
@@ -95,7 +109,7 @@ def summary_max_tokens(task: str) -> int:
 
 
 def provider() -> str:
-    """当前 LLM 后端："gemini" 或 "grok"（非法/缺失回退 DEFAULT_PROVIDER）。"""
+    """当前 LLM 后端：VALID_PROVIDERS 之一（非法/缺失/已停用都回退 DEFAULT_PROVIDER）。"""
     p = _load_raw().get("provider")
     return p if p in VALID_PROVIDERS else DEFAULT_PROVIDER
 
@@ -121,6 +135,7 @@ def load_for_ui() -> dict:
     """给设置 UI 用：返回当前生效值 + 各 api key 是否已设置（不回传 key 明文）。"""
     return {
         "provider": provider(),
+        "disabled_providers": DISABLED_PROVIDERS,
         "dialogue": dialogue_params(),
         "summary": summary_params(),
         "summary_max_tokens": {t: summary_max_tokens(t) for t in SUMMARY_MAX_TASKS},

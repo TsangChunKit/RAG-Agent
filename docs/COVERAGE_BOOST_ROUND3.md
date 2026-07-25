@@ -297,8 +297,9 @@ scripts/: 53% → 61% (+8%)
 通过率: 97.7%
 ```
 
-> 📌 **最新实测（2026-07-25 复核，`pytest tests/unit/ --cov=scripts`）**：597 通过 / 0 失败 /
+> 📌 **本轮之后（2026-07-25 复核，`pytest tests/unit/ --cov=scripts`）**：597 通过 / 0 失败 /
 > 1 跳过，scripts 覆盖率 **60.5%**（含 app.py 为 64%）。Round 3 记录的 3 个失败测试已修复。
+> 更新的数字见 `COVERAGE_BOOST_ROUND4.md`（同日 Round 4：723 通过、72.53%）。
 > 本轮新增模块：`text_norm.py` 83%（未覆盖的 2 行是 zhconv 缺失分支）；`reranker.py` 维持 100%
 > （新增两个测试锁住"分数只能 sigmoid 一次"）。
 >

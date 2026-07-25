@@ -8,9 +8,13 @@
 4. Python 3.9 不兼容的类型注解
 
 用法：
-    python scripts/check_code_patterns.py              # 检查所有文件
-    python scripts/check_code_patterns.py app.py       # 检查特定文件
+    python scripts/check_code_patterns.py              # 检查所有文件（不含 tests/）
+    python scripts/check_code_patterns.py app.py       # 检查特定文件（显式指定则不排除）
     python scripts/check_code_patterns.py --fix        # 自动修复（如果可能）
+
+扫描范围：递归扫当前目录，排除 .venv/ 、__pycache__/ 和 tests/。排除 tests/ 是必须的——
+测试文件里会**故意**放坏模式当 fixture 数据（比如断言 PEP 604 的 `X | None` 会被检出），
+扫它们只会产生假阳性，把正常提交挡在门外。
 """
 import re
 import sys
@@ -137,8 +141,9 @@ def main():
     else:
         # 检查所有 Python 文件
         files = list(Path('.').glob('**/*.py'))
-        # 排除 .venv, tests, __pycache__
-        files = [f for f in files if '.venv' not in str(f) and '__pycache__' not in str(f)]
+        # 排除 .venv（第三方代码）、__pycache__（缓存）、tests（故意包含坏模式当 fixture）
+        EXCLUDED_PARTS = {'.venv', '__pycache__', 'tests'}
+        files = [f for f in files if not (EXCLUDED_PARTS & set(f.parts))]
 
     all_issues = []
 

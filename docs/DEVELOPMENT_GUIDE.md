@@ -47,6 +47,8 @@ pytest tests/unit/test_imports.py      # 导入测试
 - [ ] 需要调用哪些外部服务（LLM, Embeddings）？
 - [ ] 需要访问哪些数据（文件系统, 向量库, 图谱）？
 - [ ] 是否需要 workspace 隔离？
+- [ ] 引入了新的第三方包吗？→ 写进 `requirements.txt` 并**带一句注释说明它是干什么的、缺了会怎样**
+      （例：`zhconv  # 检索层繁→简归一化；缺失时 scripts/text_norm.py 降级为原样返回`）
 
 #### 1.3 评估影响
 
@@ -439,7 +441,8 @@ def call_new_llm(prompt: str) -> str:
 
 # 3. 集成测试
 def test_llm_integration():
-    # 测试切换 provider
+    # 测试切换 provider（前提：已把 "new_llm" 加进 settings.VALID_PROVIDERS，
+    # 否则 save() 会静默忽略这个值、provider() 回退 DEFAULT_PROVIDER）
     settings.save(provider="new_llm")
     result = ask_llm("test")
     assert result is not None
