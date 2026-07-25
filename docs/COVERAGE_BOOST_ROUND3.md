@@ -303,7 +303,7 @@ scripts/: 53% → 61% (+8%)
 > 本轮新增模块：`text_norm.py` 83%（未覆盖的 2 行是 zhconv 缺失分支）；`reranker.py` 维持 100%
 > （新增两个测试锁住"分数只能 sigmoid 一次"）。
 >
-> ⚠️ 集成测试另有 ~34 个失败，是既有腐化（陈旧 API + 污染真实 workspace 目录），
+> ⚠️ 集成测试另有 33 个失败，是既有腐化（陈旧 API + 污染真实 workspace 目录），
 > 见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
 ### 开发投入

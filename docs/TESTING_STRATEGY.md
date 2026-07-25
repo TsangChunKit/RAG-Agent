@@ -90,11 +90,11 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 ```
 
 **当前状态**（2026-07-25 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
-- 覆盖率：72.53%（已过 hook 的 70% 闸门，目标 ≥ 80%）
+- 覆盖率：72.72%（已过 hook 的 70% 闸门，目标 ≥ 80%）
 - 单元测试文件：28 个（tests/unit/）
-- 测试结果：723 通过 / 0 失败 / 1 跳过
+- 测试结果：734 通过 / 0 失败 / 1 跳过
 
-> ⚠️ 集成测试（`pytest tests/integration/ --integration`）当前有 ~34 个失败，是**既有腐化**
+> ⚠️ 集成测试（`pytest tests/integration/ --integration`）当前有 33 个失败（数量会随上一轮残留的 workspace 浮动），是**既有腐化**
 > （测试写死了已改名的 API，且直接往真实 `private.nosync/workspaces/` 里建 workspace，
 > 上一轮残留会让下一轮 `create_workspace()` 撞 "already exists"）。修它是独立任务，
 > 见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md)。
@@ -211,7 +211,7 @@ python scripts/check_code_patterns.py
 | 静态检查 | ✅ 100% | ✅ 100% | P0 |
 | 导入测试 | ✅ 100% | ✅ 100% | P0 |
 | 单元测试 | 🟡 73%（scripts + app） | ✅ 80% | P1 |
-| 集成测试 | 🔴 35 个失败（既有腐化，见 TESTING_COVERAGE_PLAN 任务 14） | ✅ 全绿 + 60% | P1 |
+| 集成测试 | 🔴 33 个失败（既有腐化，见 TESTING_COVERAGE_PLAN 任务 14） | ✅ 全绿 + 60% | P1 |
 | **整体** | **🟢 73%（≥ hook 的 70% 阈值）** | **✅ 80%** | **P0** |
 
 ---
