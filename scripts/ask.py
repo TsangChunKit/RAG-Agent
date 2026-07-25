@@ -31,6 +31,7 @@ from scripts.reranker import rerank_candidates
 from scripts.llm import ask_llm
 from scripts.parse import find_files_for_date, parse_transcript, render_full_text
 from scripts.summarize import summary_path
+from scripts.text_norm import to_simplified
 from scripts.workspace_manager import get_current_workspace, get_workspace_dir, load_workspace_config
 
 # 心智地图（scripts/build_graph.py 的产物）里，节点相关度高于这个阈值才触发"图谱引导检索"
@@ -335,6 +336,9 @@ def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
     """混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排 → 父块/窗口扩展。
     流程：hybrid 取 topN 候选 → bge-reranker-v2-m3 精排取 final_top_k → 父块扩展。
     k / 窗口扩展 / rerank 开关及数量均取「⚙️ 索引设置」当前值（可在 UI 改，下次问答即生效，无需重建）。"""
+    # 繁→简归一化一次，后面 embed / FTS / reranker 三条腿共用（索引侧的 text 也是简体，见
+    # scripts/text_norm.py）。使用者打繁体时不做这一步，ngram FTS 零命中、dense 也会漏。
+    query = to_simplified(query)
     rp = index_settings.retrieval_params()
     if k is None:
         k = rp["top_k"]
@@ -536,7 +540,8 @@ def find_relevant_graph_nodes(question: str, graph: dict, top_k: int = GRAPH_NOD
         vecs = embed(texts)["dense_vecs"]
         _graph_node_embeddings = {n["id"]: v for n, v in zip(nodes, vecs)}
 
-    q_vec = embed_one(question)
+    # 图谱节点的标签/描述是简体（从简体语料提炼），繁体问题不归一化会匹配不上
+    q_vec = embed_one(to_simplified(question))
     q_norm = q_vec / (np.linalg.norm(q_vec) + 1e-9)
 
     scored = []

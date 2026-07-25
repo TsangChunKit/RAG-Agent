@@ -172,6 +172,52 @@ class TestRerankCandidates:
         assert abs(scores[1] - 0.5) < 0.1
 
     @patch("scripts.reranker._get_reranker")
+    def test_rerank_skips_sigmoid_when_model_already_normalizes(self, mock_get_reranker):
+        """模型自带 Sigmoid 激活时，predict() 已经返回 0–1，不能再 sigmoid 一次。
+
+        回归测试：sentence-transformers 5.x 的 CrossEncoder 会从模型 config 读 activation_fn
+        （bge-reranker-v2-m3 就是 Sigmoid），旧实现又 sigmoid 了一遍，结果 logits -11 的无关
+        片段被挤到 0.500004、彼此只差 1e-6（fp16 下直接相等）→ 精排失去区分度、退化成 hybrid
+        原序，相关性阈值也无从下手。
+        """
+        import torch
+
+        from scripts.reranker import rerank_candidates
+
+        mock_reranker = MagicMock()
+        mock_reranker.activation_fn = torch.nn.Sigmoid()
+        # 模型已归一化的输出：相关 0.835，无关 1.6e-5（对应 logits 1.62 / -11.03）
+        mock_reranker.predict.return_value = np.array([0.835, 1.6e-5, 1.6e-5])
+        mock_get_reranker.return_value = mock_reranker
+
+        hits = pd.DataFrame({"text": ["相关", "无关1", "无关2"]})
+        result = rerank_candidates("query", hits, top_k=3)
+
+        scores = result["rerank_score"].tolist()
+        assert abs(scores[0] - 0.835) < 1e-6
+        assert scores[1] < 0.01  # 无关片段必须留在接近 0 的区间，而不是被挤到 0.5
+        assert scores[0] - scores[1] > 0.8  # 区分度保住了，阈值才有意义
+
+    @patch("scripts.reranker._get_reranker")
+    def test_rerank_applies_sigmoid_when_model_outputs_logits(self, mock_get_reranker):
+        """模型激活是 Identity 时，predict() 返回原始 logits，需要我们自己 sigmoid 一次"""
+        import torch
+
+        from scripts.reranker import rerank_candidates
+
+        mock_reranker = MagicMock()
+        mock_reranker.activation_fn = torch.nn.Identity()
+        mock_reranker.predict.return_value = np.array([1.62, -11.03])
+        mock_get_reranker.return_value = mock_reranker
+
+        hits = pd.DataFrame({"text": ["相关", "无关"]})
+        result = rerank_candidates("query", hits, top_k=2)
+
+        scores = result["rerank_score"].tolist()
+        assert abs(scores[0] - 0.835) < 0.01
+        assert scores[1] < 0.01
+
+    @patch("scripts.reranker._get_reranker")
     def test_rerank_preserves_original_columns(self, mock_get_reranker):
         """测试保留原始 DataFrame 的所有列"""
         from scripts.reranker import rerank_candidates

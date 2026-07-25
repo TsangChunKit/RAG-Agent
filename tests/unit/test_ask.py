@@ -333,6 +333,62 @@ class TestSanitize:
         assert sanitize("normal query") == "normal query"
 
 
+class TestQueryNormalization:
+    """检索入口的繁→简归一化（语料库是简体，使用者可能打繁体；见 scripts/text_norm.py）"""
+
+    @patch("scripts.ask._get_table")
+    @patch("scripts.ask.embed_one")
+    @patch("scripts.ask.index_settings.retrieval_params")
+    @patch("scripts.ask.index_settings.reranker_params")
+    def test_retrieve_normalizes_before_embed_and_fts(
+        self, mock_reranker_params, mock_retrieval_params, mock_embed, mock_table
+    ):
+        """retrieve() 必须用归一化后的 query 去 embed + FTS（一处归一化，两条腿共用）"""
+        from scripts.ask import retrieve
+
+        mock_retrieval_params.return_value = {"top_k": 5, "window_expand": 1}
+        mock_reranker_params.return_value = {"use_reranker": False, "rerank_top_k": 10, "final_top_k": 5}
+
+        empty_df = pd.DataFrame(columns=["source_file", "chunk_index", "raw_text", "session_date", "start_ts", "end_ts"])
+        mock_table_instance = MagicMock()
+        mock_table_instance.to_pandas.return_value = empty_df
+        mock_table.return_value = mock_table_instance
+        mock_embed.return_value = np.random.rand(768)
+
+        mock_search_result = MagicMock()
+        mock_search_result.to_pandas.return_value = empty_df
+        mock_search_builder = MagicMock()
+        mock_search_builder.vector.return_value = mock_search_builder
+        mock_search_builder.text.return_value = mock_search_builder
+        mock_search_builder.rerank.return_value = mock_search_builder
+        mock_search_builder.limit.return_value = mock_search_result
+        mock_table_instance.search.return_value = mock_search_builder
+
+        retrieve("我喜歡抽水煙", k=5)
+
+        mock_embed.assert_called_once_with("我喜欢抽水烟")
+        mock_search_builder.text.assert_called_once_with("我喜欢抽水烟")
+
+    @patch("scripts.ask.embed_one")
+    def test_find_relevant_graph_nodes_normalizes_question(self, mock_embed):
+        """图谱锚点匹配也要归一化：图谱节点文本是简体，繁体问题否则匹配不上"""
+        import scripts.ask as ask_mod
+
+        graph = {
+            "nodes": [
+                {"id": "schema:a", "type": "belief", "label": "我不值得", "description": "核心信念", "domain": ""}
+            ],
+            "edges": [],
+        }
+        vec = np.ones(8)
+        mock_embed.return_value = vec
+
+        with patch.object(ask_mod, "_graph_node_embeddings", {"schema:a": vec}):
+            ask_mod.find_relevant_graph_nodes("我喜歡抽水煙", graph)
+
+        mock_embed.assert_called_once_with("我喜欢抽水烟")
+
+
 class TestMemoryLoading:
     """记忆加载测试"""
 

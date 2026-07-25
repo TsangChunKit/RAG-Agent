@@ -358,6 +358,28 @@ class TestChunking:
         assert "[2024-01-01" in chunks[0].text
         assert "测试内容" in chunks[0].text
 
+    def test_chunk_session_text_is_simplified_raw_text_keeps_original(self):
+        """索引字段 text 做繁→简归一化，展示字段 raw_text 保留原文。
+
+        检索层统一简体才能和简体 query / ngram FTS 对上；raw_text 是拼窗口喂 LLM 和 UI
+        显示用的原文，不能被改字形。现有语料本来全简体 → 这一步对旧数据是 no-op。
+        """
+        session = ParsedSession(
+            source_file="test.txt",
+            session_date="2024-01-01",
+            file_datetime="20240101120000",
+            utterances=[
+                Utterance(timestamp="00:00:00", speaker="Andy", text="我喜歡抽水煙", line_no=1),
+            ]
+        )
+
+        chunks = chunk_session(session)
+
+        assert len(chunks) == 1
+        assert "我喜歡抽水煙" in chunks[0].raw_text  # 原文字形不动
+        assert "我喜欢抽水烟" in chunks[0].text      # 索引用的是简体
+        assert "我喜歡抽水煙" not in chunks[0].text
+
     def test_chunk_all(self, monkeypatch, tmp_path):
         """测试批量分块。"""
         # 创建临时测试文件

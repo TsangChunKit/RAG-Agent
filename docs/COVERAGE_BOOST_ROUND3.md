@@ -297,10 +297,13 @@ scripts/: 53% → 61% (+8%)
 通过率: 97.7%
 ```
 
-> 📌 **最新实测（2026-07-24 复核）**：565 通过 / 3 失败 / 73 跳过，整体覆盖率 **60%**。
-> 仍有 3 个失败测试（`test_ask.py::TestGraphLoading::test_load_graph_valid/_missing`、
-> `test_build_graph.py::TestBuildChatGraph::test_build_chat_graph_empty_sessions`），
-> 均为 mock/数据结构不匹配，非生产 bug，待修复。跳过数由 1 增至 73（多为需要真实模型/集成环境的用例）。
+> 📌 **最新实测（2026-07-25 复核，`pytest tests/unit/ --cov=scripts`）**：597 通过 / 0 失败 /
+> 1 跳过，scripts 覆盖率 **60.5%**（含 app.py 为 64%）。Round 3 记录的 3 个失败测试已修复。
+> 本轮新增模块：`text_norm.py` 83%（未覆盖的 2 行是 zhconv 缺失分支）；`reranker.py` 维持 100%
+> （新增两个测试锁住"分数只能 sigmoid 一次"）。
+>
+> ⚠️ 集成测试另有 ~34 个失败，是既有腐化（陈旧 API + 污染真实 workspace 目录），
+> 见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
 ### 开发投入
 

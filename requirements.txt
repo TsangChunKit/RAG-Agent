@@ -6,6 +6,7 @@ openai           # xAI/Grok（OpenAI 兼容端点 api.x.ai/v1）作为 LLM 第�
 pandas
 pyarrow
 tantivy          # LanceDB 全文检索索引需要
+zhconv           # 检索层繁→简归一化（纯 Python，无编译依赖）；缺失时 scripts/text_norm.py 降级为原样返回
 python-dotenv
 pyyaml
 tqdm

@@ -5,7 +5,9 @@
 ——本机 transformers 5.x 与 FlagEmbedding 1.4.0 的 reranker 不兼容（它内部调用已被移除的
 tokenizer.prepare_for_model()，会抛 AttributeError）。改用 sentence-transformers 的 CrossEncoder
 加载同一个模型，在 transformers 5 上稳定可用、行为等价（cross-encoder 对 (query, passage) 打分）。
-分数用 sigmoid 归一化到 0–1，方便后续使用/阈值。
+分数一律归一化到 0–1（sigmoid），方便后续使用/阈值——但**只归一化一次**：ST 5.x 的 CrossEncoder
+会按模型 config 自带的 activation_fn（本模型是 Sigmoid）先归一化，所以 rerank_candidates 里会先
+检查激活函数，避免"两次 sigmoid"把分数全挤到 0.5 附近、让精排失去区分度（见那里的注释）。
 
 和 embedder.py 一样是本地单例（跑 mps，可选 fp16），不出网。任何一步失败都会 fallback 回原本的
 hybrid 排序，保证检索不因为 reranker 而中断（见 rerank_candidates 的 except 分支）。
@@ -46,8 +48,17 @@ def rerank_candidates(query: str, hits: pd.DataFrame, top_k: int) -> pd.DataFram
 
     pairs = [[query, _passage(row)] for _, row in hits.iterrows()]
     try:
-        raw = _get_reranker().predict(pairs, convert_to_numpy=True)  # cross-encoder 原始 logits
-        scores = torch.sigmoid(torch.as_tensor(raw)).tolist()        # 归一化到 0–1
+        model = _get_reranker()
+        raw = model.predict(pairs, convert_to_numpy=True)
+        # sentence-transformers 5.x 的 CrossEncoder 会从模型 config 读 activation_fn
+        # （bge-reranker-v2-m3 配的就是 Sigmoid），此时 predict() 返回的已经是 0–1 概率，
+        # 再 sigmoid 一次会把无关片段（logit ≈ -11 → 1.6e-5）全挤到 0.500004、彼此只差 1e-6，
+        # fp16 下直接相等 → 排序全是 tie、精排退化成 hybrid 原序，相关性阈值也无从下手。
+        # 所以按模型自带的激活函数决定还要不要归一化，只 sigmoid 那"缺失的一次"。
+        if isinstance(getattr(model, "activation_fn", None), torch.nn.Sigmoid):
+            scores = torch.as_tensor(raw).tolist()
+        else:
+            scores = torch.sigmoid(torch.as_tensor(raw)).tolist()  # 拿到的是原始 logits，自己归一化
         if not isinstance(scores, list):
             scores = [scores]
         if len(scores) != len(hits):

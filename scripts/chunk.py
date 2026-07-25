@@ -19,6 +19,7 @@ from typing import Optional
 from config import PROCESSED_DIR
 from scripts import index_settings
 from scripts.parse import ParsedSession, Utterance, iter_raw_files, parse_transcript
+from scripts.text_norm import to_simplified
 from scripts.workspace_manager import load_workspace_config
 
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[。！？\n])")
@@ -37,8 +38,8 @@ class Chunk:
     speakers: str  # 逗号分隔的去重发言人
     start_ts: str
     end_ts: str
-    raw_text: str  # 原始拼接文本（不含上下文前缀）
-    text: str  # raw_text 前加上下文化前缀，供 embedding + FTS 使用
+    raw_text: str  # 原始拼接文本（不含上下文前缀），字形保持原样——展示 / 喂 LLM 用这个
+    text: str  # raw_text 前加上下文化前缀 + 繁→简归一化，供 embedding + FTS 使用（见 text_norm.py）
     prev_chunk_id: Optional[str] = None
     next_chunk_id: Optional[str] = None
 
@@ -163,7 +164,8 @@ def chunk_session(session: ParsedSession, workspace_id: Optional[str] = None) ->
                 start_ts=start_ts,
                 end_ts=end_ts,
                 raw_text=raw_text,
-                text=f"{prefix}\n{raw_text}",
+                # 索引字段统一简体（query 侧也归一化），展示字段 raw_text 保留原文字形
+                text=to_simplified(f"{prefix}\n{raw_text}"),
             )
         )
         chunk_idx += 1

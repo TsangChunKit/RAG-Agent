@@ -41,6 +41,11 @@ class TestImports:
         from scripts import graph_schema_loader
         assert graph_schema_loader is not None
 
+    def test_import_text_norm(self):
+        """测试 text_norm 导入（zhconv 缺失时也必须能导入）。"""
+        from scripts import text_norm
+        assert text_norm is not None
+
     def test_import_ask(self):
         """测试 ask 导入（最复杂的模块）。"""
         from scripts import ask
