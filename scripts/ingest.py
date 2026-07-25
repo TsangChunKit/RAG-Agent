@@ -1,5 +1,5 @@
 """向量化 + 入 LanceDB：读取 chunk.py 产出的 chunks.jsonl，用 BGE-M3 算稠密向量，
-写入 LanceDB 表，并在 text 列建 FTS 索引（关键词侧，jieba/default 中文分词，见 config.py 里的说明）。
+写入 LanceDB 表，并在 text 列建 FTS 索引（关键词侧，ngram 分词，见 config.py 里 FTS_BASE_TOKENIZER 的说明）。
 规模小时暴力搜索即可，不建 ANN 向量索引（数据量大了再加 vector 列的 create_index()）。
 """
 
@@ -8,7 +8,6 @@ from typing import Optional
 import json
 
 import lancedb
-from lancedb.index import FTS
 from tqdm import tqdm
 
 from config import (
@@ -74,16 +73,17 @@ def ingest(chunks: Optional[list[dict]] = None, mode: str = "overwrite", workspa
         table = db.create_table(LANCEDB_TABLE_NAME, data=rows, mode="overwrite")
 
     fts = index_settings.fts_params()
-    table.create_index(
+    # 注：lancedb 0.27.1（Python 3.9 下 pip 能装到的最高版本）的 Table.create_index() 还没有
+    # 统一后的 config= 签名（那是 0.34.0 才加的），用旧版但仍受支持的 create_fts_index()，
+    # 见 config.py 里 FTS_BASE_TOKENIZER 旁边关于 lancedb/Python 版本的说明。
+    table.create_fts_index(
         "text",
-        config=FTS(
-            base_tokenizer=fts["base_tokenizer"],
-            ngram_min_length=fts["ngram_min"],
-            ngram_max_length=fts["ngram_max"],
-            remove_stop_words=False,
-            stem=False,
-            ascii_folding=False,
-        ),
+        base_tokenizer=fts["base_tokenizer"],
+        ngram_min_length=fts["ngram_min"],
+        ngram_max_length=fts["ngram_max"],
+        remove_stop_words=False,
+        stem=False,
+        ascii_folding=False,
         replace=True,
     )
     return table

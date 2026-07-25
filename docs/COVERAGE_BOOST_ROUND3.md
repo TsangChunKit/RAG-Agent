@@ -230,7 +230,7 @@ scripts/: 53% → 61% (+8%)
 |------|--------|------|
 | chunk.py | 89% | Round 2 ✅ |
 | summarize.py | 86% | Round 2 ✅ |
-| ingest.py | 78% | Round 2 ✅ |
+| ingest.py | 85% | Round 2 ✅ |
 | session_graph.py | 78% | Round 2 ✅ |
 | build_chat_graph.py | 78% | Round 2 ✅ |
 | ask.py | 76% | Round 2 ✅ |

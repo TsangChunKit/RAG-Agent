@@ -22,7 +22,7 @@
 | graph_utils.py | 99 | 100% | 80% | P0 | ✅ 达标 |
 | session_graph.py | 76 | 78% | 80% | P0 | 🟢 接近 |
 | chunk.py | 133 | 89% | 80% | P0 | ✅ 达标 |
-| ingest.py | 40 | 78% | 80% | P0 | 🟢 接近 |
+| ingest.py | 39 | 85% | 80% | P0 | ✅ 达标 |
 | build_graph.py | 24 | 54% | 80% | P0 | 🟡 需要 |
 | **配置/工具类** ||||
 | graph_schema_loader.py | 73 | 71% | 80% | P1 | 🟢 接近 |

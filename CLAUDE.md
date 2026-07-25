@@ -370,7 +370,7 @@ def validate_input(text: str) -> bool:
 **核心業務邏輯現狀**：
 - `scripts/ask.py` - 問答核心（當前 75% 🟡）
 - `scripts/chunk.py` - 分塊邏輯（當前 89% ✅）
-- `scripts/ingest.py` - 入庫邏輯（當前 78% 🟡）
+- `scripts/ingest.py` - 入庫邏輯（當前 85% ✅）
 - `scripts/build_graph.py` - 圖譜構建（當前 54% 🟡）
 - `scripts/graph_utils.py` - 圖譜工具（當前 100% ✅）
 
@@ -560,7 +560,8 @@ git commit --no-verify -m "emergency fix: ..."
 - ✅ **scripts/graph_utils.py** 100%
 - ✅ **scripts/chunk.py** 89%
 - 🟡 **scripts/ask.py** 75%（接近 80% 目標，補齊歷史壓縮/GraphRAG 分支即可達標）
-- 🟡 **scripts/ingest.py** 78%、**scripts/session_graph.py** 78%
+- ✅ **scripts/ingest.py** 85%
+- 🟡 **scripts/session_graph.py** 78%
 
 ### 優先級 P0（0% 覆蓋，風險最高）
 

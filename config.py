@@ -151,18 +151,22 @@ EMBEDDING_BATCH_SIZE = 256       # M5 Pro/48GB 实测 256 明显更快且稳定�
 
 # ---- LanceDB ----
 LANCEDB_TABLE_NAME = "sessions"
-# FTS 关键词侧的分词器：改用 jieba/default 做真正的中文分词（效果优先，用户已同意联网下载）。
-# 环境搭建步骤（新机器/词典丢失时重新执行）：
-#   1. pip install pylance
-#   2. python -m lance.download jieba   # 会打印 LANCE_LANGUAGE_MODEL_HOME 路径
-#   3. 已知坑：lance 自带下载器写死的 GitHub 路径已失效（messense/jieba-rs 仓库重构后
-#      dict.txt 从 src/data/dict.txt 移到了 jieba/src/data/dict.txt），下载器不会校验
-#      HTTP 状态码，会把 404 页面的 HTML 当成词典写入，导致建索引时报「不是合法频率整数」。
-#      需要手动重新下载覆盖：
-#        curl -s "https://raw.githubusercontent.com/messense/jieba-rs/main/jieba/src/data/dict.txt" \
-#          -o "$(python -c 'import lance; print(lance.download.LANGUAGE_MODEL_HOME)')/jieba/default/dict.txt"
-# 之前用的 ngram(2-3字符) 分词器已验证可用，作为该环境词典缺失时的本地零依赖备选方案。
-FTS_BASE_TOKENIZER = "jieba/default"
+# FTS 关键词侧的分词器：目前用 ngram(2-3字符)，zero-dependency，已验证可用。
+#
+# 想用 jieba/default 做真正的中文分词？2026-07-25 排查过，目前环境用不了，原因不是词典缺失：
+#   - jieba tokenizer 是 lance-index 的 optional Cargo feature `tokenizer-jieba`，
+#     lancedb（PyPI 预编译 wheel）从 0.29.0 起才在这个 feature 上编译，
+#     而 0.29.0+ 全部要求 Python>=3.10（用 `strings` 对比过 0.27.1 与 0.34.0 的
+#     `_lancedb.abi3.so`，0.27.1 完全没有 jieba-rs/lindera 符号）。
+#   - 本项目 venv 目前钉在 Python 3.9（见 README §五 / CLAUDE.md 的 3.9 兼容性规则），
+#     pip 在 3.9 下能装到的最高版本就是 lancedb 0.27.1，所以 base_tokenizer="jieba/default"
+#     一定会命中 lance-index 里 `_ => Err("unknown base tokenizer ...")` 的 fallback 分支。
+#   - jieba 词典本身已经下载好、格式正常（~/Library/Application Support/lance/language_models/
+#     jieba/default/dict.txt），不需要重新下载；升级 Python 到 3.10+ 并把 lancedb 升到 >=0.29
+#     之后，把这行改回 "jieba/default" 即可直接生效，不用碰词典。
+#   - Python 3.9 → 3.10+ 升级是单独排期的架构改动（影响 venv/CI matrix/lint 规则等），
+#     不要为了 jieba 顺便升级。
+FTS_BASE_TOKENIZER = "ngram"
 FTS_NGRAM_MIN_LENGTH = 2
 FTS_NGRAM_MAX_LENGTH = 3
 

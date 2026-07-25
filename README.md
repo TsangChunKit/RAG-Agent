@@ -365,11 +365,14 @@ python3.9 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# 2. 中文分词词典（LanceDB FTS 用）——lance 自带的下载器指向的 GitHub 路径已失效，
-#    需要手动从新路径下载，详细原因见 config.py 里 FTS_BASE_TOKENIZER 旁边的注释
-python -m lance.download jieba
-curl -s "https://raw.githubusercontent.com/messense/jieba-rs/main/jieba/src/data/dict.txt" \
-  -o "$(python -c 'import lance; print(lance.download.LANGUAGE_MODEL_HOME)')/jieba/default/dict.txt"
+# 2.（可选，当前默认不需要）中文分词用 jieba 分词器——
+#    目前 Python 3.9 下 pip 只能装到 lancedb 0.27.1，这个版本没编译 jieba tokenizer 支持，
+#    所以默认 FTS_BASE_TOKENIZER 是 "ngram"（零依赖，已验证可用）。跳过这一步即可。
+#    以后升级到 Python 3.10+ 并把 lancedb 升到 >=0.29 后，才需要跑下面两行拉词典，
+#    详细原因见 config.py 里 FTS_BASE_TOKENIZER 旁边的注释：
+# python -m lance.download jieba
+# curl -s "https://raw.githubusercontent.com/messense/jieba-rs/main/jieba/src/data/dict.txt" \
+#   -o "$(python -c 'import lance; print(lance.download.LANGUAGE_MODEL_HOME)')/jieba/default/dict.txt"
 
 # 3. 个人数据放在 private.nosync/ 里。先建目录，把 Gemini API key 写进去
 #    （这是凭证，已被 .gitignore 排除，别提交进 git——见第九节）：

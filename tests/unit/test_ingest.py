@@ -11,7 +11,6 @@
 """
 from pathlib import Path
 from typing import Generator
-from unittest.mock import MagicMock, patch
 
 import lancedb
 import numpy as np
@@ -29,14 +28,6 @@ def mock_embed(monkeypatch):
         }
     monkeypatch.setattr("scripts.ingest.embed", fake_embed)
     return fake_embed
-
-
-@pytest.fixture
-def mock_fts_index():
-    """Mock FTS index creation to avoid LanceDB API version issues."""
-    # 直接 patch create_index 方法
-    with patch.object(lancedb.table.Table, "create_index", return_value=None):
-        yield
 
 
 class TestLoadChunks:
@@ -353,6 +344,43 @@ class TestIngest:
         # 空数据会抛出 ValueError（LanceDB 要求非空数据或 schema）
         with pytest.raises(ValueError, match="Cannot create table from empty list"):
             ingest(mode="overwrite")
+
+    def test_ingest_builds_real_fts_index(self, tmp_path, mock_embed, monkeypatch):
+        """端到端测试 ingest() 真正建出可用的 FTS 索引（不 mock create_index/create_fts_index）。
+
+        之前所有测试都绕过 db.create_table() 手动建表，从未跑过 ingest() 里真正的
+        FTS 索引创建那一行，导致 create_index(config=FTS(...)) 在当前 lancedb 版本上
+        签名不兼容（TypeError）完全没被测出来。这个测试跑真实的 ingest() + 真实的关键词检索。
+        """
+        chunks = [
+            {
+                "id": "c1",
+                "text": "这是一段关于焦虑和依附关系的咨询记录",
+                "raw_text": "原始",
+                "session_date": "2024-01-01",
+                "speakers": ["Andy"],
+                "source_file": "test.txt",
+                "chunk_index": 0,
+                "start_ts": "00:00:00",
+                "end_ts": "00:01:00",
+                "prev_chunk_id": None,
+                "next_chunk_id": None,
+            }
+        ]
+        monkeypatch.setattr("scripts.ingest.load_chunks", lambda workspace_id: chunks)
+        monkeypatch.setattr("scripts.ingest.index_settings.embedding_params", lambda: {"batch_size": 1})
+        monkeypatch.setattr("scripts.ingest.index_settings.fts_params", lambda: {
+            "base_tokenizer": "ngram",
+            "ngram_min": 2,
+            "ngram_max": 3,
+        })
+        monkeypatch.setattr("scripts.ingest.DB_DIR", lambda x: tmp_path / "db_real_fts")
+
+        table = ingest(mode="overwrite")
+
+        hits = table.search("焦虑", query_type="fts").limit(5).to_pandas()
+        assert len(hits) == 1
+        assert hits.iloc[0]["id"] == "c1"
 
     def test_table_schema_validation(self, tmp_path, mock_embed, monkeypatch):
         """测试表 schema 正确性（替代 FTS 测试）。"""
