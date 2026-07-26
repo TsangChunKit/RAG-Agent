@@ -165,6 +165,34 @@ Gemini，而是「稳定骨干进缓存 + 命中问题的局部邻域动态拼�
 - 手机/其他设备（需要该设备也登入同一个 Tailscale 账号并保持连接）：http://100.64.84.111:8501
   （这个地址已经存在 macOS 备忘录「心理咨询AI助手 - 访问地址」里）
 
+> ⚠️ **2026-07-26 起的当前状态：自动启动暂时不可用，需要你做一次手动授权。**
+>
+> 在此之前，这四份 plist 里的三份（Streamlit / 聊天记忆看门狗 / raw 入库看门狗）其实还指着
+> **旧项目** `心理咨詢agent`，所以本项目 `workspaces/counseling/data/raw/` 里的新逐字稿一直
+> 没人扫——新文件不自动入库的根因就是这个。plist 已改指向 RAG-Agent（并显式传
+> `--workspace counseling`），但改完起不来，报 `Operation not permitted:
+> .../RAG-Agent/.venv/pyvenv.cfg`：macOS 的 TCC 把 `~/Documents` 的读取权限**按可执行文件逐个授权**，
+> 旧项目 venv 指向的 `~/.local/bin/python3.11` 早就被授权过，本项目 venv 指向的
+> `/Library/Developer/CommandLineTools/usr/bin/python3` 没有。三个 job 会开机崩溃循环，
+> 所以已先 `bootout` 卸载。
+>
+> **二选一恢复**（都是一次性的）：
+> 1. 系统设置 →「隐私与安全性」→「完全磁盘访问权限」→ `+` 加入
+>    `/Library/Developer/CommandLineTools/usr/bin/python3`（Finder 里按 `⌘⇧G` 粘路径），
+>    然后照 §三「如果 launchd 配置本身坏了」重装三个 job。改动小、可逆，但给了这个解释器全盘权限。
+> 2. 把整个项目挪到 `~/Documents` 之外（如 `~/Projects/RAG-Agent`），TCC 根本不管那些路径。
+>    更干净、以后不会再踩，但要改 plist / 别名 / 脚本里的绝对路径。
+>
+> **在你处理之前的临时办法**（进程活到下次重启/登出为止，开机不会自启）：
+> ```bash
+> cd "/Users/andytsang/Documents/Project/RAG-Agent" && source .venv/bin/activate
+> nohup streamlit run app.py --server.port 8501 --server.headless true > /tmp/streamlit.log 2>&1 &
+> nohup python -m scripts.raw_ingest_watcher  --workspace counseling > /tmp/raw_ingest_watcher.log 2>&1 &
+> nohup python -m scripts.chat_memory_watcher --workspace counseling > /tmp/chat_memory_watcher.log 2>&1 &
+> ```
+> 从终端启动能跑，正是因为终端本身有 `~/Documents` 授权、子进程继承得到。
+> 看门狗没跑起来时，新逐字稿也可以在 UI 里点「⚡ 立即入库」手动入（见 §四）。
+
 侧边栏第二页是「心智地图」，可视化核心图式/应对模式/事件的关系图。
 
 ### 一键开/关（终端别名）
@@ -258,15 +286,27 @@ for label in com.andytsang.aitherapist.tailscale com.andytsang.aitherapist.strea
 done
 ```
 
-⚠️ **已知的坑**：这个项目目录在 `~/Documents` 底下。如果哪天改 launchd 配置时又遇到
-`Operation not permitted`，几乎可以确定是同一个坑——**launchd 不能直接 exec 这个目录树下的
-脚本文件**（不管是 shell script 还是带 shebang 的可执行文件），但可以：
-1. 直接 exec 一个"外部"的解释器二进制、用 `-m 模块名` 加载代码（`python3 -m streamlit`
-   而不是 `.venv/bin/streamlit`），或
-2. 把命令内联进 `bash -c "命令"`，不要让 launchd 直接 exec 这个目录下的 `.sh` 文件。
+⚠️ **已知的坑（`Operation not permitted`）**：这个项目目录在 `~/Documents` 底下，而 macOS 的
+TCC（隐私保护）对 launchd 拉起的进程**按可执行文件逐个**授予 `~/Documents` 读取权限。所以现象是：
+同一条命令在终端里跑得好好的，交给 launchd 就报 `PermissionError: [Errno 1] Operation not
+permitted: .../RAG-Agent/.venv/pyvenv.cfg`（venv 连自己的配置都读不到 → `init_import_site` 直接死）。
 
-当前四份 plist 已经是照这个方式写的，正常不需要再碰。如果想彻底避免这类坑，也可以考虑把
-整个项目挪到 `~/Documents` 之外（比如 `~/Projects`），launchd/沙盒类工具对那些路径通常不设限。
+**判断方法**（别猜，跑一个 probe job）：写一份最小 plist，`ProgramArguments` 直接 exec 那个解释器
+二进制去读项目里任意文件，看它是否 `Operation not permitted`。实测结论：
+
+| launchd 直接 exec 的二进制 | 能读 `~/Documents/Project/...` |
+|---|---|
+| `/bin/bash`（再由它去读） | ❌ |
+| `/Users/andytsang/.local/bin/python3.11`（旧项目 venv 的目标） | ✅ 早年授权过 |
+| `/Library/Developer/CommandLineTools/usr/bin/python3`（本项目 3.9 venv 的目标） | ❌ 没授权 |
+
+关键在于**被授权的是解释器二进制本身，不是脚本、也不是包一层 `bash -c` 就能绕过**（包 bash 只会
+让被授权对象变成 bash）。`.venv/bin/python3` 只是个 symlink，真正参与判定的是它指向的目标——
+用 `readlink -f .venv/bin/python3` 看清楚指向谁。
+
+两种解法（见 §一「当前状态」里的完整步骤）：给那个解释器加「完全磁盘访问权限」，或者把整个项目
+挪到 `~/Documents` 之外（`~/Projects` 之类）——**后者更彻底**，TCC 根本不管那些路径，也省掉以后
+每换一次 Python 版本就要重新授权一次。
 
 ### 完全手动跑（不经过 launchd，纯前台调试用）
 
@@ -295,14 +335,16 @@ python -m scripts.chat_memory_watcher          # 另开一个终端跑
 cd "/Users/andytsang/Documents/Project/RAG-Agent"
 source .venv/bin/activate
 
-# 有新的一周咨询逐字稿时：直接把 .txt 丢进 private.nosync/data/raw/ 即可——「raw 入库看门狗」
-# （com.andytsang.aitherapist.rawingestwatcher，见 §一）每 2 分钟扫一次，发现没入库的新文件
-# 就自动跑下面这条一条龙 parse→chunk→embed→摘要→更新长期记忆，无需手动敲命令。
+# 有新的一周咨询逐字稿时：直接把 .txt 丢进
+#   private.nosync/workspaces/counseling/data/raw/
+# （每个 workspace 各有自己的 raw/，路径 = workspaces/<workspace>/data/raw/）
+# 即可——「raw 入库看门狗」（com.andytsang.aitherapist.rawingestwatcher，见 §一）每 2 分钟扫一次，
+# 发现没入库的新文件就自动跑一条龙 parse→chunk→embed→摘要→更新长期记忆，无需手动敲命令。
 # （文件写完 30s 后才处理，避免抓到复制到一半的半个文件；日志在 /tmp/raw_ingest_watcher.log）
 # 每次入库/重建/跳过都会自动追加一条「索引变更记录」，可在侧边栏「📚 已索引的咨询记录」里查看
 #
 # 想立刻手动入库某份、或看门狗因故没跑起来时，仍可手动执行（效果完全一样，看门狗底层就是调它）：
-python -m scripts.ingest_new private.nosync/data/raw/新文件.txt
+python -m scripts.ingest_new private.nosync/workspaces/counseling/data/raw/新文件.txt
 
 # 手动重新生成长期记忆（汇总全部咨询摘要）
 python -m scripts.update_memory
@@ -324,6 +366,24 @@ python -m scripts.build_chat_graph
 # 也可以在侧边栏「⚙️ 索引设置」弹窗底部点「全量重建」按钮，效果一样（都会记一条变更记录）
 python -m scripts.ingest
 ```
+
+### 不想等看门狗：UI 里点一下就入库
+
+把 .txt 丢进 `raw/` 后，打开侧边栏「📚 已索引的咨询记录」——如果有还没入库的文件，弹窗顶部会
+直接列出来，并给一个 **「⚡ 立即入库这 N 份」** 按钮，点了就在前台跑完整流程（parse → 分块 →
+本地向量化 → LLM 摘要 → 更新长期记忆），一份约 1–2 分钟，期间别关页面。每份独立成功/失败，
+坏文件（比如文件名少了 14 位日期前缀）只会自己报错，不拖垮同批其他文件。
+
+这个按钮和看门狗、命令行走的是**同一个** `scripts/ingest_new.py`，「哪些还没入库」也共用同一个
+`pending_raw_files()` 判定（文件名不在 `chunks.jsonl` 里就算没入库）。之所以要这条手动通路：
+看门狗是个可能悄悄挂掉/指错目录的单点（2026-07-26 就是这么坏的，见 §一），有个不依赖它的入口，
+系统就不会因为一个组件失效而整体停摆。
+
+> ⚠️ **改分词器/索引参数记得看清改的是哪一层**：`config.py` 里的 `FTS_BASE_TOKENIZER` 等只是
+> **默认值**，真正生效的是 `private.nosync/index_settings.json`（UI「⚙️ 索引设置」写的就是它）。
+> 2026-07-26 踩过：代码默认已经从 `jieba/default` 改回 `ngram`，但设置文件里还是 `jieba/default`，
+> 于是每次新入库都在 `create_fts_index` 那步炸 `lance error: unknown base tokenizer jieba/default`。
+> 排查时先 `cat private.nosync/index_settings.json`，别只看 `config.py`。删掉这个文件 = 恢复全部默认值。
 
 **索引跑在哪：全程本地。** 分块是纯 Python，向量化用本地 BGE-M3 模型（跑在 Apple GPU / MPS 上，
 见 `config.py` 的 `EMBEDDING_DEVICE`），向量库是本机 LanceDB 文件（`private.nosync/db/`）——

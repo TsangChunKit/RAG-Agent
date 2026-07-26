@@ -4,14 +4,17 @@
 <dict>
     <key>Label</key>
     <string>com.andytsang.aitherapist.chatmemorywatcher</string>
+    <!-- ⚠️ 同 rawingestwatcher：非 Streamlit 进程必须显式传 --workspace，别依赖字母序兜底。 -->
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/andytsang/Documents/Project/心理咨詢agent/.venv/bin/python3</string>
+        <string>/Users/andytsang/Documents/Project/RAG-Agent/.venv/bin/python3</string>
         <string>-m</string>
         <string>scripts.chat_memory_watcher</string>
+        <string>--workspace</string>
+        <string>counseling</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/andytsang/Documents/Project/心理咨詢agent</string>
+    <string>/Users/andytsang/Documents/Project/RAG-Agent</string>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>

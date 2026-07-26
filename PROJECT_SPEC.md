@@ -498,6 +498,13 @@ python scripts/ingest_new.py data/raw/新文件.txt
 
 LanceDB 支持**追加新行而不重建全表**(append column / add data),所以增量很轻。
 
+> **实现现状（2026-07-26 更新，与本节原始设计的差异）**：路径已 workspace 化
+> （`private.nosync/workspaces/<workspace>/data/raw/`），命令改为 `python -m scripts.ingest_new <文件>`。
+> 触发方式从「一条命令」扩成**三条等价通路**：raw 入库看门狗（每 2 分钟自动扫）、
+> UI「📚 已索引的咨询记录」里的「⚡ 立即入库」按钮、以及上面这条命令。三者共用
+> `ingest_new.pending_raw_files()` 判定「哪些还没入库」，实现细节见 `docs/ARCHITECTURE.md` §1b。
+> 多一条不依赖看门狗的手动入口是刻意的冗余：看门狗是单点，挂了/指错目录时系统仍要能推进。
+
 ---
 
 ## 6. 实施顺序（Milestones，交给 Claude Code 按序执行）

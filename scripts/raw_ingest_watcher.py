@@ -5,9 +5,11 @@ ingest_new_file()（入库 + 摘要 + 更新 LONG_TERM_MEMORY.md）——不用�
 手动前台调试：
     python -m scripts.raw_ingest_watcher [--workspace <workspace_id>]
 
-判定"新文件"：文件名（= chunks.jsonl 里的 source_file）不在已索引集合里。ingest_new_file()
-本身对已入库文件是幂等的（会跳过 chunk/摘要），但我们只对真正的新文件调用它，入库后它的
-chunk 就进了 chunks.jsonl，下一轮不再是候选，所以不会重复触发 Gemini 摘要。
+判定"新文件"的规则（不在 chunks.jsonl 的 source_file 集合里 + mtime 已稳定）住在
+scripts/ingest_new.pending_raw_files()，UI 的「⚡ 立即入库」按钮走的是同一个函数——单一真相源，
+不在两处各写一套。ingest_new_file() 本身对已入库文件是幂等的（会跳过 chunk/摘要），但我们只对
+真正的新文件调用它，入库后它的 chunk 就进了 chunks.jsonl，下一轮不再是候选，所以不会重复
+触发 Gemini 摘要。
 
 两个防呆：
   1) 文件可能还在复制/写入途中——只处理"最近 STABLE_SECONDS 秒内 mtime 没再变过"的文件
@@ -15,17 +17,16 @@ chunk 就进了 chunks.jsonl，下一轮不再是候选，所以不会重复触�
   2) 有的文件可能永远解析失败（比如文件名没有 14 位日期前缀）——记进内存里的 _failed，
      本进程生命周期内只报一次错、之后跳过，避免每轮刷屏（launchd 重启后会重置，可接受）。
 
-支持 workspace：通过命令行参数指定 workspace。
+支持 workspace：通过命令行参数指定 workspace。⚠️ 本进程不是 Streamlit，拿不到 UI 的
+session_state，不传 --workspace 时 get_current_workspace() 会退到「workspaces/ 下字母序第一个」
+——launchd 的 plist 里请显式传 --workspace，别依赖这个顺序（见 scripts/launchd/）。
 """
 from typing import Optional
-import json
 import sys
 import time
-from pathlib import Path
 
 from config import RAW_DIR
-from scripts.chunk import CHUNKS_JSONL_PATH
-from scripts.ingest_new import ingest_new_file
+from scripts.ingest_new import ingest_new_file, pending_raw_files
 
 CHECK_INTERVAL_SECONDS = 120  # 每 2 分钟扫一次
 STABLE_SECONDS = 30           # 文件 mtime 至少稳定这么久才认为写完、可以入库
@@ -34,37 +35,9 @@ STABLE_SECONDS = 30           # 文件 mtime 至少稳定这么久才认为写�
 _failed: set[str] = set()
 
 
-def _indexed_source_files(workspace_id: Optional[str] = None) -> set[str]:
-    """
-
-获取已入库的文件列表（workspace 感知）。"""
-    chunks_path = CHUNKS_JSONL_PATH(workspace_id)
-    if not chunks_path.exists():
-        return set()
-    with open(chunks_path, encoding="utf-8") as f:
-        return {json.loads(line)["source_file"] for line in f}
-
-
-def _pending_files(workspace_id: Optional[str] = None) -> list[Path]:
-    """raw 目录里还没入库、且已写完（mtime 稳定）的 .txt 文件（workspace 感知）。"""
-    raw_dir = RAW_DIR(workspace_id)
-    if not raw_dir.exists():
-        return []
-    indexed = _indexed_source_files(workspace_id)
-    now = time.time()
-    pending = []
-    for p in sorted(raw_dir.glob("*.txt")):
-        if p.name in indexed or p.name in _failed:
-            continue
-        if now - p.stat().st_mtime < STABLE_SECONDS:
-            continue  # 可能还在写入，等下一轮
-        pending.append(p)
-    return pending
-
-
 def check_and_ingest(workspace_id: Optional[str] = None) -> int:
     """检查一次；返回本轮成功入库的新文件数（方便测试，workspace 感知）。"""
-    pending = _pending_files(workspace_id)
+    pending = pending_raw_files(workspace_id, stable_seconds=STABLE_SECONDS, skip=_failed)
     if not pending:
         return 0
 

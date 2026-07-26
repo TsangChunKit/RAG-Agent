@@ -5,7 +5,7 @@
 **症状**：不断发现新的运行时错误（AttributeError, NameError），修复后又发现新的。
 
 **根本原因**（本文档记录的是项目初期状况，当时覆盖率仅 2%）：
-1. ❌ **测试覆盖率不足**（初期 2%，现已提升到 73%，见下方目标表）
+1. ❌ **测试覆盖率不足**（初期 2%，现已提升到 71%，见下方目标表）
 2. ❌ **测试层次不完整**（只有单元测试，没有集成测试）
 3. ❌ **没有静态代码检查**（依赖手动发现错误）
 4. ❌ **缺少端到端测试**（没有模拟实际运行环境）
@@ -89,15 +89,34 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 # 目标：覆盖率 ≥ 80%
 ```
 
-**当前状态**（2026-07-25 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
-- 覆盖率：72.72%（已过 hook 的 70% 闸门，目标 ≥ 80%）
+**当前状态**（2026-07-26 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
+- 覆盖率：71.5%（已过 hook 的 70% 闸门，目标 ≥ 80%）
 - 单元测试文件：28 个（tests/unit/）
-- 测试结果：734 通过 / 0 失败 / 1 跳过
+- 测试结果：747 通过 / 0 失败 / 1 跳过
 
-> ⚠️ 集成测试（`pytest tests/integration/ --integration`）当前有 33 个失败（数量会随上一轮残留的 workspace 浮动），是**既有腐化**
-> （测试写死了已改名的 API，且直接往真实 `private.nosync/workspaces/` 里建 workspace，
-> 上一轮残留会让下一轮 `create_workspace()` 撞 "already exists"）。修它是独立任务，
-> 见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md)。
+> 📉 比 2026-07-25 的 72.72% 略降，原因是这一轮加了 autouse 硬隔离（见下方「测试隔离的三道闸门」），
+> `import app` 不再顺带执行部分模块级代码 → app.py 31% → 25%。用 1.2 个覆盖率点换掉"测试会污染
+> 真实数据、会打真实 API"，是刻意的取舍。
+
+> ⚠️ 集成测试（`pytest tests/integration/ --integration`）当前 **18 failed / 54 passed**
+> （原为 33 failed / 39 passed）。剩下的失败全是**测试写死了已改签名的 API**这一类既有腐化，
+> 集中在 `test_edge_cases.py` 与 `test_ui_features.py`；污染真实 workspace 那一类已根治。
+> 修剩下的是独立任务，见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+
+### 测试隔离的三道闸门（`tests/conftest.py`，autouse）
+
+写在 conftest 顶层且 autouse，因为"让每个测试自己记得隔离"已被证明不可靠：
+
+| 闸门 | 作用 |
+|-----|-----|
+| `isolate_data_root` | 把 `workspace_manager.WORKSPACES_ROOT` / `PRIVATE_DIR`、`INDEX_SETTINGS_PATH`、`GEMINI_SETTINGS_PATH`、`ENV_PATH` 钉进 `tmp_path`，清 `CURRENT_WORKSPACE` 与 `st.session_state`，并预置一个 `default-ws`（要"零个 workspace"的测试用 `empty_workspaces_root`）|
+| `block_real_llm_calls` | 在 `genai.Client` / `openai.OpenAI` 构造函数上设断路器，漏 mock 时**大声报错**而不是静默出网 |
+| `reset_module_caches` | 清 `ask._table` / `ask._all_chunks_cache`，防模块级单例跨测试泄漏 |
+
+⚠️ 两个反复踩的坑，写测试时记牢：
+1. `WORKSPACES_ROOT` 是 **import-time 求值的常量**，patch `PRIVATE_DIR` 对它无效。
+2. Mock LLM 要 patch **调用方 namespace 里的名字**（`scripts.ask.ask_llm` / `scripts.summarize.ask_llm`），
+   patch `scripts.llm.ask_llm` 拦不住 `from scripts.llm import ask_llm` 的绑定。
 
 ---
 
@@ -210,9 +229,9 @@ python scripts/check_code_patterns.py
 |------|------|------|--------|
 | 静态检查 | ✅ 100% | ✅ 100% | P0 |
 | 导入测试 | ✅ 100% | ✅ 100% | P0 |
-| 单元测试 | 🟡 73%（scripts + app） | ✅ 80% | P1 |
-| 集成测试 | 🔴 33 个失败（既有腐化，见 TESTING_COVERAGE_PLAN 任务 14） | ✅ 全绿 + 60% | P1 |
-| **整体** | **🟢 73%（≥ hook 的 70% 阈值）** | **✅ 80%** | **P0** |
+| 单元测试 | 🟡 71%（scripts + app） | ✅ 80% | P1 |
+| 集成测试 | 🟡 18 个失败（既有腐化，原 33 个，见 TESTING_COVERAGE_PLAN 任务 14） | ✅ 全绿 + 60% | P1 |
+| **整体** | **🟢 71%（≥ hook 的 70% 阈值）** | **✅ 80%** | **P0** |
 
 ---
 

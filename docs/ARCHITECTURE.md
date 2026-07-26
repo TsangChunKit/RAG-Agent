@@ -30,6 +30,29 @@
 - `embedder.py` → BGE-M3 模型
 - `ingest.py` → `chunk.py`, `embedder.py`, LanceDB
 
+#### 1b. 增量入库的三条触发通路（同一个 `ingest_new.py`）
+
+```
+                      ┌─ raw 入库看门狗（每 2 分钟，launchd 常驻）
+raw/ 新增 .txt  ───────┼─ UI「📚 已索引的咨询记录」→「⚡ 立即入库」按钮
+                      └─ 命令行 python -m scripts.ingest_new <文件>
+                                    ↓
+                    [ingest_new.pending_raw_files()]   ← 「哪些还没入库」的单一真相源
+                                    ↓
+                    [ingest_new.ingest_new_file()]  parse → chunk → ingest(append)
+                                    → chunks.jsonl → summarize → update_memory → changelog
+```
+
+三条通路共用 `pending_raw_files()` 判定「没入库」（文件名不在 `chunks.jsonl` 的 `source_file`
+集合里），差别只有：看门狗传 `stable_seconds=30`（避开还在复制的半个文件）并用 `skip=_failed`
+记住永久失败的文件；UI/命令行传 0（用户的点击本身就是「已放好」的信号）。
+
+**⚠️ 写入顺序是个不变量**：`ingest_new_file()` 必须先 `ingest()` 进 LanceDB、成功后才把 chunk
+追加进 `chunks.jsonl`。因为 `chunks.jsonl` 是「已入库」的真相源，先写它等于提前宣布成功——
+一旦 LanceDB / FTS 那步失败，那份逐字稿就既不在库里、又不在待入库清单里，摘要 / 长期记忆 /
+变更记录全都没跑，而看门狗永远不会重试它（2026-07-26 真实事故，见 `tests/unit/test_ingest_new.py`
+的 `TestFailureLeavesNoPhantomIndex`）。反过来最坏只是下次重试一遍，是可恢复的。
+
 ### 2. 摘要生成流程
 
 ```
@@ -157,10 +180,18 @@ Layer 4: 知识提取
 Layer 5: 应用
 ├─ ask.py             # 问答核心
 ├─ update_memory.py   # 记忆更新
+├─ ingest_new.py      # 增量入库编排（parse→chunk→ingest→summarize→update_memory）
+│                     #   + pending_raw_files() / ingest_pending()：待入库判定的单一真相源
 └─ context_cache.py   # 缓存管理
 
+Layer 5.5: 常驻看门狗（launchd，非 Streamlit 进程）
+├─ raw_ingest_watcher.py    # 每 2 分钟扫 raw/，调 ingest_new.pending_raw_files() + ingest_new_file()
+└─ chat_memory_watcher.py   # 闲置 30 分钟更新 AI 对话记忆 + 其图谱
+   ⚠️ 这两个拿不到 Streamlit 的 session_state，必须由 plist 显式传 --workspace
+      （见 scripts/launchd/），否则退到「workspaces/ 下字母序第一个」这种隐式行为
+
 Layer 6: UI
-├─ app.py             # Streamlit 主应用
+├─ app.py             # Streamlit 主应用（→ ingest_new.pending_raw_files / ingest_pending）
 └─ pages/             # Streamlit 页面
 ```
 

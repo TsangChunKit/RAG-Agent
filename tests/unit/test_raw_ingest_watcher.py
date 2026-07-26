@@ -1,17 +1,21 @@
 """测试逐字稿入库看门狗（scripts/raw_ingest_watcher.py）。
 
-两个防呆是这个模块存在的理由，必须有测试守住：
+这个模块存在的理由是两个防呆，必须有测试守住：
   1. 只处理 mtime 已稳定 STABLE_SECONDS 的文件（否则会抓到半个正在复制的文件就入库）；
   2. 永久失败的文件记进 _failed，本进程内只报一次错（否则每 2 分钟刷屏一次）。
 
+「哪些文件算待入库」的规则本身住在 scripts/ingest_new.pending_raw_files()（UI 按钮共用），
+在 tests/unit/test_ingest_new.py 里测；这里只测看门狗自己的部分：是否把 STABLE_SECONDS
+和 _failed 正确传下去、逐份入库、一份失败不拖垮其余。
+
 _failed 是模块级全局状态，每个测试都要清空，否则测试之间互相污染。
 """
-import json
 import os
 import time
 
 import pytest
 
+from scripts import ingest_new as inew
 from scripts import raw_ingest_watcher as w
 from scripts.raw_ingest_watcher import (
     CHECK_INTERVAL_SECONDS,
@@ -33,7 +37,11 @@ def clear_failed():
 
 @pytest.fixture
 def env(tmp_path, monkeypatch):
-    """raw 目录 + chunks.jsonl 指到 tmp_path，ingest_new_file 全程 mock。"""
+    """raw 目录 + chunks.jsonl 指到 tmp_path，ingest_new_file 全程 mock。
+
+    路径要 patch 在 scripts.ingest_new 上——pending_raw_files() 住在那个模块里，
+    读的是它的模块全局。
+    """
     raw_dir = tmp_path / "raw"
     chunks_path = tmp_path / "processed" / "chunks.jsonl"
 
@@ -43,8 +51,8 @@ def env(tmp_path, monkeypatch):
         calls.append((path.name, workspace_id))
         return {"session_date": "2026-07-25"}
 
-    monkeypatch.setattr(w, "RAW_DIR", lambda ws=None: raw_dir)
-    monkeypatch.setattr(w, "CHUNKS_JSONL_PATH", lambda ws=None: chunks_path)
+    monkeypatch.setattr(inew, "RAW_DIR", lambda ws=None: raw_dir)
+    monkeypatch.setattr(inew, "CHUNKS_JSONL_PATH", lambda ws=None: chunks_path)
     monkeypatch.setattr(w, "ingest_new_file", fake_ingest)
 
     return {"raw": raw_dir, "chunks": chunks_path, "calls": calls}
@@ -59,68 +67,6 @@ def _make_txt(raw_dir, name, stable=True):
         old = time.time() - (STABLE_SECONDS + 60)
         os.utime(p, (old, old))
     return p
-
-
-def _write_chunks(chunks_path, source_files):
-    chunks_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(chunks_path, "w", encoding="utf-8") as f:
-        for sf in source_files:
-            f.write(json.dumps({"source_file": sf}) + "\n")
-
-
-# ── 已索引集合 ─────────────────────────────────────────────────────────────
-
-
-class TestIndexedSourceFiles:
-    def test_empty_when_no_chunks_file(self, env):
-        assert w._indexed_source_files() == set()
-
-    def test_reads_source_files(self, env):
-        _write_chunks(env["chunks"], ["a.txt", "a.txt", "b.txt"])
-
-        assert w._indexed_source_files() == {"a.txt", "b.txt"}
-
-
-# ── 候选文件 ───────────────────────────────────────────────────────────────
-
-
-class TestPendingFiles:
-    def test_empty_when_raw_dir_missing(self, env):
-        assert w._pending_files() == []
-
-    def test_finds_new_stable_txt(self, env):
-        _make_txt(env["raw"], "20260725120000-新咨询.txt")
-
-        assert [p.name for p in w._pending_files()] == ["20260725120000-新咨询.txt"]
-
-    def test_skips_already_indexed(self, env):
-        _make_txt(env["raw"], "old.txt")
-        _write_chunks(env["chunks"], ["old.txt"])
-
-        assert w._pending_files() == []
-
-    def test_skips_file_still_being_written(self, env):
-        """mtime 太新 → 可能还在复制，等下一轮。"""
-        _make_txt(env["raw"], "copying.txt", stable=False)
-
-        assert w._pending_files() == []
-
-    def test_skips_known_failed(self, env):
-        _make_txt(env["raw"], "broken.txt")
-        w._failed.add("broken.txt")
-
-        assert w._pending_files() == []
-
-    def test_ignores_non_txt(self, env):
-        _make_txt(env["raw"], "note.md")
-
-        assert w._pending_files() == []
-
-    def test_sorted_by_name(self, env):
-        _make_txt(env["raw"], "b.txt")
-        _make_txt(env["raw"], "a.txt")
-
-        assert [p.name for p in w._pending_files()] == ["a.txt", "b.txt"]
 
 
 # ── check_and_ingest ──────────────────────────────────────────────────────
@@ -144,6 +90,13 @@ class TestCheckAndIngest:
         check_and_ingest("counseling")
 
         assert env["calls"] == [("a.txt", "counseling")]
+
+    def test_skips_file_still_being_written(self, env):
+        """看门狗必须传 STABLE_SECONDS 下去，否则会抓到还在复制的半个文件。"""
+        _make_txt(env["raw"], "copying.txt", stable=False)
+
+        assert check_and_ingest() == 0
+        assert env["calls"] == []
 
     def test_failure_is_recorded_and_not_retried(self, env, monkeypatch):
         """入库报错 → 计数不加、记进 _failed，下一轮不再重试（避免每 2 分钟刷屏）。"""

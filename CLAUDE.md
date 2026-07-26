@@ -357,15 +357,15 @@ def validate_input(text: str) -> bool:
 
 #### 覆蓋率目標（強制執行）
 
-> 數據更新於 2026-07-25（實測 `pytest tests/unit/ --cov=scripts --cov=app`，即 pre-commit hook 用的同一條命令）。
+> 數據更新於 2026-07-26（實測 `pytest tests/unit/ --cov=scripts --cov=app`，即 pre-commit hook 用的同一條命令）。
 
 | 模塊類型 | 最低覆蓋率 | 推薦覆蓋率 | 狀態 |
 |---------|----------|-----------|-----|
 | **核心業務邏輯** | 80% | 90% | 🟡 當前 54-100%（多數達標）|
 | **配置/工具類** | 60% | 80% | 🟢 當前 71-100% |
-| **UI 代碼** | 50% | 70% | 🔴 當前 app.py 31% |
+| **UI 代碼** | 50% | 70% | 🔴 當前 app.py 25% |
 | **批處理腳本** | 40% | 60% | 🟢 當前 80-99%（未覆蓋的只有 `__main__` 進程入口）|
-| **整體項目** | 70% | 85% | 🟢 當前 73%（已過 hook 閾值）|
+| **整體項目** | 70% | 85% | 🟢 當前 71.5%（已過 hook 閾值）|
 
 **核心業務邏輯現狀**：
 - `scripts/ask.py` - 問答核心（當前 79% 🟡）
@@ -374,9 +374,11 @@ def validate_input(text: str) -> bool:
 - `scripts/build_graph.py` - 圖譜構建（當前 54% 🟡）
 - `scripts/graph_utils.py` - 圖譜工具（當前 100% ✅）
 
-**當前缺口**：`app.py` 僅 31%（Streamlit 佈局代碼為主），以及兩個一次性工具腳本
+**當前缺口**：`app.py` 僅 25%（Streamlit 佈局代碼為主），以及兩個一次性工具腳本
 （`auto_fix.py`、`migrate_from_old_project.py`）仍為 0%。批處理/看門狗腳本已於 2026-07-25 補齊
-（見 `docs/COVERAGE_BOOST_ROUND4.md`），整體從 60% 拉到 73%。
+（見 `docs/COVERAGE_BOOST_ROUND4.md`），整體從 60% 拉到 73%；2026-07-26 因給 `tests/conftest.py`
+加了 autouse 硬隔離（測試不再污染真實 `private.nosync/`、不再打真實 API），`import app` 少走了一段
+模塊級代碼，整體回落到 71.5%——這是刻意用覆蓋率換測試可信度，詳見 `docs/TESTING_COVERAGE_PLAN.md`。
 
 #### 新功能開發檢查清單
 
@@ -561,18 +563,22 @@ git commit --no-verify -m "emergency fix: ..."
 
 - ✅ **scripts/graph_utils.py** 100%、**index_records.py** 100%、**settings.py** 100%
 - ✅ **scripts/chunk.py** 90%、**ingest.py** 85%
-- ✅ **批處理/看門狗**：update_memory 89%、update_chat_memory 92%、ingest_new 83%、
-  chat_memory_watcher 82%、raw_ingest_watcher 80%、check_code_patterns 99%
-  （2026-07-25 Round 4，未覆蓋部分只有 `__main__` 進程入口）
+- ✅ **批處理/看門狗**：update_memory 89%、update_chat_memory 92%、ingest_new 87%、
+  chat_memory_watcher 82%、raw_ingest_watcher 67%、check_code_patterns 99%
+  （2026-07-25 Round 4，未覆蓋部分只有 `__main__` 進程入口；raw_ingest_watcher 的百分比降低是因為
+  待入庫判定挪進了 ingest_new.py，分母從 59 行縮到 36 行，未覆蓋的仍只有常駐 while 循環）
 - 🟡 **scripts/ask.py** 79%（接近 80% 目標，補齊歷史壓縮/GraphRAG 分支即可達標）
 - 🟡 **scripts/session_graph.py** 78%
 
 ### 優先級 P0（拉高整體到 80%）
 
-1. **app.py** (31% → 50%)：正確做法是把「按鈕點下去之後做什麼」抽成 `scripts/` 裡的純函數再測，
-   而不是給 `st.*` 佈局代碼硬寫測試
-2. **集成測試腐化**：`pytest tests/integration/ --integration` 有 35 個既有失敗
-   （測試寫死了已改名的 API + 污染真實 workspace 目錄），詳見 `docs/TESTING_COVERAGE_PLAN.md` 任務 14
+1. **app.py** (25% → 50%)：正確做法是把「按鈕點下去之後做什麼」抽成 `scripts/` 裡的純函數再測，
+   而不是給 `st.*` 佈局代碼硬寫測試（範例：`⚡ 立即入庫` 按鈕的邏輯全在 `ingest_new.pending_raw_files`
+   / `ingest_pending`，`tests/unit/test_app.py` 只用 `__wrapped__` 取出彈窗內層函數驗分支）
+2. **集成測試腐化**：`pytest tests/integration/ --integration` 現為 18 failed / 54 passed
+   （原 33 failed；污染真實 workspace 那一類已於 2026-07-26 根治，剩下的全是測試寫死了已改簽名的
+   API，集中在 `test_edge_cases.py` / `test_ui_features.py`），詳見
+   `docs/TESTING_COVERAGE_PLAN.md` 任務 14
 
 ### 優先級 P1
 

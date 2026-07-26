@@ -6,8 +6,14 @@ changelog action 是否正确（added / reindexed / skipped）。
 
 所有下游（parse / chunk / ingest / summarize / update_memory）都 mock 掉——
 这里测的是编排逻辑，不是它们各自的实现。
+
+`pending_raw_files()` / `ingest_pending()` 是「raw 里还有哪些没入库」这条规则的**单一真相源**，
+看门狗（scripts/raw_ingest_watcher.py）和 UI 的「⚡ 立即入库」按钮都走它，所以规则本身
+（已索引 / 还在写入 / 非 .txt / 排序）在这里测，看门狗那边只测它自己的 _failed 记忆。
 """
 import json
+import os
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -15,7 +21,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from scripts import ingest_new as inew
-from scripts.ingest_new import ingest_new_file
+from scripts.ingest_new import ingest_new_file, ingest_pending, pending_raw_files
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────
@@ -182,6 +188,41 @@ class TestIngestNewFile:
 # ── 幂等 / --force ────────────────────────────────────────────────────────
 
 
+class TestFailureLeavesNoPhantomIndex:
+    """入库失败时不能留下"已索引"的假象。
+
+    2026-07-26 真实事故：ingest() 因 FTS 分词器配置报错，但 chunks.jsonl 已经先写了 61 行
+    → 该文件从此被当成"已入库"，pending_raw_files() 再也不返回它，看门狗和 UI 都不会重试，
+    而摘要 / 长期记忆 / 变更记录全都没跑。所以 chunks.jsonl 必须在 ingest() **成功之后**才写。
+    """
+
+    def test_chunks_jsonl_not_written_when_ingest_fails(self, env):
+        env["mocks"]["ingest"].side_effect = RuntimeError("lance error: unknown base tokenizer")
+
+        with pytest.raises(RuntimeError):
+            ingest_new_file(_incoming_file(env["tmp"]))
+
+        assert not env["chunks"].exists()
+
+    def test_file_still_pending_after_failed_ingest(self, env):
+        """失败后它必须仍在待入库清单里，下一轮/点一次按钮能重试。"""
+        env["mocks"]["ingest"].side_effect = RuntimeError("boom")
+
+        with pytest.raises(RuntimeError):
+            ingest_new_file(_incoming_file(env["tmp"]))
+
+        assert [p.name for p in pending_raw_files()] == ["20260725120000-咨询.txt"]
+
+    def test_no_change_record_when_ingest_fails(self, env):
+        """变更记录也不能记 added——那会让「📚 已索引的咨询记录」显示一份并不存在的索引。"""
+        env["mocks"]["ingest"].side_effect = RuntimeError("boom")
+
+        with pytest.raises(RuntimeError):
+            ingest_new_file(_incoming_file(env["tmp"]))
+
+        env["mocks"]["record"].assert_not_called()
+
+
 class TestIdempotency:
     def test_already_chunked_skips_ingest(self, env):
         """已在库中 → 不重复 chunk/入库，只记一条 skipped。"""
@@ -227,3 +268,114 @@ class TestIdempotency:
         ingest_new_file(_incoming_file(env["tmp"]))
 
         env["mocks"]["update_memory"].assert_called_once()
+
+
+# ── 待入库清单（看门狗 + UI 按钮共用的真相源）────────────────────────────────
+
+
+def _raw_txt(raw_dir, name, age_seconds=3600):
+    """在 raw/ 放一个 txt；age_seconds 是把 mtime 往前调多久（模拟「写完多久了」）。"""
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    p = raw_dir / name
+    p.write_text("Andy(00:00:01): 测试。", encoding="utf-8")
+    old = time.time() - age_seconds
+    os.utime(p, (old, old))
+    return p
+
+
+class TestPendingRawFiles:
+    def test_empty_when_raw_dir_missing(self, env):
+        assert pending_raw_files() == []
+
+    def test_finds_new_txt(self, env):
+        _raw_txt(env["raw"], "20260726110034-新咨询.txt")
+
+        assert [p.name for p in pending_raw_files()] == ["20260726110034-新咨询.txt"]
+
+    def test_skips_already_indexed(self, env):
+        _raw_txt(env["raw"], "old.txt")
+        _mark_already_chunked(env["chunks"], "old.txt")
+
+        assert pending_raw_files() == []
+
+    def test_ignores_non_txt(self, env):
+        _raw_txt(env["raw"], "note.md")
+
+        assert pending_raw_files() == []
+
+    def test_sorted_by_name(self, env):
+        _raw_txt(env["raw"], "b.txt")
+        _raw_txt(env["raw"], "a.txt")
+
+        assert [p.name for p in pending_raw_files()] == ["a.txt", "b.txt"]
+
+    def test_skip_set_is_excluded(self, env):
+        """看门狗用它跳过已知永久失败的文件。"""
+        _raw_txt(env["raw"], "broken.txt")
+        _raw_txt(env["raw"], "ok.txt")
+
+        assert [p.name for p in pending_raw_files(skip={"broken.txt"})] == ["ok.txt"]
+
+    def test_stable_seconds_skips_file_still_being_written(self, env):
+        """mtime 太新 → 可能还在复制，等下一轮（看门狗传 stable_seconds=30）。"""
+        _raw_txt(env["raw"], "copying.txt", age_seconds=1)
+
+        assert pending_raw_files(stable_seconds=30) == []
+
+    def test_stable_seconds_zero_returns_even_brand_new_file(self, env):
+        """UI 手动触发不等稳定窗口——用户点按钮就是明确说「这份已经放好了」。"""
+        _raw_txt(env["raw"], "just_copied.txt", age_seconds=0)
+
+        assert [p.name for p in pending_raw_files()] == ["just_copied.txt"]
+
+
+# ── ingest_pending（UI「⚡ 立即入库」按钮的后端）──────────────────────────────
+
+
+class TestIngestPending:
+    def test_nothing_pending(self, env):
+        assert ingest_pending() == {"ingested": [], "failed": []}
+
+    def test_ingests_all_pending(self, env, monkeypatch):
+        _raw_txt(env["raw"], "a.txt")
+        _raw_txt(env["raw"], "b.txt")
+        done = []
+        monkeypatch.setattr(
+            inew, "ingest_new_file",
+            lambda p, force=False, workspace_id=None: done.append(p.name),
+        )
+
+        result = ingest_pending()
+
+        assert done == ["a.txt", "b.txt"]
+        assert result == {"ingested": ["a.txt", "b.txt"], "failed": []}
+
+    def test_passes_workspace_and_force(self, env, monkeypatch):
+        _raw_txt(env["raw"], "a.txt")
+        calls = []
+        monkeypatch.setattr(
+            inew, "ingest_new_file",
+            lambda p, force=False, workspace_id=None: calls.append((p.name, force, workspace_id)),
+        )
+
+        ingest_pending(workspace_id="counseling", force=True)
+
+        assert calls == [("a.txt", True, "counseling")]
+
+    def test_one_failure_does_not_block_others(self, env, monkeypatch):
+        """一份坏文件不能拖垮整批——失败的原样报回去让 UI 显示。"""
+        _raw_txt(env["raw"], "a_bad.txt")
+        _raw_txt(env["raw"], "b_ok.txt")
+
+        def half_broken(p, force=False, workspace_id=None):
+            if "bad" in p.name:
+                raise ValueError("文件名没有 14 位日期前缀")
+
+        monkeypatch.setattr(inew, "ingest_new_file", half_broken)
+
+        result = ingest_pending()
+
+        assert result["ingested"] == ["b_ok.txt"]
+        assert result["failed"] == [
+            {"file": "a_bad.txt", "error": "文件名没有 14 位日期前缀"}
+        ]

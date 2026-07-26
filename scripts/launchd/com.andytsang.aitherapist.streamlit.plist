@@ -6,7 +6,7 @@
     <string>com.andytsang.aitherapist.streamlit</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/andytsang/Documents/Project/心理咨詢agent/.venv/bin/python3</string>
+        <string>/Users/andytsang/Documents/Project/RAG-Agent/.venv/bin/python3</string>
         <string>-m</string>
         <string>streamlit</string>
         <string>run</string>
@@ -17,7 +17,14 @@
         <string>8501</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/andytsang/Documents/Project/心理咨詢agent</string>
+    <string>/Users/andytsang/Documents/Project/RAG-Agent</string>
+    <!-- 侧边栏的 Workspace 选择器会写 session_state 覆盖它；这个只是「还没选过时」的初始默认，
+         免得靠 workspaces/ 的字母序兜底。 -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>CURRENT_WORKSPACE</key>
+        <string>counseling</string>
+    </dict>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>

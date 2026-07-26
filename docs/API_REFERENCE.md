@@ -492,6 +492,96 @@ def parse_transcript(path: Path) -> ParsedSession:
 
 ---
 
+## scripts/ingest_new.py
+
+增量入库：把 `raw/` 里的新逐字稿一条龙做完（parse → chunk → 向量化 → LanceDB append →
+摘要 → 更新长期记忆 → 记变更记录）。看门狗、UI 的「⚡ 立即入库」按钮、命令行三条通路都走这里。
+
+### 核心函数
+
+#### `ingest_new_file()`
+```python
+def ingest_new_file(path: Path, force: bool = False, workspace_id: Optional[str] = None) -> dict:
+    """
+    增量摄取单个文件（幂等；已入库/已有摘要的步骤会跳过，除非 force=True）。
+
+    Args:
+        path: 逐字稿路径（不在 raw/ 下会先 copy 进去）
+        force: 强制重新入库 + 重新生成摘要
+        workspace_id: workspace 名称，None = 当前 workspace
+
+    Returns:
+        该场的结构化摘要 dict
+
+    Raises:
+        ValueError: 文件名没有 14 位日期前缀（parse 阶段）
+        Exception: 向量化 / LanceDB / LLM 任一步失败都会原样抛出
+    """
+```
+
+⚠️ **写入顺序不变量**：内部必须先 `ingest()` 成功、再把 chunk 追加进 `chunks.jsonl`。
+`chunks.jsonl` 是「已入库」的真相源，顺序反了会让失败的文件被当成已入库、永不重试
+（详见 `docs/ARCHITECTURE.md` §1b）。
+
+#### `pending_raw_files()`
+```python
+def pending_raw_files(
+    workspace_id: Optional[str] = None,
+    stable_seconds: int = 0,
+    skip: Optional[Set[str]] = None,
+) -> List[Path]:
+    """
+    raw/ 里还没入库的 .txt（按文件名排序）。「没入库」= 文件名不在 chunks.jsonl 的
+    source_file 集合里。这是待入库判定的**单一真相源**：看门狗和 UI 按钮都调它。
+
+    Args:
+        workspace_id: workspace 名称，None = 当前 workspace
+        stable_seconds: >0 时只返回 mtime 已稳定这么多秒的文件（看门狗传 30，避开还在
+            复制途中的半个文件）；UI/命令行传 0
+        skip: 额外跳过的文件名集合（看门狗用它跳过本进程内已知永久失败的文件）
+
+    Returns:
+        待入库文件路径列表（raw 目录不存在时为空列表）
+    """
+```
+
+用法：
+```python
+from scripts.ingest_new import pending_raw_files
+
+# UI：列出待入库文件（不等稳定窗口）
+pending = pending_raw_files(workspace_id="counseling")
+
+# 看门狗：只要写完 30 秒以上的，且跳过已知坏文件
+pending = pending_raw_files("counseling", stable_seconds=30, skip=_failed)
+```
+
+#### `ingest_pending()`
+```python
+def ingest_pending(
+    workspace_id: Optional[str] = None,
+    force: bool = False,
+    stable_seconds: int = 0,
+) -> Dict[str, list]:
+    """
+    把 raw/ 里所有待入库的逐字稿逐份入库（UI「⚡ 立即入库」按钮的后端）。
+    一份失败不影响其余，失败信息原样返回给调用方渲染（不打印、不抛出）。
+
+    Returns:
+        {"ingested": [文件名, ...], "failed": [{"file": 文件名, "error": 错误信息}, ...]}
+    """
+```
+
+用法（app.py 里就是这么用的）：
+```python
+result = ingest_pending()                      # 当前 workspace
+st.success("已入库：" + "、".join(result["ingested"]))
+for f in result["failed"]:
+    st.error(f"❌ {f['file']}：{f['error']}")
+```
+
+---
+
 ## scripts/settings.py
 
 运行期可调参数 + LLM 后端选择的读写口。每次调用都重读 `GEMINI_SETTINGS_PATH`，改完下一次调用即生效。

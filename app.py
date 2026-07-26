@@ -22,6 +22,7 @@ from scripts.ask import (
     save_system_instruction,
 )
 from scripts.chat_store import delete_session, list_sessions, load_session, make_title, new_session_id, save_session
+from scripts.ingest_new import ingest_pending, pending_raw_files
 
 # 开了热重载（.streamlit/config.toml 的 runOnSave + watchdog）后，Streamlit 的 LocalSourcesWatcher
 # 每次 rerun 都会遍历 sys.modules 找「本项目内被 import 的模块」来监听。途中它会去解析每个模块的
@@ -194,6 +195,26 @@ def gemini_settings_dialog():
 
 @st.dialog("📚 已索引的咨询记录", width="large")
 def indexed_records_dialog():
+    # 待入库提示 + 手动触发：raw 入库看门狗每 2 分钟自动扫一次，但看门狗有可能没跑起来
+    # （比如 launchd 指错项目目录），这里给一个不依赖看门狗的手动入口 —— 冗余通路。
+    pending = pending_raw_files()
+    if pending:
+        st.warning(f"🆕 raw/ 里有 **{len(pending)}** 份还没入库：" + "、".join(p.name for p in pending))
+        st.caption(
+            "看门狗每 2 分钟自动扫一次；不想等（或看门狗没跑）就点下面手动入库。"
+            "每份会跑 parse → 分块 → 本地向量化 → LLM 摘要 → 更新长期记忆，约 1–2 分钟，期间别关页面。"
+        )
+        if st.button(f"⚡ 立即入库这 {len(pending)} 份", use_container_width=True, type="primary"):
+            with st.spinner("正在入库（含 LLM 摘要，请耐心等）…"):
+                result = ingest_pending()
+            if result["ingested"]:
+                st.success("已入库：" + "、".join(result["ingested"]))
+            for f in result["failed"]:
+                st.error(f"❌ {f['file']}：{f['error']}")
+            if not result["failed"]:
+                st.rerun()
+        st.divider()
+
     records = index_records.list_indexed_records()
     total_chunks = sum(r["n_chunks"] for r in records)
     st.caption(
@@ -216,7 +237,11 @@ def indexed_records_dialog():
         )
         st.dataframe(df, use_container_width=True, hide_index=True)
     else:
-        st.info("向量库还是空的。把逐字稿放进 private.nosync/data/raw/ 后跑 `python -m scripts.ingest_new <文件>`。")
+        st.info(
+            "向量库还是空的。把逐字稿放进本 workspace 的 `data/raw/`"
+            "（`private.nosync/workspaces/<workspace>/data/raw/`），"
+            "上面就会出现「立即入库」按钮；也可以跑 `python -m scripts.ingest_new <文件>`。"
+        )
 
     st.markdown("##### 🧾 变更记录（最近 30 条）")
     st.caption("每次新增 / 重建 / 跳过入库都会自动记一行，方便回溯「什么时候进了哪份记录」。")

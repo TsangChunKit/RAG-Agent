@@ -1,17 +1,23 @@
 # 测试覆盖率提升计划
 
-> ⚠️ 本文档为最初的提升计划。数据已更新到最新实测值（2026-07-25 第二次，
+> ⚠️ 本文档为最初的提升计划。数据已更新到最新实测值（2026-07-26，
 > `pytest tests/unit/ --cov=scripts --cov=app`）。最新逐文件覆盖率以 `COVERAGE_BOOST_ROUND4.md` 为准。
 
 ## 当前状态
 
-### 整体覆盖率：73% 🟢
+### 整体覆盖率：71% 🟢
 
 ```
 目标：70% → 85%
-当前：72.72%（scripts + app.py，734 个单元测试）
-状态：已越过最低目标 70%，距推荐值 85% 还差 12%
+当前：71.5%（scripts + app.py，747 个单元测试）
+状态：已越过最低目标 70%，距推荐值 85% 还差 13.5%
 ```
+
+> 📉 **为什么从 72.7% 掉到 71.5%（2026-07-26）**：这一轮给 `tests/conftest.py` 加了三道 autouse
+> 硬隔离闸门（钉住 `WORKSPACES_ROOT` / 堵死真实 LLM 调用 / 清模块级缓存）。隔离生效后
+> `import app` 走的是"干净 tmp workspace"那条路，`app.py` 的一部分模块级代码不再被顺带执行，
+> 于是 app.py 从 31% 掉到 25%。这是**用 1.2 个覆盖率点换掉「测试会污染真实 private.nosync/、
+> 会打真实 API」这个更严重的问题**——覆盖率是代理指标，测试可信度是真指标，冲突时选后者。
 
 > ✅ pre-commit hook 的第 4 项检查（`--cov-fail-under=70`）**已能通过**（2026-07-25 起）。
 > 清掉它靠的正是下面 P2/P3 那批 0% 的批处理脚本（update_memory / ingest_new / index_records /
@@ -36,14 +42,14 @@
 | parse.py | 80 | 88% | 80% | P1 | ✅ 达标 |
 | index_settings.py | 46 | 100% | 80% | P1 | ✅ 达标 |
 | index_records.py | 49 | 100% | 60% | P1 | ✅ 达标 |
-| workspace_manager.py | 142 | 80% | 80% | P1 | ✅ 达标 |
+| workspace_manager.py | 142 | 75% | 80% | P1 | 🟢 接近 |
 | settings.py | 67 | 100% | 60% | P1 | ✅ 达标 |
 | **批处理脚本** ||||
 | update_memory.py | 35 | 89% | 40% | P2 | ✅ 达标（未覆盖的只有 `__main__`）|
 | update_chat_memory.py | 51 | 92% | 40% | P2 | ✅ 达标（同上）|
-| ingest_new.py | 69 | 83% | 40% | P2 | ✅ 达标（同上）|
+| ingest_new.py | 94 | 87% | 40% | P2 | ✅ 达标（同上）|
 | chat_memory_watcher.py | 62 | 82% | 40% | P2 | ✅ 达标（未覆盖的是常驻 while 循环）|
-| raw_ingest_watcher.py | 59 | 80% | 40% | P2 | ✅ 达标（同上）|
+| raw_ingest_watcher.py | 36 | 67% | 40% | P2 | ✅ 达标（未覆盖的 12 行全是 `__main__` 常驻循环；文件从 59 行缩到 36 行，是因为待入库判定挪进了 ingest_new.py）|
 | **工具脚本（低优先级）** ||||
 | check_code_patterns.py | 90 | 99% | - | P3 | ✅ 达标（它是 hook 第一道闸门，自己必须可信）|
 | auto_fix.py | 79 | 0% | - | P3 | ⚪ 可选（一次性修复脚本）|
@@ -155,21 +161,33 @@
 
 **实际工作量**：约 0.5 天（7 个测试文件，126 个新测试：597 → 723）
 
-#### 任务 14: 修复集成测试腐化（2026-07-25 新增，优先级 P0）
+#### 任务 14: 修复集成测试腐化（2026-07-25 新增，优先级 P0）—— 🟡 一半完成
 
-`pytest tests/integration/ --integration` 当前 **33 个失败（2026-07-25 实测 33 failed / 39 passed；数量随上一轮残留的 workspace 浮动），
-与被测代码无关**，两类原因：
+`pytest tests/integration/ --integration` 原本 **33 个失败，与被测代码无关**，两类原因：
 
 1. **测试写死了已改名/已改签名的 API** —— 例如 `index_settings.load()`（不存在）、
-   `parse_transcript(str)`（实参必须是 `Path`）。属于测试没跟上重构。
+   `parse_transcript(str)`（实参必须是 `Path`）、`ingest(chunks=list[Chunk], rebuild=True)`
+   （实际吃 `list[dict]` + `mode=`）。属于测试没跟上重构。
 2. **测试污染真实数据目录** —— `test_full_workflow.py` 等直接调 `create_workspace("ws1", ...)`，
    建在真实的 `private.nosync/workspaces/` 下。上一轮跑完不清理，下一轮就撞
    `ValueError: Workspace already exists: ws1`；`test-workspace/` 甚至已被误提交进 git。
-   修法：fixture 里 monkeypatch `WORKSPACES_ROOT` 到 `tmp_path`，一次性切断。
 
-**做完之前，不要把整体覆盖率的锅算在集成测试头上**——它们现在跑不完，覆盖率数据只反映单元测试。
+**2026-07-26 进展：18 failed / 54 passed**（原 33 failed / 39 passed）。已做的是**根治第 2 类**：
+`tests/conftest.py` 加了三道 **autouse** 闸门，任何测试（不只是集成测试）都不可能再污染真实数据或出网：
 
-**预计工作量**：0.5-1 天
+| 闸门 | 钉住什么 | 为什么必须在 conftest 做 |
+|-----|---------|----------------------|
+| `isolate_data_root` | `workspace_manager.WORKSPACES_ROOT` / `PRIVATE_DIR`、`INDEX_SETTINGS_PATH`、`GEMINI_SETTINGS_PATH`、`ENV_PATH`、`CURRENT_WORKSPACE` 环境变量、`st.session_state` | `WORKSPACES_ROOT` 是 **import-time 求值的模块常量**，测试里 patch `PRIVATE_DIR` 对它完全无效——这正是 13 个"以为自己隔离了"的测试实际在写真实目录的原因 |
+| `block_real_llm_calls` | `genai.Client` / `openai.OpenAI` 构造函数 + `llm` 的模块级 client 缓存 | 测试 patch 的是 `scripts.llm.ask_llm`，但调用方全是 `from scripts.llm import ask_llm`（名字已绑进各自 namespace），patch 源模块拦不住任何东西 |
+| `reset_module_caches` | `ask._table` / `ask._all_chunks_cache` | 模块级单例会把上一个测试的 tmp_path 表泄漏给下一个 |
+
+外加 `tests/integration/conftest.py` 提供**确定性** embedding 替身（crc32 当种子：同文本同向量、
+不同文本近正交），这样"该合并的节点必然合并"是可断言的事实而不是概率，也不用加载 2GB 的 BGE-M3。
+
+**剩下的 18 个失败**全属第 1 类（API 签名过时），集中在两个文件：`test_edge_cases.py`（11）、
+`test_ui_features.py`（7）。修法就是照着 `docs/API_REFERENCE.md` 逐个对签名，无新增机制。
+
+**预计剩余工作量**：0.5 天
 
 ### Phase 3: 卓越品质（持续）
 
