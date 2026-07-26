@@ -98,10 +98,9 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 > `import app` 不再顺带执行部分模块级代码 → app.py 31% → 25%。用 1.2 个覆盖率点换掉"测试会污染
 > 真实数据、会打真实 API"，是刻意的取舍。
 
-> ⚠️ 集成测试（`pytest tests/integration/ --integration`）当前 **18 failed / 54 passed**
-> （原为 33 failed / 39 passed）。剩下的失败全是**测试写死了已改签名的 API**这一类既有腐化，
-> 集中在 `test_edge_cases.py` 与 `test_ui_features.py`；污染真实 workspace 那一类已根治。
-> 修剩下的是独立任务，见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+> ✅ 集成测试（`pytest tests/integration/ --integration`）**73 passed / 0 failed**
+> （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
+> 是 **821 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
 ### 测试隔离的三道闸门（`tests/conftest.py`，autouse）
 
@@ -113,10 +112,24 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 | `block_real_llm_calls` | 在 `genai.Client` / `openai.OpenAI` 构造函数上设断路器，漏 mock 时**大声报错**而不是静默出网 |
 | `reset_module_caches` | 清 `ask._table` / `ask._all_chunks_cache`，防模块级单例跨测试泄漏 |
 
-⚠️ 两个反复踩的坑，写测试时记牢：
+⚠️ 三个反复踩的坑，写测试时记牢：
 1. `WORKSPACES_ROOT` 是 **import-time 求值的常量**，patch `PRIVATE_DIR` 对它无效。
 2. Mock LLM 要 patch **调用方 namespace 里的名字**（`scripts.ask.ask_llm` / `scripts.summarize.ask_llm`），
    patch `scripts.llm.ask_llm` 拦不住 `from scripts.llm import ask_llm` 的绑定。
+   同理 `ingest.py` 的 `embed`、`index_records.py` 的 `SUMMARIES_DIR` 都得按调用方模块打。
+3. **不要 patch `streamlit.session_state`**（曾有 autouse fixture 做 `patch("streamlit.session_state", {})`）：
+   `{}` 没有属性赋值语义，`set_current_workspace()` 里的 `st.session_state.current_workspace = x`
+   会直接 `AttributeError`，workspace 切换测了个假。清理已由 `isolate_data_root` 统一负责。
+
+### 集成测试专用 fixtures（`tests/integration/conftest.py`）
+
+集成测试要真的把 parse → chunk → ingest → retrieve 串起来跑，只有两样东西不能用真的：
+
+| fixture | 替掉什么 | 为什么 |
+|---------|---------|-------|
+| `deterministic_embed` | `embedder.embed` / `embed_one`（含 `ingest.py`、`ask.py` 里的 module-level 绑定）| 真 BGE-M3 要 2GB + 每次加载数秒。用 `crc32(text)` 当种子：同文本同向量（余弦 1.0）、不同文本近正交，于是 `resolve_graph()` 的"该合并的必然合并"是可断言的事实而不是概率 |
+| `fake_resp` | LLM 响应对象工厂（`.text` + `.usage_metadata.*_token_count`）| 调用方只用这两处；token 数必须是真整数，MagicMock 会让 `ask.py` 的加法拿到 MagicMock |
+| `no_reranker` | 通过 `index_settings.save()` 关掉 reranker + `min_score` | reranker 是本地真模型，而且假向量在它眼里毫无意义、分数会被阈值滤掉。走**正式配置通路**而不是 patch 内部，测的就是"用户在 UI 里关掉精排"的真实行为 |
 
 ---
 
@@ -230,7 +243,7 @@ python scripts/check_code_patterns.py
 | 静态检查 | ✅ 100% | ✅ 100% | P0 |
 | 导入测试 | ✅ 100% | ✅ 100% | P0 |
 | 单元测试 | 🟡 71%（scripts + app） | ✅ 80% | P1 |
-| 集成测试 | 🟡 18 个失败（既有腐化，原 33 个，见 TESTING_COVERAGE_PLAN 任务 14） | ✅ 全绿 + 60% | P1 |
+| 集成测试 | ✅ 73 passed / 0 failed（2026-07-26 修完腐化，见 TESTING_COVERAGE_PLAN 任务 14） | ✅ 全绿 + 60% | P1 |
 | **整体** | **🟢 71%（≥ hook 的 70% 阈值）** | **✅ 80%** | **P0** |
 
 ---

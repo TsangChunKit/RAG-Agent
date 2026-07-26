@@ -575,10 +575,11 @@ git commit --no-verify -m "emergency fix: ..."
 1. **app.py** (25% → 50%)：正確做法是把「按鈕點下去之後做什麼」抽成 `scripts/` 裡的純函數再測，
    而不是給 `st.*` 佈局代碼硬寫測試（範例：`⚡ 立即入庫` 按鈕的邏輯全在 `ingest_new.pending_raw_files`
    / `ingest_pending`，`tests/unit/test_app.py` 只用 `__wrapped__` 取出彈窗內層函數驗分支）
-2. **集成測試腐化**：`pytest tests/integration/ --integration` 現為 18 failed / 54 passed
-   （原 33 failed；污染真實 workspace 那一類已於 2026-07-26 根治，剩下的全是測試寫死了已改簽名的
-   API，集中在 `test_edge_cases.py` / `test_ui_features.py`），詳見
-   `docs/TESTING_COVERAGE_PLAN.md` 任務 14
+2. ~~**集成測試腐化**~~ ✅ 已於 2026-07-26 修完：`pytest tests/integration/ --integration`
+   現為 **73 passed / 0 failed**（歷程 33 → 18 → 全綠），全套 `pytest tests/ --integration`
+   為 821 passed。一個測試都沒刪，每個原有測試名和意圖都保留、只把斷言改成對著真實 API。
+   寫集成測試前先看 `docs/TESTING_STRATEGY.md` 的「三道閘門」+「集成測試專用 fixtures」，
+   踩過的坑清單在 `docs/TESTING_COVERAGE_PLAN.md` 任務 14
 
 ### 優先級 P1
 

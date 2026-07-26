@@ -118,7 +118,7 @@ def retrieve(
                 "end_ts": str,               # 窗口结束时间戳
                 "chunk_index_range": tuple,  # (起始 chunk_index, 结束 chunk_index)
                 "text": str,                 # 片段文本（父块/窗口扩展后）
-                "rank": int,                 # 排序（越小越相关）
+                "rank": int,                 # 排序，**从 0 起算**（越小越相关）
                 "score": Optional[float],    # 窗口内最高的精排分数；关了 reranker 时为 None
                 "below_threshold": bool,     # 有分数且低于 min_score（= 保底片段）
             }
@@ -134,6 +134,11 @@ def retrieve(
 
 > `score is None` 表示"没有分数可比"（关了 reranker，或走的是心智地图证据日那条内存检索
 > 通路），**不等于"不相关"**——下游不要把 None 当成低分处理。
+
+> ⚠️ **空向量库**（该 workspace 还没入过库、`sessions` 表不存在）时 `retrieve()` 抛
+> `ValueError: Table 'sessions' was not found`，**不是**返回 `[]`。这是有意的：静默返回空会把
+> "库是空的"伪装成"检索不到"。UI 侧的防线在 `app.py`——先看 `list_indexed_records()`，
+> 空库直接提示"向量库还是空的"，压根不会走到这里。
 
 #### `_filter_by_score()`（内部）
 ```python
@@ -322,6 +327,151 @@ def list_workspaces() -> list[dict]:
     注意：返回项不含 domain 字段；如需 domain 请用 load_workspace_config(name)。
     列表包含 _legacy（若旧路径数据存在），并按 name 排序。
     """
+```
+
+#### `get_workspace_dir()`
+```python
+def get_workspace_dir(workspace_id: Optional[str] = None) -> Path:
+    """
+    获取 workspace 根目录（None = 当前 workspace）。
+
+    降级顺序：workspace 存在 → 返回它；WORKSPACES_ROOT 整个不存在 → 返回 PRIVATE_DIR
+    （旧结构兼容）；否则 raise ValueError("Workspace not found: ...")。
+    workspace_id == "_legacy" 时直接返回 PRIVATE_DIR。
+    """
+```
+
+#### `load_workspace_config()`
+```python
+def load_workspace_config(workspace_id: Optional[str] = None) -> dict:
+    """
+    加载 workspace 配置，缺失字段用 DEFAULT_WORKSPACE_CONFIG 顶上。
+
+    ⚠️ 配置文件是坏 JSON 时**不抛异常**：打印一行警告后整体降级到
+    DEFAULT_WORKSPACE_CONFIG。刻意如此——配置被编辑器写坏时整个 app 不该打不开，
+    用户至少还能进 UI 把它改回来。
+    """
+```
+
+#### `set_current_workspace()`
+```python
+def set_current_workspace(workspace_id: str) -> None:
+    """
+    切换当前 workspace：写 st.session_state（非 Streamlit 环境退回环境变量
+    CURRENT_WORKSPACE）。
+
+    ⚠️ st.session_state 是**进程级**的，测试里必须清（见 tests/conftest.py），
+    也不要 patch 成普通 dict——`{}` 不支持属性赋值，这行会 AttributeError。
+    """
+```
+
+---
+
+## scripts/index_settings.py
+
+六组索引参数的 JSON 读写层（`private.nosync/index_settings.json`）。**只有分组读函数 + 全量
+写函数**，没有 `load()`、没有 `update(key=value)`：分组是刻意的，混成一个扁平 dict 就看不出
+哪些改动要重建索引、哪些下一次问答就生效。
+
+```python
+retrieval_params()      -> {"top_k", "window_expand"}                     # 查询期，立即生效
+chunking_params()       -> {"chunk_size", "chunk_overlap"}                # 只影响之后新入库的
+embedding_params()      -> {"model", "device", "batch_size", "use_fp16"}   # model/device 改动需重启
+fts_params()            -> {"base_tokenizer", "ngram_min", "ngram_max"}    # 改完需重建索引
+reranker_params()       -> {"use_reranker", "rerank_top_k", "final_top_k",
+                            "min_score", "min_keep", "model", "device", "use_fp16"}
+graph_evidence_params() -> {"max_dates", "fragments_per_date", "window_expand", "include_summary"}
+
+load_for_ui() -> dict   # 上面六组打包成 {"retrieval": ..., "chunking": ..., ...}
+save(retrieval, chunking, embedding, fts, reranker, graph_evidence) -> None  # 六组全给
+reset() -> None         # 删掉设置文件 = 全部回退 config.py 常量
+```
+
+缺失/为 `None` 的字段一律用 `config.py` 常量顶上（`False` 会保留，不当作缺失）。
+
+> ⚠️ **这一层刻意不做取值校验**：写 `chunk_size = -1` 会原样存下来。边界靠唯一的写入来源
+> ——「⚙️ 索引设置」表单的 `st.number_input("分块大小 chunk_size（字符）", 100, 2000, ...)`。
+> 改动那个 widget 的上下界时，记得 `tests/integration/test_edge_cases.py::test_negative_chunk_size`
+> 会跟着炸（它断言了那行代码），这是提醒而不是噪音。
+
+---
+
+## scripts/graph_utils.py
+
+#### `resolve_graph()`
+```python
+def resolve_graph(fragments: list[dict], threshold: float = MERGE_SIM_THRESHOLD,
+                  schema: Optional[dict] = None) -> dict:
+    """
+    reduce 步：把逐份咨询抽出的子图归并成一张全局图（纯 Python + 一次本地 BGE 批量向量化，
+    不调 LLM）。
+
+    ⚠️ 只吃**一个** fragments 列表，第二个位置参数是相似度阈值——不是 edges。
+
+    Args:
+        fragments: [{"nodes", "edges", "session_date", ...}, ...]
+
+    Returns:
+        {"nodes": [...], "edges": [...]}；同类型内语义相似度 ≥ threshold 的节点合并成一个
+        规范节点（id 形如 "schema:0"），description 取最长的那份、related_dates 取并集；
+        边重映射到规范 id 后按 (源, 目标, 关系类型) 去重并合并 evidence_dates。
+        空列表 / 节点为空的 fragment → {"nodes": [], "edges": []}。
+    """
+```
+
+#### `merge_graphs()`
+```python
+def merge_graphs(therapy_graph: Optional[dict], chat_graph: Optional[dict]) -> Optional[dict]:
+    """
+    合并真实咨询图谱（source=therapy）和 AI 对话记忆图谱（source=chat）。
+
+    ⚠️ 两个**固定角色**的位置参数，不是 merge_graphs([g1, g2])——正因为角色固定，
+    source 标签才能自动打上（UI 靠它区分颜色）。
+    任一边为 None 时原样返回另一边，两边都为 None 返回 None（优雅降级）。
+    合并后会重算中心性（跨图的边会改变连接度，半张图上算的值不代表全局重要程度）。
+    """
+```
+
+#### `compute_centrality()`
+```python
+def compute_centrality(graph: dict) -> None:
+    """原地给每个节点写 degree_centrality / betweenness_centrality（保留 4 位小数）。"""
+```
+
+---
+
+## scripts/index_records.py
+
+#### `list_indexed_records()`
+```python
+def list_indexed_records(workspace_id: Optional[str] = None) -> list[dict]:
+    """
+    读 chunks.jsonl 按 source_file 聚合成已索引清单（真相源是分块产物，不查 LanceDB）。
+
+    Returns:
+        [{"source_file", "session_date", "n_chunks", "has_summary"}]，
+        按 (session_date, source_file) **倒序**（新的在前）。
+        文件不存在或为空 → []（app.py 用它判断"向量库还是空的"）。
+    """
+```
+
+#### `load_change_log()`
+```python
+def load_change_log(limit: int = 50, workspace_id: Optional[str] = None) -> list[dict]:
+    """读取最近 limit 条索引变更记录，最新的在前；坏行跳过（不让审计日志的半行毁掉整页）。"""
+```
+
+---
+
+## scripts/chat_store.py
+
+```python
+new_session_id() -> str                       # 12 位十六进制
+list_sessions(workspace_id=None) -> list[dict]
+load_session(session_id, workspace_id=None) -> dict
+save_session(session_id, title, messages, created_at=None, workspace_id=None) -> None
+delete_session(session_id, workspace_id=None) -> None
+make_title(first_message: str) -> str         # 换行压成空格，截 24 字 + "…"（单字符省略号）
 ```
 
 ---

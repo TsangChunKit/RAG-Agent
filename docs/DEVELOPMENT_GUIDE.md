@@ -248,32 +248,48 @@ open htmlcov/index.html
 ```python
 """tests/integration/test_new_feature_integration.py"""
 import pytest
-from unittest.mock import patch
+
+pytestmark = pytest.mark.integration
 
 
 class TestNewFeatureIntegration:
     """新功能集成测试"""
-    
-    @patch('scripts.llm.ask_llm')
-    @patch('scripts.embedder.embed_one')
-    def test_full_pipeline(self, mock_embed, mock_llm):
-        """测试完整流程"""
-        mock_embed.return_value = [0.1] * 768
-        mock_llm.return_value = "LLM response"
-        
-        from scripts.new_feature import main_function
-        
-        result = main_function("input")
-        
+
+    def test_full_pipeline(self, monkeypatch, deterministic_embed, fake_resp):
+        """测试完整流程（文件 I/O 用真的，只有 embedding 和 LLM 用替身）"""
+        from scripts import new_feature
+
+        # ⚠️ patch 的是**调用方 namespace 里的名字**。new_feature.py 写的是
+        # `from scripts.llm import ask_llm`，名字在 import 时就绑进它自己的 namespace 了，
+        # patch("scripts.llm.ask_llm") 拦不到任何东西——历史上一批"mock 了 LLM"的集成测试
+        # 其实在打真实 API，就是这么来的。
+        monkeypatch.setattr(new_feature, "ask_llm",
+                            lambda contents, **kw: fake_resp("LLM response"))
+
+        result = new_feature.main_function("input")
+
         assert result is not None
-        mock_embed.assert_called()
-        mock_llm.assert_called()
 ```
+
+三条约定（详见 [TESTING_STRATEGY.md](./TESTING_STRATEGY.md)）：
+
+1. **数据隔离不用自己做** —— `tests/conftest.py` 的 autouse 闸门已经把 `WORKSPACES_ROOT`、
+   `INDEX_SETTINGS_PATH`、`GEMINI_SETTINGS_PATH`、`ENV_PATH`、`st.session_state` 全钉进
+   `tmp_path`。**不要**自己 patch `PRIVATE_DIR`（它是 import-time 求值的，patch 无效）。
+2. **embedding / LLM 用 `tests/integration/conftest.py` 的替身** —— `deterministic_embed`
+   （同文本同向量，不加载 2GB 模型）、`fake_resp`、`no_reranker`。别手写
+   `mock_embed.return_value = [0.1] * 768`：维度是 1024，而且 `ingest.py` 用的是 module-level
+   绑定的 `embed`，patch `scripts.embedder.embed` 对它无效。
+3. **其余全用真的** —— 真 LanceDB、真文件 I/O。集成测试的价值就在于验"接起来还能跑通"，
+   把邻居都 mock 掉就退化成单元测试了。
 
 #### 5.2 运行集成测试
 
 ```bash
 pytest tests/integration/test_new_feature_integration.py --integration -v
+
+# 全套（unit + integration），提交前跑一次；当前基线 821 passed / 0 failed
+pytest tests/ --integration -q
 ```
 
 ---

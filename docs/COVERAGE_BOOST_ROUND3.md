@@ -305,6 +305,7 @@ scripts/: 53% → 61% (+8%)
 >
 > ⚠️ 集成测试另有 33 个失败，是既有腐化（陈旧 API + 污染真实 workspace 目录），
 > 见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+> （2026-07-26 补记：这 33 个已全部修完，集成测试现为 73 passed / 0 failed。）
 
 ### 开发投入
 

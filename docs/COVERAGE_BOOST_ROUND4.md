@@ -63,7 +63,9 @@ pytest tests/unit/ --cov=scripts --cov-report=term-missing --cov-fail-under=70
 （`RAW_DIR` / `SUMMARIES_DIR` / `CHUNKS_JSONL_PATH` / …），**不碰真实 workspace**。
 这和集成测试现存的毛病正好相反——`tests/integration/` 里有些测试直接往
 `private.nosync/workspaces/` 建 `ws1` / `ws2` / `test-ws`，跑完不清理，下一轮撞
-`Workspace already exists`（见 `TESTING_COVERAGE_PLAN.md` 任务 14，仍待修）。
+`Workspace already exists`（见 `TESTING_COVERAGE_PLAN.md` 任务 14）。
+（2026-07-26 补记：已根治——隔离改成 `tests/conftest.py` 里的 autouse 闸门，
+不再靠每个测试自觉；集成测试同时修到全绿。）
 
 两个模块级全局状态需要在测试间清空，否则测试互相污染：
 `raw_ingest_watcher._failed`（用 autouse fixture 清）。

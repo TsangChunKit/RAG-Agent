@@ -161,7 +161,7 @@
 
 **实际工作量**：约 0.5 天（7 个测试文件，126 个新测试：597 → 723）
 
-#### 任务 14: 修复集成测试腐化（2026-07-25 新增，优先级 P0）—— 🟡 一半完成
+#### 任务 14: 修复集成测试腐化（2026-07-25 新增，优先级 P0）—— ✅ 已完成（2026-07-26）
 
 `pytest tests/integration/ --integration` 原本 **33 个失败，与被测代码无关**，两类原因：
 
@@ -172,8 +172,11 @@
    建在真实的 `private.nosync/workspaces/` 下。上一轮跑完不清理，下一轮就撞
    `ValueError: Workspace already exists: ws1`；`test-workspace/` 甚至已被误提交进 git。
 
-**2026-07-26 进展：18 failed / 54 passed**（原 33 failed / 39 passed）。已做的是**根治第 2 类**：
-`tests/conftest.py` 加了三道 **autouse** 闸门，任何测试（不只是集成测试）都不可能再污染真实数据或出网：
+**最终结果：73 passed / 0 failed**（历程 33 failed → 18 failed → 全绿；全套
+`pytest tests/ --integration` = 821 passed）。**一个测试都没删** —— 每个原有测试名和它的意图
+都保留，只把断言重写成对着真实 API。
+
+第 2 类的根治：`tests/conftest.py` 加了三道 **autouse** 闸门，任何测试（不只是集成测试）都不可能再污染真实数据或出网：
 
 | 闸门 | 钉住什么 | 为什么必须在 conftest 做 |
 |-----|---------|----------------------|
@@ -181,13 +184,30 @@
 | `block_real_llm_calls` | `genai.Client` / `openai.OpenAI` 构造函数 + `llm` 的模块级 client 缓存 | 测试 patch 的是 `scripts.llm.ask_llm`，但调用方全是 `from scripts.llm import ask_llm`（名字已绑进各自 namespace），patch 源模块拦不住任何东西 |
 | `reset_module_caches` | `ask._table` / `ask._all_chunks_cache` | 模块级单例会把上一个测试的 tmp_path 表泄漏给下一个 |
 
-外加 `tests/integration/conftest.py` 提供**确定性** embedding 替身（crc32 当种子：同文本同向量、
-不同文本近正交），这样"该合并的节点必然合并"是可断言的事实而不是概率，也不用加载 2GB 的 BGE-M3。
+外加 `tests/integration/conftest.py` 提供三个替身：`deterministic_embed`（crc32 当种子：同文本
+同向量、不同文本近正交，"该合并的节点必然合并"于是是可断言的事实而不是概率，也不用加载 2GB 的
+BGE-M3）、`fake_resp`（LLM 响应工厂）、`no_reranker`（走 `index_settings.save()` 正式通路关掉精排）。
+详见 [TESTING_STRATEGY.md](./TESTING_STRATEGY.md#集成测试专用-fixtures-testsintegrationconftestpy)。
 
-**剩下的 18 个失败**全属第 1 类（API 签名过时），集中在两个文件：`test_edge_cases.py`（11）、
-`test_ui_features.py`（7）。修法就是照着 `docs/API_REFERENCE.md` 逐个对签名，无新增机制。
+第 1 类（API 签名过时）的修法是把 `test_full_pipeline.py` / `test_full_workflow.py` /
+`test_edge_cases.py` / `test_ui_features.py` **逐个测试重写**，对着代码而不是对着记忆写断言。
+过程中发现的一批"测试幻想出来的 API"，同时也是给文档的校正清单：
 
-**预计剩余工作量**：0.5 天
+| 测试以为的 | 实际的 |
+|-----------|-------|
+| `index_settings.load()` / `.update(chunk_size=...)` | 只有六个分组读函数 + `load_for_ui()` / `save(六组全给)` / `reset()`；**刻意不做校验**，边界靠 UI 的 `st.number_input(..., 100, 2000, ...)` 兜 |
+| `merge_graphs([g1, g2])` | `merge_graphs(therapy_graph, chat_graph)`——合并的是两个固定角色，所以能自动打 `source` 标签；任一边为 `None` 时原样返回另一边 |
+| `resolve_graph(nodes, edges)` | `resolve_graph(fragments, threshold=...)`——第二个位置参数是阈值，旧测试传 `[]` 只是"恰好没报错" |
+| `create_workspace(...) -> workspace_id` | 返回 `Path`（workspace 根目录），id 是 `.name` |
+| `parse_transcript(str)` + `result.turns[i].user_text` | 吃 `Path`，返回 `ParsedSession.utterances`（发言列表，不是 user/assistant 轮次对）；逐字稿格式是 `发言人(HH:MM:SS): 文本`，文件名前 14 位必须是 `YYYYMMDDHHMMSS` |
+| `ingest(list[Chunk], rebuild=True)` | `ingest(list[dict], mode="overwrite"/"append")` |
+| `make_title()` 截 50 字 + `"..."` | 截 **24** 字 + 单字符 `"…"` |
+| `load_workspace_config()` 遇坏 JSON 抛 `JSONDecodeError` | 捕获后**降级**到 `DEFAULT_WORKSPACE_CONFIG`（配置写坏时 app 仍打得开） |
+| `retrieve()` 空库返回 `[]` | 抛 `ValueError: Table 'sessions' was not found`（有意的失败可见性；UI 侧由 `list_indexed_records()` 提前挡掉） |
+| `list_indexed_records()` 按日期正序 | 按 `(session_date, source_file)` **倒序**（新的在前） |
+| `answer()` 吞掉 LLM 异常 | 直接向上抛，让 app.py 显示真实错误而不是伪装成"没有相关记录" |
+
+**实际工作量**：约 0.5 天（4 个集成测试文件重写，无一删除）
 
 ### Phase 3: 卓越品质（持续）
 
@@ -204,41 +224,41 @@
 
 ### 1. Mock 策略
 
+**patch 调用方 namespace，不是定义处**（任务 14 里 13 个测试栽在这一点上）：
+
 ```python
-# Mock LLM 调用
-@patch('scripts.llm.ask_llm')
-def test_answer(mock_llm):
-    mock_llm.return_value = "Mocked response"
-    result = answer("test question")
+# ✅ ask.py 写的是 `from scripts.llm import ask_llm`，名字绑在 scripts.ask 里
+def test_answer(monkeypatch, fake_resp):
+    from scripts import ask
+    monkeypatch.setattr(ask, "ask_llm", lambda contents, **kw: fake_resp("Mocked response"))
+    result = ask.answer("test question")
     assert result["answer"] == "Mocked response"
 
-# Mock Embeddings
-@patch('scripts.embedder.embed_one')
-def test_retrieve(mock_embed):
-    mock_embed.return_value = [0.1] * 768
-    results = retrieve("test query")
-    assert len(results) > 0
+# ❌ patch("scripts.llm.ask_llm") 拦不到 ask.py 里已绑定的名字——
+#    测试照样打真实 API（现已被 conftest 的 block_real_llm_calls 兜住）
+
+# Embeddings 用 tests/integration/conftest.py 的 deterministic_embed，
+# 它一次性 patch 掉 embedder / ingest / ask 三处绑定；维度是 1024（EMBEDDING_DIM），不是 768
 ```
 
 ### 2. Fixture 策略
 
 ```python
-# 共享测试数据
+# 共享测试数据（真实 dataclass：ParsedSession 是 utterances，不是 turns）
 @pytest.fixture
 def sample_session():
+    from scripts.parse import ParsedSession, Utterance
     return ParsedSession(
-        source_file="test.txt",
+        source_file="20260101000000_测试.txt",
         session_date="2026-01-01",
-        turns=[...]
+        file_datetime="20260101000000",
+        utterances=[Utterance(speaker="来访者", timestamp="00:00:01", text="你好", line_no=1)],
     )
 
-# 隔离环境
-@pytest.fixture
-def isolated_workspace(tmp_path):
-    workspace = tmp_path / "test_workspace"
-    workspace.mkdir()
-    yield workspace
-    # pytest 自动清理
+# 隔离环境：不用自己写。tests/conftest.py 的 autouse isolate_data_root
+# 已经把 WORKSPACES_ROOT / INDEX_SETTINGS_PATH / GEMINI_SETTINGS_PATH / ENV_PATH
+# 全钉进 tmp_path，并预置了 DEFAULT_TEST_WORKSPACE。
+# 需要"连 workspace 都不存在"的场景，用 empty_workspaces_root fixture。
 ```
 
 ### 3. 参数化测试
