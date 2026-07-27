@@ -13,3 +13,5 @@ tqdm
 streamlit        # M7 网页聊天界面
 watchdog         # Streamlit 事件驱动文件监控（热重载）；不装会回退到轮询监控，刷屏且吃 CPU，见 .streamlit/config.toml
 pyvis            # M7 扩展：核心人物/议题/事件关系图可视化
+pypdf            # scripts/book_ingest.py：提取有文字层 PDF 古籍/书籍的文本
+python-docx      # scripts/book_ingest.py：提取 .docx 书籍/笔记的文本

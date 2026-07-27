@@ -53,6 +53,45 @@ raw/ 新增 .txt  ───────┼─ UI「📚 已索引的咨询记录
 变更记录全都没跑，而看门狗永远不会重试它（2026-07-26 真实事故，见 `tests/unit/test_ingest_new.py`
 的 `TestFailureLeavesNoPhantomIndex`）。反过来最坏只是下次重试一遍，是可恢复的。
 
+#### 1c. 非逐字稿文档入库适配器（`scripts/book_ingest.py`）
+
+现有入库流水线（parse.py / chunk.py / ingest_new.py）是围绕"逐字稿"设计的两条硬约束：
+文件名必须有 14 位日期前缀（`config.FILENAME_DATETIME_RE`），每行必须匹配
+`发言人(HH:MM:SS): 文本`（`config.TRANSCRIPT_LINE_RE`）。书籍/参考资料类文档（如八字/紫微
+古籍，见 `bazhai-ziwu` workspace）既没有真实日期也没有对话结构，不满足这两条约束。
+
+```
+书籍源文件 (.pdf / .docx / .txt)
+    ↓
+[book_ingest.extract_text()]      按后缀分发：pypdf / python-docx / 直接读取
+    ↓
+[book_ingest.clean_book_text()]   剥离网页抓取噪音（页眉/页脚/检索框提示/黏在正文首尾的噪音子串）
+    ↓                                  （逐字拆行源只去空行，避免误伤单字行里的数字/叠字）
+[book_ingest._reflow_to_paragraphs()]  按句末标点 + 长度上限重新聚合成段落
+    ↓                                  （竖排 PDF 常被 pypdf 逐字符拆行，必须先重新分段，
+    ↓                                   否则每个"发言"只有 1 字却要背整条前缀，噪音占比可达 94%）
+[book_ingest._strip_glued_noise()]    reflow 后再清一遍（ctext URN/URL/版权/wiki 工具栏等
+    ↓                                  噪音本身也可能是逐字拆行，拼回连续子串后才能匹配）
+[book_ingest.convert_book_to_transcript()]  渲染成「原文(00:00:00): 段落」格式的合成逐字稿
+    ↓                                        文件名 = 固定哨兵日期 19000101 + 6 位序号 + 书名
+写入 workspace 的 raw/
+    ↓
+[book_ingest._ingest_chunks_only()]  parse → chunk → ingest(append) → chunks.jsonl → changelog
+    ↓                                （幂等：已入库的 source_file 直接跳过）
+向量数据库
+```
+
+**⚠️ 故意不调用 `ingest_new.ingest_pending()` / `ingest_new_file()`**：那两个函数入库后无条件
+调用 `summarize_session()`（`scripts/summarize.py`），而它的 system instruction 硬编码
+"你是一位心理咨询记录整理助手"、schema 要求 `emotional_tone` / `psychological_themes` 等
+心理咨询专用字段——对书籍类内容答非所问，而且是把整份提取文本（本项目古籍单份可达 20 万+
+字符）一次性塞进单次 LLM 调用。`book_ingest.py` 因此只复用 `parse.py` / `chunk.py` /
+`scripts.ingest.ingest()` 做分块入库，跳过摘要和 `update_memory()`——这类 workspace 里
+`list_indexed_records()` 看到的 `has_summary` 会一直是 `False`，这是预期行为，不是 bug。
+
+这是一层薄适配（via negativa）：不改动 parse/chunk/ingest_new/summarize 任何一行，出问题
+删掉对应 workspace 即可完全回退，不影响其他 workspace（如 `counseling`）。
+
 ### 2. 摘要生成流程
 
 ```
@@ -182,6 +221,9 @@ Layer 5: 应用
 ├─ update_memory.py   # 记忆更新
 ├─ ingest_new.py      # 增量入库编排（parse→chunk→ingest→summarize→update_memory）
 │                     #   + pending_raw_files() / ingest_pending()：待入库判定的单一真相源
+├─ book_ingest.py     # 非逐字稿文档入库适配器（PDF/DOCX/TXT→合成逐字稿→parse→chunk→ingest，
+│                     #   跳过 summarize/update_memory，见 §1c）；只依赖 parse/chunk/ingest/
+│                     #   index_records，不依赖 ingest_new.py
 └─ context_cache.py   # 缓存管理
 
 Layer 5.5: 常驻看门狗（launchd，非 Streamlit 进程）

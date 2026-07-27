@@ -732,6 +732,101 @@ for f in result["failed"]:
 
 ---
 
+## scripts/book_ingest.py
+
+非逐字稿文档（PDF/DOCX/TXT 书籍/参考资料）→ 合成逐字稿 → 入库的适配器，详见
+`docs/ARCHITECTURE.md` §1c。**不调用 `summarize_session()` / `update_memory()`**——那套
+prompt 是心理咨询专用的，见下方 `ingest_book_folder()` 的说明。
+
+#### `extract_text()`
+```python
+def extract_text(path: Path) -> str:
+    """按后缀分发到 extract_pdf_text() / extract_docx_text() / extract_txt_text()。
+
+    Raises:
+        ValueError: 不支持的文件类型；或（PDF）疑似扫描件无文字层（页均字符数 < 20），
+            需要先做 OCR。
+    """
+```
+
+#### `clean_book_text()`
+```python
+def clean_book_text(text: str) -> str:
+    """剥离网页抓取常见噪音：独立成行的页眉/页脚/检索框提示 + 黏在正文首尾的噪音子串
+    （如 ctext.org 每页附带的来源 URL/页码、"喜歡我們的網站？"引导语）+ 连续重复的运行页眉
+    + 空行。保留原有分段（一行一段落）。
+
+    若输入主要是「一行一字」（竖排 PDF），只去空行、不做整行去重/页码过滤——那些规则会
+    误伤 URN 数字和叠字；噪音留给 reflow 后的 _strip_glued_noise()。
+    """
+```
+
+#### `convert_book_to_transcript()`
+```python
+def convert_book_to_transcript(
+    path: Path,
+    workspace_id: str,
+    seq: int = 0,
+    title: Optional[str] = None,
+) -> Path:
+    """把一本书转换成「合成逐字稿」，写进 workspace 的 raw/，返回写入路径。
+
+    内部流程：clean_book_text() → _reflow_to_paragraphs()（按句末标点 + 长度上限重新聚合
+    成段落——竖排 PDF 常被 pypdf 逐字符拆行，必须重新分段，否则每个"发言"只有 1 字却要
+    背整条「原文(00:00:00): 」前缀，噪音占比可达 94%）→ 对每段 _strip_glued_noise() 再
+    过滤纯噪音段（ctext URN/URL/版权/wiki 工具栏等噪音本身也可能是逐字拆行，拼回连续子串
+    后才能匹配）→ 每段渲染成一行 `原文(00:00:00): 段落`。文件名 = 固定哨兵日期 19000101
+    + 6 位 seq + 书名，满足 parse.py 的 14 位日期前缀约定。
+
+    Args:
+        path: 源文件（.pdf / .docx / .txt）
+        workspace_id: 目标 workspace
+        seq: 同批转换里的序号（拼时间戳后 6 位，保证同批文件名互不冲突）
+        title: 显示用书名，默认取源文件去后缀的文件名
+
+    Raises:
+        ValueError: 提取后没有可用文本（清洗/过滤后段落为空）
+    """
+```
+
+#### `ingest_book_folder()`
+```python
+def ingest_book_folder(
+    src_dir: Path,
+    workspace_id: str,
+    skip_files: Optional[List[str]] = None,
+) -> Dict[str, list]:
+    """批量转换 + 入库一个目录下所有 .pdf/.docx/.txt（供命令行/一次性任务调用）。
+
+    每份文件独立转换、独立入库，一份失败不影响其余。转换成功的文件走
+    parse→chunk→向量化入库（幂等，已入库的 source_file 直接跳过），**不生成摘要、
+    不更新长期记忆**——`scripts/summarize.py` 的 system instruction 硬编码
+    "你是一位心理咨询记录整理助手"，schema 要求 emotional_tone/psychological_themes
+    等字段，对书籍类内容答非所问，而且是把整份提取文本（本项目古籍单份可达 20 万+
+    字符）一次性塞进单次 LLM 调用，纯属浪费。
+
+    Args:
+        src_dir: 源目录（.pdf/.docx/.txt 混放即可，其余后缀原样跳过，不计入结果）
+        workspace_id: 目标 workspace
+        skip_files: 文件名黑名单（如已知的扫描件，先跳过等 OCR 好了再入库）
+
+    Returns:
+        {
+            "converted": [文件名, ...],
+            "convert_failed": [{"file", "error"}, ...],
+            "ingested": [文件名, ...],
+            "failed": [{"file", "error"}, ...],
+        }
+    """
+```
+
+用法：
+```bash
+python -m scripts.book_ingest <源目录> <workspace_id> [跳过文件名...]
+```
+
+---
+
 ## scripts/settings.py
 
 运行期可调参数 + LLM 后端选择的读写口。每次调用都重读 `GEMINI_SETTINGS_PATH`，改完下一次调用即生效。

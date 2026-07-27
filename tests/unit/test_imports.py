@@ -70,6 +70,7 @@ class TestImports:
         """一次性导入所有核心模块。"""
         from scripts import (
             ask,
+            book_ingest,
             build_graph,
             chunk,
             graph_schema_loader,

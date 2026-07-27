@@ -68,6 +68,25 @@ create_workspace(
 )
 ```
 
+#### 3. 入库非逐字稿文档（书籍 / PDF / DOCX / TXT 参考资料）
+
+现有入库流水线是围绕"逐字稿"设计的（文件名要 14 位日期前缀、每行要
+`发言人(HH:MM:SS): 文本` 格式）。像八字/紫微古籍这类没有日期、没有对话结构的书籍/
+参考资料，用 `scripts/book_ingest.py` 这个薄适配器转换后再入库（不改动 parse/chunk/
+ingest_new 任何一行，细节见 `docs/ARCHITECTURE.md` §1c）：
+
+```bash
+# 支持 .pdf（需要文字层，扫描件会报错提示先做 OCR）/ .docx / .txt
+# 会自动清洗常见网页抓取噪音（页眉/页脚/检索框提示），并把竖排 PDF 常见的逐字符断行
+# 重新聚合成正常段落，再转成合成逐字稿入库
+python -m scripts.book_ingest <源目录> <workspace_id> [跳过的文件名...]
+```
+
+⚠️ 这条通路**只做分块入库，不生成摘要、不更新长期记忆**——`scripts/summarize.py` 的摘要
+prompt 是心理咨询专用的（system instruction 写死"你是一位心理咨询记录整理助手"），对
+书籍内容答非所问，所以这类 workspace 里「已索引的记录」的 `has_summary` 会一直是
+`False`，这是预期行为。
+
 ### Workspace 目录结构
 
 ```
