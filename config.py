@@ -160,22 +160,21 @@ EMBEDDING_BATCH_SIZE = 256       # M5 Pro/48GB 实测 256 明显更快且稳定�
 
 # ---- LanceDB ----
 LANCEDB_TABLE_NAME = "sessions"
-# FTS 关键词侧的分词器：目前用 ngram(2-3字符)，zero-dependency，已验证可用。
+# FTS 关键词侧的分词器：默认 jieba/default（真正的中文分词）。
 #
-# 想用 jieba/default 做真正的中文分词？2026-07-25 排查过，目前环境用不了，原因不是词典缺失：
+# 背景（2026-07-25 排查 → 2026-07-30 Python 3.12 升级后解开）：
 #   - jieba tokenizer 是 lance-index 的 optional Cargo feature `tokenizer-jieba`，
-#     lancedb（PyPI 预编译 wheel）从 0.29.0 起才在这个 feature 上编译，
-#     而 0.29.0+ 全部要求 Python>=3.10（用 `strings` 对比过 0.27.1 与 0.34.0 的
-#     `_lancedb.abi3.so`，0.27.1 完全没有 jieba-rs/lindera 符号）。
-#   - 本项目 venv 目前钉在 Python 3.9（见 README §五 / CLAUDE.md 的 3.9 兼容性规则），
-#     pip 在 3.9 下能装到的最高版本就是 lancedb 0.27.1，所以 base_tokenizer="jieba/default"
-#     一定会命中 lance-index 里 `_ => Err("unknown base tokenizer ...")` 的 fallback 分支。
-#   - jieba 词典本身已经下载好、格式正常（~/Library/Application Support/lance/language_models/
-#     jieba/default/dict.txt），不需要重新下载；升级 Python 到 3.10+ 并把 lancedb 升到 >=0.29
-#     之后，把这行改回 "jieba/default" 即可直接生效，不用碰词典。
-#   - Python 3.9 → 3.10+ 升级是单独排期的架构改动（影响 venv/CI matrix/lint 规则等），
-#     不要为了 jieba 顺便升级。
-FTS_BASE_TOKENIZER = "ngram"
+#     lancedb 官方 wheel 从 0.29.0 起才编译该 feature，且 0.29.0+ 要求 Python>=3.10。
+#   - 旧环境钉在 Python 3.9 时只能装到 lancedb 0.27.1（无 jieba 符号），因此长期
+#     退回 ngram(2-3 字符)。venv 现为 3.12 + lancedb>=0.29（见 pyproject.toml），
+#     已实测 create_fts_index(base_tokenizer="jieba/default") 可用。
+#   - 词典路径：~/Library/Application Support/lance/language_models/jieba/default/dict.txt
+#     （若缺失：见 README §五 的一次性下载步骤）。
+#   - ngram 仍可作为兜底：在「⚙️ 索引设置」把 base_tokenizer 改回 "ngram" 即可
+#    （ngram_min/max 只在 base_tokenizer=ngram 时生效）。改分词器后必须重建 FTS。
+#   - 注意：config.py 只是 defaults；实际运行值来自 private.nosync/index_settings.json，
+#     改完要同步设置文件或 UI，再重建索引。
+FTS_BASE_TOKENIZER = "jieba/default"
 FTS_NGRAM_MIN_LENGTH = 2
 FTS_NGRAM_MAX_LENGTH = 3
 

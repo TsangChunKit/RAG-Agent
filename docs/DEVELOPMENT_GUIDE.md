@@ -19,7 +19,7 @@ Read docs/ARCHITECTURE.md      # 了解架构
 
 # 2. 确认环境
 source .venv/bin/activate
-python --version  # 确保 Python 3.9+
+python --version  # 确保 Python 3.12.x（pyproject requires-python ==3.12.*）
 pytest --version  # 确保测试工具可用
 
 # 3. 运行基础检查
@@ -537,18 +537,16 @@ def my_function():
 
 ## 代码规范速查
 
-### Python 3.9 兼容性
+### 类型注解（Python 3.12）
 
 ```python
-# ❌ 不兼容
-def func() -> dict | None:
-def func() -> str | int:
-
-# ✅ 兼容
+# 两种写法都合法；项目不强制某一种
 from typing import Optional, Union
 
-def func() -> Optional[dict]:
-def func() -> Union[str, int]:
+def func_a() -> dict | None:       # PEP 604（3.10+）
+def func_b() -> Optional[dict]:    # typing.Optional（同样 OK）
+def func_c() -> str | int:
+def func_d() -> Union[str, int]:
 ```
 
 ### 导入顺序

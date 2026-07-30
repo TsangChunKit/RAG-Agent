@@ -3,9 +3,9 @@
 
 捕获常见错误模式：
 1. 路径函数被当作 Path 对象使用
-2. 缺少 workspace_id 参数
-3. Optional 导入在文档字符串内
-4. Python 3.9 不兼容的类型注解
+2. 缺少 workspace_id 参数（仅 app.py / pages/ 警告）
+3. Optional 导入在文档字符串内（已停用，恒返回空）
+4. 类型注解兼容性（已停用：项目钉 Python 3.12，PEP 604 合法）
 
 用法：
     python scripts/check_code_patterns.py              # 检查所有文件（不含 tests/）
@@ -13,7 +13,7 @@
     python scripts/check_code_patterns.py --fix        # 自动修复（如果可能）
 
 扫描范围：递归扫当前目录，排除 .venv/ 、__pycache__/ 和 tests/。排除 tests/ 是必须的——
-测试文件里会**故意**放坏模式当 fixture 数据（比如断言 PEP 604 的 `X | None` 会被检出），
+测试文件里会**故意**放坏模式当 fixture 数据（例如路径函数少写调用括号），
 扫它们只会产生假阳性，把正常提交挡在门外。
 """
 import re
@@ -86,29 +86,14 @@ def check_optional_in_docstring(file_path: Path) -> List[CodeIssue]:
 
 
 def check_type_annotation_compatibility(file_path: Path) -> List[CodeIssue]:
-    """检查 Python 3.9 不兼容的类型注解。"""
-    issues = []
-    content = _read_text_safe(file_path)
-    lines = content.split('\n')
+    """类型注解兼容性检查（已停用）。
 
-    # Python 3.9 不支持 PEP 604 (X | Y) 语法
-    type_union_pattern = re.compile(r'\b(dict|list|str|int|float|bool)\s*\|\s*None\b')
+    历史上用于拦截 PEP 604 的 ``X | Y``（Python 3.9 不支持）。项目现钉
+    ``requires-python = "==3.12.*"``，该语法合法，继续 hard-fail 只会挡住现代写法。
 
-    for i, line in enumerate(lines, 1):
-        # 跳过注释
-        if line.strip().startswith('#'):
-            continue
-
-        match = type_union_pattern.search(line)
-        if match:
-            issues.append(CodeIssue(
-                str(file_path), i,
-                match.group(0),
-                f"Python 3.9 不支持。使用 Optional[{match.group(1)}] 替代",
-                "error"
-            ))
-
-    return issues
+    保留函数签名与 main() 调用点，避免破坏既有 import；恒返回空。
+    """
+    return []
 
 
 def check_missing_workspace_id(file_path: Path) -> List[CodeIssue]:

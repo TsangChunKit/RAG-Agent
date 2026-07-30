@@ -1,11 +1,11 @@
 """测试静态检查工具本身（scripts/check_code_patterns.py）。
 
 这个脚本是 pre-commit hook 的第一道闸门。它自己没测试的话，「检查通过」这句话就没有分量：
-误报会挡住正常提交，漏报会让 Python 3.9 不兼容的代码溜进去。
+误报会挡住正常提交，漏报会让路径函数误用之类的真实错误溜进去。
 
 重点测试：
 1. check_path_function_usage() - 路径函数被当 Path 用（RAW_DIR.exists vs RAW_DIR().exists）
-2. check_type_annotation_compatibility() - PEP 604 `X | None`（Python 3.9 不支持）
+2. check_type_annotation_compatibility() - 已停用（Python 3.12 下 PEP 604 合法，恒返回空）
 3. check_missing_workspace_id() - 只对 app.py / pages/ 发警告
 4. main() - 退出码：有 error → 1，只有 warning → 0，全过 → 0
 """
@@ -111,37 +111,34 @@ class TestCheckOptionalInDocstring:
         assert check_optional_in_docstring(f) == []
 
 
-# ── Python 3.9 类型注解兼容性 ──────────────────────────────────────────────
+# ── 类型注解兼容性（已停用）────────────────────────────────────────────────
 
 
 class TestCheckTypeAnnotationCompatibility:
-    """项目跑在 Python 3.9，PEP 604 的 `X | None` 会在导入时炸。"""
+    """项目钉 Python 3.12，PEP 604 的 `X | None` 合法；此检查恒返回空。"""
 
     @pytest.mark.parametrize("annotation", ["dict | None", "list | None", "str | None", "int | None"])
-    def test_detects_pep604_unions(self, tmp_path, annotation):
+    def test_pep604_unions_are_not_flagged(self, tmp_path, annotation):
         f = _py(tmp_path, f"def f() -> {annotation}:\n    return None\n")
 
-        issues = check_type_annotation_compatibility(f)
-
-        assert len(issues) == 1
-        assert issues[0].pattern == annotation
-        assert "Optional[" in issues[0].suggestion
+        assert check_type_annotation_compatibility(f) == []
 
     def test_optional_form_is_not_flagged(self, tmp_path):
         f = _py(tmp_path, "def f() -> Optional[dict]:\n    return None\n")
 
         assert check_type_annotation_compatibility(f) == []
 
-    def test_skips_comment_lines(self, tmp_path):
-        """注释里写 `dict | None` 只是在说明写法，不该报错。"""
-        f = _py(tmp_path, "# 不要写 dict | None，Python 3.9 不支持\n")
+    def test_comment_lines_still_empty(self, tmp_path):
+        f = _py(tmp_path, "# dict | None is fine on 3.12\n")
 
         assert check_type_annotation_compatibility(f) == []
 
-    def test_suggestion_keeps_base_type(self, tmp_path):
+    def test_always_returns_empty_list(self, tmp_path):
+        """停用后签名仍是 List[CodeIssue]，调用方（main）依赖可迭代空列表。"""
         f = _py(tmp_path, "x: list | None = None\n")
-
-        assert "Optional[list]" in check_type_annotation_compatibility(f)[0].suggestion
+        result = check_type_annotation_compatibility(f)
+        assert result == []
+        assert isinstance(result, list)
 
 
 # ── workspace_id 警告 ─────────────────────────────────────────────────────
@@ -196,7 +193,8 @@ class TestMain:
         assert "所有检查通过" in capsys.readouterr().out
 
     def test_error_exits_one(self, tmp_path, monkeypatch, capsys):
-        f = _py(tmp_path, "def f() -> dict | None:\n    return None\n")
+        # 用路径函数误用作为 error 源（PEP 604 不再报错）
+        f = _py(tmp_path, "if RAW_DIR.exists():\n    pass\n")
         monkeypatch.setattr("sys.argv", ["check_code_patterns.py", str(f)])
 
         with pytest.raises(SystemExit) as exc:
@@ -238,9 +236,9 @@ class TestMain:
     def test_no_args_scans_cwd_recursively(self, tmp_path, monkeypatch):
         """不给参数 → 递归扫当前目录（chdir 到 tmp_path，别扫真实项目）。"""
         (tmp_path / "pkg").mkdir()
-        (tmp_path / "pkg" / "bad.py").write_text("def f() -> str | None:\n    pass\n", encoding="utf-8")
+        (tmp_path / "pkg" / "bad.py").write_text("if RAW_DIR.exists():\n    pass\n", encoding="utf-8")
         (tmp_path / ".venv").mkdir()
-        (tmp_path / ".venv" / "vendored.py").write_text("y: int | None = None\n", encoding="utf-8")
+        (tmp_path / ".venv" / "vendored.py").write_text("if DB_DIR.exists():\n    pass\n", encoding="utf-8")
         monkeypatch.chdir(tmp_path)
         monkeypatch.setattr("sys.argv", ["check_code_patterns.py"])
 
@@ -248,6 +246,17 @@ class TestMain:
             main()
 
         assert exc.value.code == 1  # 找到 pkg/bad.py
+
+    def test_pep604_file_exits_zero(self, tmp_path, monkeypatch, capsys):
+        """PEP 604 在 3.12 下合法，整文件只有 `X | None` 时应通过。"""
+        f = _py(tmp_path, "def f() -> dict | None:\n    return None\n")
+        monkeypatch.setattr("sys.argv", ["check_code_patterns.py", str(f)])
+
+        with pytest.raises(SystemExit) as exc:
+            main()
+
+        assert exc.value.code == 0
+        assert "所有检查通过" in capsys.readouterr().out
 
     @pytest.mark.parametrize("excluded_dir", [".venv", "__pycache__", "tests"])
     def test_excluded_dirs_not_scanned(self, tmp_path, monkeypatch, capsys, excluded_dir):
@@ -257,7 +266,7 @@ class TestMain:
         """
         d = tmp_path / excluded_dir
         d.mkdir()
-        (d / "sample.py").write_text("y: int | None = None\n", encoding="utf-8")
+        (d / "sample.py").write_text("if RAW_DIR.exists():\n    pass\n", encoding="utf-8")
         monkeypatch.chdir(tmp_path)
         monkeypatch.setattr("sys.argv", ["check_code_patterns.py"])
 
@@ -271,7 +280,7 @@ class TestMain:
         """排除是按路径层级判断的，深层嵌套（tests/unit/…）同样跳过。"""
         nested = tmp_path / "tests" / "unit"
         nested.mkdir(parents=True)
-        (nested / "test_x.py").write_text('assert "dict | None" in msg\n', encoding="utf-8")
+        (nested / "test_x.py").write_text("if RAW_DIR.exists():\n    pass\n", encoding="utf-8")
         monkeypatch.chdir(tmp_path)
         monkeypatch.setattr("sys.argv", ["check_code_patterns.py"])
 
@@ -282,7 +291,7 @@ class TestMain:
 
     def test_explicit_test_file_arg_is_still_checked(self, tmp_path, monkeypatch):
         """排除只作用于「不给参数」的递归扫描；显式点名一个文件时仍然检查它。"""
-        f = _py(tmp_path, "def f() -> dict | None:\n    pass\n", name="test_something.py")
+        f = _py(tmp_path, "if RAW_DIR.exists():\n    pass\n", name="test_something.py")
         monkeypatch.setattr("sys.argv", ["check_code_patterns.py", str(f)])
 
         with pytest.raises(SystemExit) as exc:

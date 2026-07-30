@@ -675,9 +675,8 @@ class TestEdgeCases:
 class TestDisabledProviders:
     """gemini 暂时停用后的行为（见 settings.DISABLED_PROVIDERS 的原因说明）。
 
-    背景：Gemini 3.x 用 thinking_level 取代了 thinking_budget，但 Python 3.9 能装的最高版
-    google-genai（1.47.0）的 ThinkingConfig 不认 thinking_level，调用直接被 pydantic 拒。
-    所以 gemini 从可选 provider 里摘掉，默认走 hermes。
+    背景：gemini 曾因 Python 3.9 / google-genai 1.x 不支持 thinking_level 而停用；
+    环境已升 3.12 + google-genai 2.x，技术 blocker 解除，但产品上仍停用、默认 hermes。
     """
 
     def test_gemini_not_selectable(self):

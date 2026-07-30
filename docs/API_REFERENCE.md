@@ -100,7 +100,7 @@ def retrieve(
     workspace_id: Optional[str] = None
 ) -> list[dict]:
     """
-    混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排
+    混合检索（稠密语义 + FTS 关键词，RRF 融合）→ 可选 cross-encoder 精排
     → 相关性阈值过滤 → 父块/窗口扩展。
 
     注意：query 进来后先过 text_norm.to_simplified()（繁→简），embed / FTS / reranker
@@ -561,7 +561,7 @@ def to_simplified(text: str) -> str:
 | `ask.py::retrieve()` | query | 覆盖 embed + FTS + reranker 三条腿 |
 | `ask.py::find_relevant_graph_nodes()` | question | 图谱节点标签/描述是简体 |
 
-**为什么必须做**：ngram FTS 靠字符重叠，「水煙」和「水烟」零重叠；dense 也会漏。实测繁体
+**为什么必须做**：FTS（jieba 或 ngram）与 dense 对繁简变体都不可靠，「水煙」和「水烟」易漏。实测繁体
 query「我喜歡抽水煙」检索不到语料里唯一提到「水烟」的两个块，归一化后两个都能命中。
 
 依赖 `zhconv`（纯 Python，无编译依赖）。缺失时降级为原样返回。
@@ -757,8 +757,8 @@ DEFAULT_PROVIDER = "hermes"            # 非法/缺失/已停用时的回退值�
 DISABLED_PROVIDERS = {"gemini": "……停用原因（UI 会显示）"}  # 与 VALID_PROVIDERS 不相交
 ```
 
-> `gemini` 当前停用：Python 3.9 能装的最高版 `google-genai`（1.47.0）的 `ThinkingConfig` 不支持
-> `thinking_level`。原因与恢复步骤见 README §七「gemini 为什么停用」。
+> `gemini` 当前停用（产品选择）。原 Python 3.9 / google-genai 1.x 的 `thinking_level` 技术
+> blocker 已在 3.12 + google-genai 2.x 下解除。恢复步骤见 README §七「gemini 为什么停用」。
 
 ### `provider()`
 
@@ -809,23 +809,18 @@ def save(dialogue: dict, summary: dict, summary_max: dict,
 
 ---
 
-## 类型注解规范（Python 3.9 兼容）
+## 类型注解规范（Python 3.12）
 
-### ❌ 禁止使用
-
-```python
-# PEP 604 语法（Python 3.10+）
-def func() -> dict | None:  # ❌ 不兼容 Python 3.9
-def func() -> str | int:    # ❌ 不兼容 Python 3.9
-```
-
-### ✅ 必须使用
+项目钉 `requires-python = "==3.12.*"`。PEP 604（`X | Y`）与 `typing.Optional` / `Union` 都合法，
+不强制某一种；存量代码大量使用 `Optional[...]`，新代码两种皆可。
 
 ```python
 from typing import Optional, Union
 
-def func() -> Optional[dict]:  # ✅ 兼容 Python 3.9
-def func() -> Union[str, int]: # ✅ 兼容 Python 3.9
+def func_a() -> dict | None:       # ✅ PEP 604
+def func_b() -> Optional[dict]:    # ✅ typing.Optional
+def func_c() -> str | int:         # ✅
+def func_d() -> Union[str, int]:   # ✅
 ```
 
 ---
@@ -842,17 +837,7 @@ if CHAT_MEMORY_PATH.exists():
 if CHAT_MEMORY_PATH(workspace_id).exists():
 ```
 
-### 2. TypeError: unsupported operand type(s) for |
-
-```python
-# ❌ 错误
-def func() -> dict | None:
-
-# ✅ 正确
-def func() -> Optional[dict]:
-```
-
-### 3. NameError: name 'Optional' is not defined
+### 2. NameError: name 'Optional' is not defined
 
 ```python
 # ❌ 错误：导入在 docstring 内
@@ -865,7 +850,7 @@ from typing import Optional
 from typing import Optional
 ```
 
-### 4. 缺少 workspace_id 参数
+### 3. 缺少 workspace_id 参数
 
 ```python
 # ⚠️ 警告：在 UI 代码中应该传递
@@ -875,20 +860,18 @@ build_graph()  # 使用默认 workspace
 build_graph(workspace_id=current_workspace)
 ```
 
-### 5. ThinkingConfig: thinking_level Extra inputs are not permitted
+### 4. ThinkingConfig: thinking_level Extra inputs are not permitted
 
 ```
 1 validation error for ThinkingConfig
 thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_value='high']
 ```
 
-**原因**：Gemini 3.x 用 `thinking_level` 取代了 `thinking_budget`，但 Python 3.9 能装的最高版
-`google-genai`（1.47.0）的 `ThinkingConfig` 只有 `include_thoughts` / `thinking_budget` 两个字段；
-支持 `thinking_level` 的 `google-genai` 2.x 要求 Python ≥ 3.10，所以 `pip install -U` 也拿不到。
+**原因（历史）**：Gemini 3.x 用 `thinking_level` 取代了 `thinking_budget`；旧环境 Python 3.9
+只能装到 `google-genai` 1.47.0，其 `ThinkingConfig` 不认 `thinking_level`。
 
-**现状**：`gemini` provider 已停用（`settings.DISABLED_PROVIDERS`），默认走 hermes，
-不会再触发这个错误。要用回 Gemini 得先升 Python ≥ 3.10 + google-genai 2.x，
-恢复步骤见 README §七「gemini 为什么停用」。
+**现状**：venv 已是 Python 3.12 + `google-genai` 2.x（`ThinkingConfig` 含 `thinking_level`），
+该错误不应再出现。`gemini` provider 仍停用（产品选择，默认 hermes）；恢复步骤见 README §七。
 
 **排查用**：
 
@@ -905,7 +888,7 @@ print(list(types.ThinkingConfig.model_fields))  # 装的 SDK 到底支持哪些�
 
 开发新功能前，确认：
 - [ ] 所有 `from config import` 的路径都是函数
-- [ ] 使用 `Optional[X]` 而非 `X | None`
+- [ ] 类型注解合法（`Optional[X]` 或 `X | None` 皆可；Python 3.12）
 - [ ] `from typing import` 在模块顶部，不在 docstring 内
 - [ ] Workspace 相关函数传递 `workspace_id` 参数
 - [ ] Mock 了所有外部依赖（LLM, Embeddings, DB）

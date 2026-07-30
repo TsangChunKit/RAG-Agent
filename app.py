@@ -319,11 +319,11 @@ def index_settings_dialog():
     st.markdown("##### 🔡 关键词检索分词（FTS；改完需重建索引生效）")
     f = cur["fts"]
     f_tok = st.text_input("分词器 base_tokenizer", value=f["base_tokenizer"], key="f_tok",
-                          help="默认 ngram（零依赖）；jieba/default 需 lancedb>=0.29（要求 Python>=3.10），"
-                               "当前 Python 3.9 环境下会报 unknown base tokenizer，见 config.py 说明")
+                          help="默认 jieba/default（中文分词，需 lancedb>=0.29 + jieba 词典）；"
+                               "也可填 ngram（字符 n-gram 兜底）。改完需重建 FTS，见 config.py / README")
     fc1, fc2 = st.columns(2)
-    f_min = fc1.number_input("ngram 最短", 1, 10, int(f["ngram_min"]), 1, key="f_min")
-    f_max = fc2.number_input("ngram 最长", 1, 10, int(f["ngram_max"]), 1, key="f_max")
+    f_min = fc1.number_input("ngram 最短（仅 ngram 时）", 1, 10, int(f["ngram_min"]), 1, key="f_min")
+    f_max = fc2.number_input("ngram 最长（仅 ngram 时）", 1, 10, int(f["ngram_max"]), 1, key="f_max")
 
     st.markdown("##### 🎯 Reranker 精排（cross-encoder）")
     st.caption(

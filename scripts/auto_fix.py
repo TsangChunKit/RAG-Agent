@@ -33,7 +33,7 @@ def fix_optional_in_docstring(filepath):
 
 
 def fix_type_annotations(filepath):
-    """修复 X | None -> Optional[X]"""
+    """可选风格：X | None -> Optional[X]（Python 3.12 下两者都合法，非兼容性修复）。"""
     content = filepath.read_text(encoding='utf-8')
     original = content
 

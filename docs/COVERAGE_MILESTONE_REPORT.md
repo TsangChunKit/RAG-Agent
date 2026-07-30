@@ -153,7 +153,7 @@ scripts/: 22% → 40% (+18%)
 1. **API_REFERENCE.md** (200+ 行)
    - 所有函数签名和类型
    - 路径函数使用规范
-   - Python 3.9 兼容性
+   - 类型注解规范（Python 3.12）
    - 常见错误速查
 
 2. **ARCHITECTURE.md** (400+ 行)

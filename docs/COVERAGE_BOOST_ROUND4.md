@@ -41,7 +41,7 @@ pytest tests/unit/ --cov=scripts --cov-report=term-missing --cov-fail-under=70
 ## 每个文件测到了什么（不是为了数字，是为了这些性质）
 
 - **`check_code_patterns.py`** — 它是 hook 的第一道闸门。自己没测试，「检查通过」这句话就没分量：
-  误报挡住正常提交，漏报让 `dict | None` 这种 Python 3.9 炸点溜进去。测了四个检查函数
+  误报挡住正常提交，漏报让路径函数误用等真实错误溜进去。测了四个检查函数
   各自的真阳/真阴，以及 `main()` 的三种退出码（error→1、只有 warning→0、全过→0）。
 - **`index_records.py`** — 「📚 已索引的记录」UI 的数据源。测聚合/倒序/`has_summary`，
   以及 changelog 的坏行跳过（半行 JSON 不能让整份日志读不出来）。

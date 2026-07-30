@@ -298,7 +298,8 @@ permitted: .../RAG-Agent/.venv/pyvenv.cfg`（venv 连自己的配置都读不到
 |---|---|
 | `/bin/bash`（再由它去读） | ❌ |
 | `/Users/andytsang/.local/bin/python3.11`（旧项目 venv 的目标） | ✅ 早年授权过 |
-| `/Library/Developer/CommandLineTools/usr/bin/python3`（本项目 3.9 venv 的目标） | ❌ 没授权 |
+| `/Library/Developer/CommandLineTools/usr/bin/python3`（旧 3.9 系统 Python） | ❌ 没授权 |
+| uv 管理的 cpython-3.12.x（当前 `.venv` 目标） | ⚠️ 换解释器后需重新授权，或把项目挪出 `~/Documents` |
 
 关键在于**被授权的是解释器二进制本身，不是脚本、也不是包一层 `bash -c` 就能绕过**（包 bash 只会
 让被授权对象变成 bash）。`.venv/bin/python3` 只是个 symlink，真正参与判定的是它指向的目标——
@@ -381,9 +382,9 @@ python -m scripts.ingest
 
 > ⚠️ **改分词器/索引参数记得看清改的是哪一层**：`config.py` 里的 `FTS_BASE_TOKENIZER` 等只是
 > **默认值**，真正生效的是 `private.nosync/index_settings.json`（UI「⚙️ 索引设置」写的就是它）。
-> 2026-07-26 踩过：代码默认已经从 `jieba/default` 改回 `ngram`，但设置文件里还是 `jieba/default`，
-> 于是每次新入库都在 `create_fts_index` 那步炸 `lance error: unknown base tokenizer jieba/default`。
-> 排查时先 `cat private.nosync/index_settings.json`，别只看 `config.py`。删掉这个文件 = 恢复全部默认值。
+> 默认已是 `jieba/default`（Python 3.12 + lancedb≥0.29）；若设置文件仍是旧的 `ngram`，会一直用
+> ngram，直到你在 UI 改完或对齐设置文件并**重建 FTS**。排查时先 `cat private.nosync/index_settings.json`，
+> 别只看 `config.py`。删掉这个文件 = 恢复全部默认值。
 
 **索引跑在哪：全程本地。** 分块是纯 Python，向量化用本地 BGE-M3 模型（跑在 Apple GPU / MPS 上，
 见 `config.py` 的 `EMBEDDING_DEVICE`），向量库是本机 LanceDB 文件（`private.nosync/db/`）——
@@ -421,19 +422,19 @@ Cache，稳定）+ **局部邻域**（命中概念及其 k-hop 邻居，逐查�
 ```bash
 cd "/Users/andytsang/Documents/Project/RAG-Agent"
 
-# 1. Python 3.9 虚拟环境（代码全程按 Python 3.9 兼容性编写，勿用 3.10+ 的 `X | None` 语法）
-python3.9 -m venv .venv
+# 1. Python 3.12 环境（uv；pyproject 钉 requires-python ==3.12.*）
+#    安装 uv：https://docs.astral.sh/uv/getting-started/installation/
+uv sync --group dev
 source .venv/bin/activate
-pip install -r requirements.txt
+python --version   # 应显示 3.12.x
 
-# 2.（可选，当前默认不需要）中文分词用 jieba 分词器——
-#    目前 Python 3.9 下 pip 只能装到 lancedb 0.27.1，这个版本没编译 jieba tokenizer 支持，
-#    所以默认 FTS_BASE_TOKENIZER 是 "ngram"（零依赖，已验证可用）。跳过这一步即可。
-#    以后升级到 Python 3.10+ 并把 lancedb 升到 >=0.29 后，才需要跑下面两行拉词典，
-#    详细原因见 config.py 里 FTS_BASE_TOKENIZER 旁边的注释：
-# python -m lance.download jieba
+# 2. 中文 FTS 分词词典（默认 FTS_BASE_TOKENIZER = "jieba/default"，需词典一次）
+#    pylance 不进常驻依赖，用 --with 临时拉：
+uv run --with pylance python -m lance.download jieba
+#    若 dict 损坏/缺失，可从 jieba-rs 补一份（路径因 OS 而异）：
 # curl -s "https://raw.githubusercontent.com/messense/jieba-rs/main/jieba/src/data/dict.txt" \
-#   -o "$(python -c 'import lance; print(lance.download.LANGUAGE_MODEL_HOME)')/jieba/default/dict.txt"
+#   -o "$HOME/Library/Application Support/lance/language_models/jieba/default/dict.txt"
+#    不想用 jieba 时：在「⚙️ 索引设置」把 base_tokenizer 改回 "ngram" 即可（零额外依赖）。
 
 # 3. 个人数据放在 private.nosync/ 里。先建目录，把 LLM 后端的 key 写进去
 #    （这是凭证，已被 .gitignore 排除，别提交进 git——见第九节）：
@@ -545,27 +546,21 @@ Hermes base_url，是凭证，已被 `.gitignore` 排除）；索引参数存在
 
 #### gemini 为什么停用
 
-Gemini 3.x 已用 `thinking_level` 取代 `thinking_budget`，而本项目跑在 **Python 3.9** 上——能装的最高版
-`google-genai` 是 **1.47.0**，它的 `ThinkingConfig` 不认 `thinking_level`，调用会被 pydantic 直接拒：
+**历史原因（已解除）**：Gemini 3.x 用 `thinking_level` 取代 `thinking_budget`。旧环境钉在
+Python 3.9 时只能装到 `google-genai` 1.47.0，其 `ThinkingConfig` 不认 `thinking_level`，调用会被
+pydantic 直接拒。支持该参数的 2.x 要求 Python ≥ 3.10。
 
-```
-1 validation error for ThinkingConfig
-thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_value='high']
-```
+**现状（2026-07-30）**：venv 已是 **Python 3.12** + **google-genai 2.x**（`ThinkingConfig` 含
+`thinking_level`），技术 blocker 已解除。`gemini` 仍登记在
+[`scripts/settings.py`](scripts/settings.py) 的 `DISABLED_PROVIDERS`（产品选择，默认 hermes；
+UI 会显示停用原因）：`provider()` 读到 `gemini` 会回退 hermes，`save()` 也拒绝写回。
+`scripts/llm.py` 的 `_ask_gemini()` 与 Explicit Caching 代码**原样保留**。
 
-支持该参数的 `google-genai` **2.x 要求 Python ≥ 3.10**，所以在当前环境里 `pip install -U` 也拿不到；
-退回旧的 `thinking_budget` 同样不行（Gemini 3.x 模型不再接受它）。
+**恢复步骤**（两步，环境已就绪）：
 
-因此 `gemini` 从可选 provider 里摘掉，登记在 [`scripts/settings.py`](scripts/settings.py) 的
-`DISABLED_PROVIDERS`（UI 的 provider 选区会显示这条原因）：`provider()` 读到 `gemini` 会回退 hermes，
-`save()` 也拒绝把它写回设置文件。`scripts/llm.py` 的 `_ask_gemini()` 与 Explicit Caching 代码**原样保留**。
-
-**恢复步骤**（三步，改回来即生效）：
-
-1. 环境换到 Python ≥ 3.10，`pip install -U google-genai`（2.x）。
-2. `scripts/settings.py`：把 `"gemini"` 加回 `VALID_PROVIDERS`、从 `DISABLED_PROVIDERS` 删掉
+1. `scripts/settings.py`：把 `"gemini"` 加回 `VALID_PROVIDERS`、从 `DISABLED_PROVIDERS` 删掉
    （需要的话把 `DEFAULT_PROVIDER` 改回 `"gemini"`）。
-3. `config.py`：把默认模型名换回 `GEMINI_MODEL = "gemini-3.5-flash"`、
+2. `config.py`：把默认模型名换回 `GEMINI_MODEL = "gemini-3.5-flash"`、
    `GEMINI_SUMMARY_MODEL = "gemini-3.1-flash-lite"`。
 
 ### 参数改动是否需要「全量重建」速查
@@ -660,7 +655,7 @@ thinking_level  Extra inputs are not permitted [type=extra_forbidden, input_valu
 > top1 只有 0.035（语料本身覆盖少）。所以阈值只负责砍掉 0.001 量级的噪音尾巴，不做硬判；
 > 想更严就把 `min_score` 调到 0.03–0.05，想完全关掉就设 **0**（行为回到改动前）。
 
-> **繁简统一（检索层不变量）**：语料库全是简体（转写工具输出），但你常打繁体。ngram FTS 靠字符
+> **繁简统一（检索层不变量）**：语料库全是简体（转写工具输出），但你常打繁体。FTS / dense 对繁简
 > 重叠，「水煙」和「水烟」零重叠，dense 也会漏——实测繁体 query 检索不到语料里唯一提到「水烟」的
 > 两个块。所以约定：**进检索/匹配的文本一律先过 `scripts/text_norm.to_simplified()`，展示用的原文
 > 不动**（`Chunk.raw_text`、prompt 里你的原问题都保留原字形）。落点三处：`chunk.py` 生成

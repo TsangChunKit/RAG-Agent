@@ -46,10 +46,10 @@ DEFAULT_PROVIDER = "hermes"
 # 所以 scripts/llm.py 里 _ask_gemini() 那条分支在真实运行路径上进不去（代码保留、便于恢复）。
 DISABLED_PROVIDERS = {
     "gemini": (
-        "Gemini 3.x 已用 thinking_level 取代 thinking_budget，但本项目跑在 Python 3.9 上，"
-        "能装的最高版 google-genai（1.47.0）的 ThinkingConfig 不认 thinking_level，调用会被 "
-        "pydantic 直接拒（extra_forbidden）。支持该参数的 google-genai 2.x 要求 Python ≥ 3.10。"
-        "恢复方式：升级到 Python ≥ 3.10 + google-genai 2.x，然后把 \"gemini\" 加回 VALID_PROVIDERS。"
+        "曾因 Python 3.9 装不到支持 thinking_level 的 google-genai 2.x 而停用；"
+        "现环境已是 Python 3.12 + google-genai（ThinkingConfig 含 thinking_level），技术 blocker 已解除。"
+        "仍保持停用、默认走 hermes。恢复：把 \"gemini\" 加回 VALID_PROVIDERS、从本 dict 删掉，"
+        "并把 config.py 默认模型名换回 gemini-3.x（见 README §七）。"
     ),
 }
 

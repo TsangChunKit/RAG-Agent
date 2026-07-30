@@ -14,7 +14,7 @@
     "use_fp16": true
   },
   "fts": {
-    "base_tokenizer": "ngram",
+    "base_tokenizer": "jieba/default",
     "ngram_min": 2,
     "ngram_max": 3
   },

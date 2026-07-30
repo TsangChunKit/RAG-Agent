@@ -21,7 +21,7 @@
 **检查内容**：
 - ✅ 路径函数被当作 Path 对象使用（如 `CHAT_MEMORY_PATH.exists()`）
 - ⚪ Optional 导入在文档字符串内（误报太多，已停用，恒返回空）
-- ✅ Python 3.9 不兼容的类型注解（PEP 604 的 `X | None`）
+- ⚪ 类型注解兼容性（曾拦截 PEP 604；项目现钉 3.12，已停用，恒返回空）
 - ⚠️ 缺少 workspace_id 参数（只对 `app.py` / `pages/` 发**警告**，不挡提交）
 
 **扫描范围**：递归扫当前目录，排除 `.venv/`、`__pycache__/`、`tests/`。
@@ -261,7 +261,6 @@ python scripts/check_code_patterns.py
 
 - [ ] 所有路径常量都用 `CONSTANT()` 调用（不是 `CONSTANT.method`）
 - [ ] 所有 `from typing import` 在文档字符串外面
-- [ ] 没有 `dict | None` 语法（Python 3.9 不支持）
 - [ ] Workspace 相关函数都传递了 `workspace_id` 参数
 - [ ] 运行 `python scripts/check_code_patterns.py` 通过
 - [ ] 运行 `pytest tests/unit/test_imports.py` 通过

@@ -97,7 +97,7 @@
 
 1. **準確性**
    - 函數簽名必須與實際代碼一致
-   - 參數類型必須正確（Python 3.9 兼容）
+   - 參數類型必須正確（Python 3.12；`X | None` 與 `Optional[X]` 皆可）
    - 示例代碼必須可運行
 
 2. **完整性**
@@ -220,7 +220,7 @@ def validate_input(text: str) -> bool:
    - 導入測試能捕獲：
      * 語法錯誤
      * 導入錯誤（NameError, ImportError）
-     * 類型注解兼容性問題（Python 3.9 vs 3.10+）
+     * 類型注解 / 語法錯誤（import-time 即爆）
      * 模塊級別的執行錯誤（import-time errors）
    
    ```python
@@ -461,8 +461,7 @@ def validate_input(text: str) -> bool:
    ```
    檢查：
    - 路徑函數使用錯誤
-   - Python 3.9 類型注解兼容性
-   - workspace_id 參數缺失
+   - workspace_id 參數缺失（僅 UI 層警告）
 
 2. **導入測試**
    ```bash

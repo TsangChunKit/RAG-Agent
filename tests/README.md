@@ -139,7 +139,7 @@ def test_example(isolated_workspace, mock_gemini):
 GitHub Actions 自动运行测试：
 - **每次 push/PR**: 运行单元测试
 - **Main 分支**: 额外运行集成测试
-- **Python 版本**: 3.9, 3.10, 3.11
+- **Python 版本**: 3.12（与 `requires-python = "==3.12.*"` 一致）
 
 查看状态：[![Tests](../../actions/workflows/test.yml/badge.svg)](../../actions/workflows/test.yml)
 

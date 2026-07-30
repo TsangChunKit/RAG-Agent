@@ -93,7 +93,7 @@ ParsedSession
     ↓
 [ask.py:retrieve()] 混合检索
     ├─ 向量检索 (LanceDB)
-    ├─ FTS 检索（ngram，靠字符重叠 → 繁简必须先对齐）
+    ├─ FTS 检索（默认 jieba/default 中文分词；繁简仍须先对齐，见 text_norm）
     ├─ 重排序 (reranker.py，输出 0–1 相关性分数)
     ├─ 相关性阈值 (_filter_by_score：< min_score 的丢掉；全不过线才留 min_keep 条保底)
     └─ 窗口扩展（父块，文本取 raw_text = 原文字形）
@@ -356,7 +356,7 @@ LanceDB 表：`sessions`
 | `next_chunk_id` | `str` | 后一个 chunk 的 id（无则空串）|
 
 **索引**：
-- FTS 索引：`text` 字段（ngram tokenizer，见 index_settings）
+- FTS 索引：`text` 字段（默认 jieba/default，可改 ngram；见 index_settings / config.FTS_BASE_TOKENIZER）
 - 向量：不建 ANN 索引（数据规模小，直接暴力搜索即可）
 
 ### 图谱 Schema
@@ -471,9 +471,10 @@ provider 的可选集合只有一个真相来源：`scripts/settings.py`。
 - 停用某个后端时，`config.py` 里的默认模型名要一起换成仍启用的后端吃得下的值——否则"删掉设置文件 =
   恢复默认"会把不可用的模型名塞回去。
 
-**当前状态**：`gemini` 停用（Python 3.9 → google-genai 1.47 的 `ThinkingConfig` 不支持 `thinking_level`；
-细节与恢复步骤见 README §七「gemini 为什么停用」）。`scripts/llm.py` 的 `_ask_gemini()` 与
-`scripts/context_cache.py` 的 Explicit Caching 因此处于休眠状态（代码保留、单元测试仍覆盖）。
+**当前状态**：`gemini` 仍停用（产品选择；原 Python 3.9 / google-genai 1.x 的 `thinking_level`
+blocker 已在 3.12 + google-genai 2.x 下解除；恢复步骤见 README §七「gemini 为什么停用」）。
+`scripts/llm.py` 的 `_ask_gemini()` 与 `scripts/context_cache.py` 的 Explicit Caching 因此处于
+休眠状态（代码保留、单元测试仍覆盖）。
 
 ---
 
