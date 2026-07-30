@@ -464,19 +464,22 @@ def validate_input(text: str) -> bool:
    - Python 3.9 類型注解兼容性
    - workspace_id 參數缺失
 
-2. **導入測試**
+2. **單元測試 + 覆蓋率**（合併為一次 pytest 呼叫）
    ```bash
-   pytest tests/unit/test_imports.py --tb=short
+   pytest tests/unit/ --cov=scripts --cov-report=term-missing --cov-fail-under=70 --tb=short -q
    ```
-   確保所有模塊能成功導入
-
-3. **覆蓋率檢查**
-   ```bash
-   pytest --cov=scripts --cov-fail-under=70
-   ```
-   確保整體覆蓋率 ≥ 70%（當前閾值，未來提升到 80%）
+   `tests/unit/` 本身就包含 `test_imports.py`，跑一次全套 unit tests 同時完成
+   「import smoke test」「跑失敗測試」「覆蓋率 ≥ 70% 檢查」三件事，
+   不再需要對同一批測試分三次 pytest 呼叫。
 
 **任何一項失敗 → commit 被拒絕 → 必須修復後才能提交**
+
+> **效能備註（2026-07-30）**：`pytest.ini` 的 `-n auto`（xdist 並行）已移除。
+> 這個專案的 unit tests 量級偏小（~750 個），序列執行反而比開多進程快
+> （實測：完整 suite 序列 ~8s vs xdist 並行 ~12-19s；13 個 import 測試序列 4s
+> vs 並行 9-11s）。連同把步驟 2/3/4 合併為一次 pytest 呼叫，pre-commit hook
+> 從原本 ~43s 降到 ~12-13s。以後測試量大幅增加、序列執行明顯變慢時，可以再
+> 評估把 `-n auto` 加回來。
 
 ### 如何安裝 Hook？
 
@@ -496,21 +499,13 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 2. 導入測試
-echo "📦 Import tests..."
+# 2. 單元測試 + 覆蓋率（合併為一次 pytest 呼叫）
+echo "🧪 Unit tests + coverage..."
 source .venv/bin/activate
-pytest tests/unit/test_imports.py --tb=short -q
+pytest tests/unit/ --cov=scripts --cov-report=term-missing --cov-fail-under=70 --tb=short -q
 if [ $? -ne 0 ]; then
-    echo "❌ Import tests failed! Fix import errors before committing."
-    exit 1
-fi
-
-# 3. 覆蓋率檢查
-echo "📊 Coverage check..."
-pytest --cov=scripts --cov-fail-under=70 --tb=no -q
-if [ $? -ne 0 ]; then
-    echo "❌ Coverage below 70%! Add more tests before committing."
-    echo "Run: pytest --cov=scripts --cov-report=html"
+    echo "❌ Unit tests or coverage failed! Fix before committing."
+    echo "Run: pytest tests/unit/ --cov=scripts --cov-report=html -v"
     echo "Then open: htmlcov/index.html"
     exit 1
 fi

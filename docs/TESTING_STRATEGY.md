@@ -241,7 +241,9 @@ python scripts/check_code_patterns.py
 ## 测试覆盖率目标
 
 > 数据更新于 2026-07-25 第二次（实测 `pytest tests/unit/ --cov=scripts --cov=app`，
-> 即 pre-commit hook 第 4 项检查用的同一条命令）。
+> 即 pre-commit hook 覆盖率检查用的同一条命令）。2026-07-30 起 pre-commit hook 已从
+> 4 项检查合并为 2 项（静态检查 + 单元测试/覆盖率合一），详见 `CLAUDE.md` 的
+> Pre-commit Hook 章节；命令本身不变，只是不再分开跑三次 pytest。
 
 | 层级 | 当前 | 目标 | 优先级 |
 |------|------|------|--------|

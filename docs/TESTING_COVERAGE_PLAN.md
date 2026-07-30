@@ -19,7 +19,9 @@
 > 于是 app.py 从 31% 掉到 25%。这是**用 1.2 个覆盖率点换掉「测试会污染真实 private.nosync/、
 > 会打真实 API」这个更严重的问题**——覆盖率是代理指标，测试可信度是真指标，冲突时选后者。
 
-> ✅ pre-commit hook 的第 4 项检查（`--cov-fail-under=70`）**已能通过**（2026-07-25 起）。
+> ✅ pre-commit hook 的覆盖率检查（`--cov-fail-under=70`）**已能通过**（2026-07-25 起）。
+> （2026-07-30 起该检查与单元测试合并为 pre-commit hook 的第 2 项，不再是独立的第 4 项——
+> hook 从 4 步简化为 2 步，命令本身没变）
 > 清掉它靠的正是下面 P2/P3 那批 0% 的批处理脚本（update_memory / ingest_new / index_records /
 > 两个 watcher / check_code_patterns），不是继续加核心模块的测试——见 `COVERAGE_BOOST_ROUND4.md`。
 > 剩下的 0%（`auto_fix.py`、`migrate_from_old_project.py`）是一次性工具脚本，优先级最低。

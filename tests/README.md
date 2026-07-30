@@ -55,7 +55,12 @@ pytest tests/unit/ --cov=scripts --cov-report=html
 open htmlcov/index.html
 ```
 
-### 并行运行（加速）
+### 并行运行（目前不建议）
+
+`pytest.ini` 的 `addopts` 已移除 `-n auto`（2026-07-30）。实测这个专案的 unit tests
+量级偏小（~750 个），xdist 并行的 worker 启动/IPC 开销比测试本身还贵：完整 suite
+序列跑 ~8s，开 `-n auto` 反而要 ~12-19s。除非未来测试量大幅增加、序列执行明显变慢，
+否则不要加回 `-n auto`。如果想临时试试：
 
 ```bash
 pytest tests/unit/ -n auto
