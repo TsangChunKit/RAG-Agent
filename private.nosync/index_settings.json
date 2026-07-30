@@ -21,15 +21,17 @@
   "reranker": {
     "use_reranker": true,
     "rerank_top_k": 50,
-    "final_top_k": 8,
+    "final_top_k": 5,
+    "min_score": 0.01,
+    "min_keep": 3,
     "model": "BAAI/bge-reranker-v2-m3",
     "device": "mps",
     "use_fp16": true
   },
   "graph_evidence": {
-    "max_dates": 3,
-    "fragments_per_date": 2,
-    "window_expand": 2,
+    "max_dates": 2,
+    "fragments_per_date": 1,
+    "window_expand": 1,
     "include_summary": true
   }
 }
