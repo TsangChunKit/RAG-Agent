@@ -1,0 +1,17 @@
+{
+  "name": "bazhai-ziwu",
+  "display_name": "八字紫微",
+  "description": "八字紫微 的知识库",
+  "domain": "generic",
+  "graph_schema": {
+    "mode": "generic"
+  },
+  "persona": {
+    "system_instruction_file": "system_instruction.md",
+    "ai_name": "八字紫微 AI 助手",
+    "context_role": "助手"
+  },
+  "chunk_prefix_template": "[{domain_label}]",
+  "domain_label": "八字紫微古籍",
+  "created_at": "2026-07-27T15:55:28.915648"
+}

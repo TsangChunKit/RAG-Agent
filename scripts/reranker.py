@@ -36,8 +36,17 @@ def _get_reranker() -> CrossEncoder:
 
 
 def _passage(row: pd.Series) -> str:
-    """passage 优先用带上下文前缀的 text 列；缺失时回退 raw_text。"""
-    return str(row.get("text") or row.get("raw_text") or "")
+    """passage 优先用带上下文前缀的 text 列；缺失时回退 raw_text。
+
+    用 pd.notna() 而不是 Python 真值判断：pandas 2.3+ 下混了 None 的 object 列构造出来的
+    缺失值是 float('nan')，而 nan 在 Python 里是真值（bool(float('nan')) == True），
+    `a or b` 短路判断会把 NaN 本身当成"有值"返回，字符串化成 "nan" 而不是回退到 raw_text。
+    """
+    for col in ("text", "raw_text"):
+        value = row.get(col)
+        if pd.notna(value) and value != "":
+            return str(value)
+    return ""
 
 
 def rerank_candidates(query: str, hits: pd.DataFrame, top_k: int) -> pd.DataFrame:

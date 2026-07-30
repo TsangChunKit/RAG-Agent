@@ -22,6 +22,15 @@ from pathlib import Path
 from typing import List, Tuple
 
 
+def _read_text_safe(file_path: Path) -> str:
+    """读文件内容；非 UTF-8（例如误扫进第三方 venv 里的测试 fixture）就跳过而不是让整个
+    检查崩溃——一个读不了的文件不该挡住其他文件的检查结果。"""
+    try:
+        return file_path.read_text(encoding='utf-8')
+    except (UnicodeDecodeError, OSError):
+        return ""
+
+
 class CodeIssue:
     """代码问题。"""
     def __init__(self, file_path: str, line_num: int, pattern: str, suggestion: str, severity: str = "error"):
@@ -39,7 +48,7 @@ class CodeIssue:
 def check_path_function_usage(file_path: Path) -> List[CodeIssue]:
     """检查路径函数是否被正确使用。"""
     issues = []
-    content = file_path.read_text(encoding='utf-8')
+    content = _read_text_safe(file_path)
     lines = content.split('\n')
 
     # config.py 中定义为函数的路径常量
@@ -79,7 +88,7 @@ def check_optional_in_docstring(file_path: Path) -> List[CodeIssue]:
 def check_type_annotation_compatibility(file_path: Path) -> List[CodeIssue]:
     """检查 Python 3.9 不兼容的类型注解。"""
     issues = []
-    content = file_path.read_text(encoding='utf-8')
+    content = _read_text_safe(file_path)
     lines = content.split('\n')
 
     # Python 3.9 不支持 PEP 604 (X | Y) 语法
@@ -110,7 +119,7 @@ def check_missing_workspace_id(file_path: Path) -> List[CodeIssue]:
     if not (file_path.name == 'app.py' or 'pages/' in str(file_path)):
         return issues
 
-    content = file_path.read_text(encoding='utf-8')
+    content = _read_text_safe(file_path)
     lines = content.split('\n')
 
     # 需要 workspace_id 的函数
@@ -141,9 +150,14 @@ def main():
     else:
         # 检查所有 Python 文件
         files = list(Path('.').glob('**/*.py'))
-        # 排除 .venv（第三方代码）、__pycache__（缓存）、tests（故意包含坏模式当 fixture）
-        EXCLUDED_PARTS = {'.venv', '__pycache__', 'tests'}
-        files = [f for f in files if not (EXCLUDED_PARTS & set(f.parts))]
+        # 排除 .venv*（第三方代码，含历史上出现过的 .venv312 这类改名残留）、__pycache__
+        # （缓存）、tests（故意包含坏模式当 fixture）
+        EXCLUDED_PARTS = {'__pycache__', 'tests'}
+        files = [
+            f for f in files
+            if not (EXCLUDED_PARTS & set(f.parts))
+            and not any(part.startswith('.venv') for part in f.parts)
+        ]
 
     all_issues = []
 

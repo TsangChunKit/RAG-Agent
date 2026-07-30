@@ -1,0 +1,68 @@
+[project]
+name = "rag-agent"
+version = "0.1.0"
+description = "本地心理咨询逐字稿 RAG 系统（LanceDB + BGE-M3 + GraphRAG）"
+requires-python = "==3.12.*"
+
+# 依赖策略：这里写「意图」（能力门槛 / 今天实测可用的下限），uv.lock 写精确版本。
+# 不用 `~=`（会挡住我们正要解开的 minor 升级），不用 `==`（lockfile 已提供精确性，
+# 写两遍就是两个真相来源）。上限只在**有实证的破坏**时加——本文件只有一条，见 transformers。
+dependencies = [
+    # ── 检索与存储 ────────────────────────────────────────────────
+    # 0.29 是 tokenizer-jieba 这个 Cargo feature 第一次被编进官方 wheel 的版本，
+    # 也是本次 Python 3.12 升级的直接目的（0.27.1 是 Python 3.9 能装到的最后一版，只有 ngram）
+    "lancedb>=0.29",
+    "pyarrow>=21",
+    "pandas>=2.3",
+    "numpy>=2.0",
+    # ── 向量化与精排 ──────────────────────────────────────────────
+    "FlagEmbedding>=1.4.0",       # BGE-M3 embedding + bge-reranker-v2-m3
+    "sentence-transformers>=5.1", # scripts/reranker.py 直接 import（此前是未声明的传递依赖）
+    "torch>=2.8",                 # 同上；MPS 后端
+    # ⚠️ 全文件唯一上限，不要随手拆。transformers 5.x 移除了 tokenizer.prepare_for_model()，
+    #    直接打断 FlagEmbedding 1.4.0 的 reranker（复现记录见 scripts/reranker.py docstring）；
+    #    embedder.py 的 BGEM3FlagModel 走同一套代码路径，从未在 5.x 上验证过。
+    #    上游已把上限放宽到 <6（sentence-transformers 5.6.1 / FlagEmbedding 1.4.0），
+    #    所以不钉这一条，裸解析就会装到 5.x。拆之前必须拿真实 embedding 做数值对比。
+    "transformers>=4.44.2,<5",
+    # ── LLM ──────────────────────────────────────────────────────
+    # 1.x 的 ThinkingConfig 不认 thinking_level（gemini provider 因此被停用）；2.x 起支持
+    "google-genai>=2.0",
+    "openai>=2.47",               # xAI/Grok 的 OpenAI 兼容端点，见 scripts/llm.py
+    # ── 图谱与文本 ────────────────────────────────────────────────
+    "networkx>=3.2",              # graph_utils 中心性计算（此前是未声明的传递依赖）
+    "zhconv>=1.4.3",              # 繁→简归一化；缺失时 text_norm.py 降级为原样返回
+    # ── UI 与工具 ─────────────────────────────────────────────────
+    "streamlit>=1.50",
+    "watchdog>=6.0",              # 事件驱动文件监控；缺失会退化成轮询，刷屏且吃 CPU
+    "pyvis>=0.3.2",               # 关系图可视化
+    "python-dotenv>=1.2",
+    "tqdm>=4.69",
+]
+
+# 刻意**不**声明（2026-07-26 迁移时清理，via negativa）：
+#   pyyaml  —— 全项目零 `import yaml`；仍会被 huggingface-hub 传递装上，真要用时再声明
+#   tantivy —— LanceDB 的 FTS 已是 native（ingest.py 传的 ngram_* 就是 native-only 参数），
+#              上游只在 extra == "tests" 里列它
+#   pylance —— 零 `import lance`；唯一用途是一次性的 `python -m lance.download jieba`，
+#              需要时用 `uv run --with pylance python -m lance.download jieba`，不留常驻依赖
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4",
+    "pytest-cov>=7.1",
+    "pytest-xdist>=3.8",
+    "pytest-mock>=3.15",
+    "pytest-timeout>=2.4",
+    "black>=25.11",
+    "ruff>=0.15",
+    "mypy>=1.19",
+    "ipdb>=0.13.13",
+    # 不再声明 pytest-watch：2018 年后无维护，是唯一把已死的 docopt 拖进依赖图的包。
+    # 要 watch 时用 `uv run --with pytest-watcher ptw . -- tests/unit -q`
+]
+
+[tool.uv]
+# scripts/ 没有 __init__.py，本项目不是要被安装的发行包（靠 pythonpath 直接 import）。
+# 不写这行，uv sync 会尝试 build 本项目并失败。
+package = false

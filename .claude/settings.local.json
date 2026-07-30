@@ -44,7 +44,9 @@
       "Read(//Users/andytsang/Documents/Project/**)",
       "Bash(cp -r \"心理咨詢agent\" \"RAG-Agent\")",
       "Bash(*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(cp ~/.claude/settings.json ~/.claude/settings.json.bak)",
+      "Read(//Users/andytsang/.claude/**)"
     ]
   },
   "hooks": {

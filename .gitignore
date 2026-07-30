@@ -9,7 +9,7 @@ private.nosync/gemini_settings.json
 # 代码/运行产物
 __pycache__/
 *.pyc
-.venv/
+.venv*/
 .DS_Store
 
 # 测试/覆盖率产物
