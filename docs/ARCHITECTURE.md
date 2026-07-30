@@ -277,7 +277,8 @@ from scripts.ask import retrieve
 
 results = retrieve(
     query="用户问题",
-    k=10,  # 返回 10 个片段（无 workspace_id 参数，使用当前 workspace）
+    k=10,  # 返回 10 个片段
+    workspace_id=None,  # None = 当前 workspace；底层连接/数据不做进程级缓存，每次都按此参数重新读取
 )
 
 # results: list[dict]
@@ -313,6 +314,7 @@ private.nosync/
         │   ├── graph_fragments/    # 图谱片段
         │   ├── graph.json          # 合并后的主图谱
         │   ├── chat_graph.json     # AI 对话图谱
+        │   ├── graph_node_embeddings.npz  # 图谱锚点节点 embedding 持久化缓存（按节点哈希增量更新）
         │   ├── index_changelog.jsonl  # 索引变更记录
         │   ├── system_instruction_history.jsonl  # System Instruction 版本历史（见下）
         │   └── chat_sessions/      # 对话会话
@@ -500,7 +502,18 @@ provider 的可选集合只有一个真相来源：`scripts/settings.py`。
 
 - **Explicit Cache**（Gemini）：长期记忆、System Instruction
 - **Session State**（Streamlit）：对话历史、当前 workspace
-- **全局变量**：LanceDB table 连接、已加载的 embedder
+- **磁盘持久化（按 workspace，按内容哈希增量失效）**：图谱锚点节点 embedding
+  （`GRAPH_NODE_EMBEDDINGS_PATH`，见 `find_relevant_graph_nodes()`）
+
+**2026-07-30 移除的反模式**：`scripts/ask.py` 曾经用 module-level 全局变量缓存
+LanceDB table 连接、全量 chunk DataFrame、合并后图谱——这三者都不区分 workspace，
+Streamlit 是单一常驻 process，切换 workspace 不会清空它们，导致"process 里查过一次
+A workspace 后，即便 UI 切到 B workspace，检索/图谱一直沿用 A 的数据"（真实事故：
+在「八字紫微」workspace 问问题却撈到「心理咨询」workspace 的 chunks）。修复方式是
+直接砍掉这三处缓存——本地连接/小 JSON 的重新读取是 ms 级成本，不值得为了这点性能
+换来"必须记得在切换 workspace 时清缓存"这种隐性耦合。唯一保留的是上面这条磁盘持久化
+（要过 embedding 模型，重算成本是秒级、真的值得缓存），且天然按 workspace 分文件，
+不需要额外的失效钩子。
 
 ---
 

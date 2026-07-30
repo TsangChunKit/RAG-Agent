@@ -39,6 +39,7 @@ if CHAT_MEMORY_PATH(workspace_id).exists():
 | `CHAT_GRAPH_JSON_PATH(workspace_id)` | `Optional[str]` | `Path` | 对话图谱文件 |
 | `LONG_TERM_MEMORY_PATH(workspace_id)` | `Optional[str]` | `Path` | 长期记忆文件 |
 | `CHAT_MEMORY_PATH(workspace_id)` | `Optional[str]` | `Path` | 对话记忆文件 |
+| `GRAPH_NODE_EMBEDDINGS_PATH(workspace_id)` | `Optional[str]` | `Path` | 图谱锚点节点 embedding 持久化缓存（`.npz`，见下方 `find_relevant_graph_nodes()`）|
 
 **重要**：所有路径都是函数，必须先调用才能使用 Path 方法。
 
@@ -95,19 +96,24 @@ def answer(
 ```python
 def retrieve(
     query: str,
-    k: Optional[int] = None
+    k: Optional[int] = None,
+    workspace_id: Optional[str] = None
 ) -> list[dict]:
     """
     混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排
     → 相关性阈值过滤 → 父块/窗口扩展。
 
-    注意：本函数没有 workspace_id 参数，使用当前 workspace（由 index_settings 决定）。
     注意：query 进来后先过 text_norm.to_simplified()（繁→简），embed / FTS / reranker
           三条腿共用归一化后的文本。索引侧的 Chunk.text 也是简体，两边对齐。
-    
+
     Args:
         query: 查询文本
         k: 返回结果数量（None = 使用「⚙️ 索引设置」当前值）
+        workspace_id: workspace ID（None = 当前 workspace）。底层的 LanceDB 连接/
+            全量 chunk DataFrame 不做进程级缓存、每次都按这个参数重新读取，避免
+            process 存活期间切换 workspace 后沿用旧 workspace 的连接（2026-07-30
+            修复：曾经是不分 workspace 的全域缓存，切换 workspace 后检索会沿用
+            上一个 workspace 的向量库）。
     
     Returns:
         [
@@ -256,7 +262,14 @@ append-only、永久保留，不做清理）。Streamlit「⚙️ System Instruc
 |------|------|---------|
 | `sanitize(q: str)` | 清理查询字符串 | `str` |
 | `extract_mentioned_dates(question: str)` | 提取提到的日期 | `list[str]` |
-| `find_relevant_graph_nodes(question, graph, top_k)` | GraphRAG 节点匹配 | `list[dict]` |
+| `find_relevant_graph_nodes(question, graph, top_k, workspace_id)` | GraphRAG 节点匹配 | `list[dict]` |
+
+**`find_relevant_graph_nodes()` 的节点向量持久化（2026-07-30）**：GRAPH_ANCHOR_TYPES
+（schema/belief/mode/coping）节点的 embedding 按 workspace 持久化在
+`GRAPH_NODE_EMBEDDINGS_PATH(workspace_id)`（`.npz`），按节点逐一存内容哈希（sha256）+
+向量。每次调用时逐节点比对哈希：命中就直接复用磁盘里的向量，只有新增节点/描述变动的节点
+才会重新调用 embedding 模型——图谱重新生成后通常只有少数节点变动，不必整批重算，也不需要
+进程内存快取（磁盘本身就是跨 workspace、跨 process 都正确的持久层）。
 
 ---
 

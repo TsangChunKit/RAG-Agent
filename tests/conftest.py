@@ -8,7 +8,6 @@
 import json
 import os
 import shutil
-import sys
 from pathlib import Path
 from typing import Generator
 from unittest.mock import MagicMock, patch
@@ -177,25 +176,6 @@ def block_real_llm_calls(monkeypatch):
     monkeypatch.setattr(llm_module, "_client", None)
     monkeypatch.setattr(llm_module, "_client_key", None)
     monkeypatch.setattr(llm_module, "_openai_clients", {})
-
-
-@pytest.fixture(autouse=True)
-def reset_module_caches():
-    """清掉 ask.py 的模块级单例缓存（LanceDB 表 + 全量 chunk DataFrame）。
-
-    `ask._table` / `ask._all_chunks_cache` 一旦被某个测试填上，后面的测试就会拿到上一个
-    测试的 tmp_path 里的表。用 sys.modules 查而不是直接 import，避免为了清缓存把 lancedb /
-    reranker 这些重依赖拖进每一个测试。
-    """
-    def _clear():
-        mod = sys.modules.get("scripts.ask")
-        if mod is not None:
-            mod._table = None
-            mod._all_chunks_cache = None
-
-    _clear()
-    yield
-    _clear()
 
 
 @pytest.fixture

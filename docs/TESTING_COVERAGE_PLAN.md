@@ -182,7 +182,14 @@
 |-----|---------|----------------------|
 | `isolate_data_root` | `workspace_manager.WORKSPACES_ROOT` / `PRIVATE_DIR`、`INDEX_SETTINGS_PATH`、`GEMINI_SETTINGS_PATH`、`ENV_PATH`、`CURRENT_WORKSPACE` 环境变量、`st.session_state` | `WORKSPACES_ROOT` 是 **import-time 求值的模块常量**，测试里 patch `PRIVATE_DIR` 对它完全无效——这正是 13 个"以为自己隔离了"的测试实际在写真实目录的原因 |
 | `block_real_llm_calls` | `genai.Client` / `openai.OpenAI` 构造函数 + `llm` 的模块级 client 缓存 | 测试 patch 的是 `scripts.llm.ask_llm`，但调用方全是 `from scripts.llm import ask_llm`（名字已绑进各自 namespace），patch 源模块拦不住任何东西 |
-| `reset_module_caches` | `ask._table` / `ask._all_chunks_cache` | 模块级单例会把上一个测试的 tmp_path 表泄漏给下一个 |
+| `reset_module_caches`（2026-07-30 已移除，见下） | `ask._table` / `ask._all_chunks_cache` | 模块级单例会把上一个测试的 tmp_path 表泄漏给下一个 |
+
+> 2026-07-30 更新：这道闸门在修复「跨 workspace 快取污染」的生产 bug 时被移除——根治办法是
+> 直接删掉 `ask._table` / `ask._all_chunks_cache` 这两个模块级单例本身（`_get_table()` /
+> `_load_all_chunks()` 改成每次都按传入的 `workspace_id` 重新读取），而不是继续「测试记得清、
+> 生产环境自求多福」。没有全局状态就没有跨测试泄漏，这道闸门因此变得不再必要，`tests/conftest.py`
+> 现在只剩两道闸门。详见 [ARCHITECTURE.md](./ARCHITECTURE.md) 的「缓存策略」与
+> [TESTING_STRATEGY.md](./TESTING_STRATEGY.md) 的「测试隔离的两道闸门」。
 
 外加 `tests/integration/conftest.py` 提供三个替身：`deterministic_embed`（crc32 当种子：同文本
 同向量、不同文本近正交，"该合并的节点必然合并"于是是可断言的事实而不是概率，也不用加载 2GB 的

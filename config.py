@@ -87,6 +87,15 @@ def CHAT_SESSIONS_DIR(workspace_id: Optional[str] = None) -> Path:
     return get_workspace_dir(workspace_id) / "data" / "chat_sessions"
 
 
+def GRAPH_NODE_EMBEDDINGS_PATH(workspace_id: Optional[str] = None) -> Path:
+    """图谱锚点节点（GRAPH_ANCHOR_TYPES）embedding 持久化缓存（workspace 独立）。
+
+    按节点逐一存内容指纹（sha256）+ 向量：换 workspace 天然对应到各自的文件；
+    图谱重新生成后只有新增/描述变动的节点会被重新 embed，其余节点直接沿用。
+    """
+    return get_workspace_dir(workspace_id) / "data" / "graph_node_embeddings.npz"
+
+
 def EXPLICIT_CACHE_STATE_PATH(workspace_id: Optional[str] = None) -> Path:
     """Explicit Caching 状态记录（workspace 独立）。
 

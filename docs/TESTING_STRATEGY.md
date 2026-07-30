@@ -102,7 +102,7 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 > （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
 > 是 **821 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
-### 测试隔离的三道闸门（`tests/conftest.py`，autouse）
+### 测试隔离的两道闸门（`tests/conftest.py`，autouse）
 
 写在 conftest 顶层且 autouse，因为"让每个测试自己记得隔离"已被证明不可靠：
 
@@ -110,7 +110,12 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 |-----|-----|
 | `isolate_data_root` | 把 `workspace_manager.WORKSPACES_ROOT` / `PRIVATE_DIR`、`INDEX_SETTINGS_PATH`、`GEMINI_SETTINGS_PATH`、`ENV_PATH` 钉进 `tmp_path`，清 `CURRENT_WORKSPACE` 与 `st.session_state`，并预置一个 `default-ws`（要"零个 workspace"的测试用 `empty_workspaces_root`）|
 | `block_real_llm_calls` | 在 `genai.Client` / `openai.OpenAI` 构造函数上设断路器，漏 mock 时**大声报错**而不是静默出网 |
-| `reset_module_caches` | 清 `ask._table` / `ask._all_chunks_cache`，防模块级单例跨测试泄漏 |
+
+> 2026-07-30 移除的第三道闸门 `reset_module_caches`（曾清 `ask._table` / `ask._all_chunks_cache`）：
+> 这两个模块级单例本身已经被删掉（`scripts/ask.py` 的 `_get_table()` / `_load_all_chunks()`
+> 改成每次都按传入的 `workspace_id` 重新读取，不再缓存），既修掉了"跨 workspace 泄漏"的
+> 生产 bug，也顺带让这个"必须记得清"的测试闸门变得不再必要——没有全局状态就没有跨测试
+> 泄漏可言。详见 [ARCHITECTURE.md](./ARCHITECTURE.md) 的「缓存策略」一节。
 
 ⚠️ 三个反复踩的坑，写测试时记牢：
 1. `WORKSPACES_ROOT` 是 **import-time 求值的常量**，patch `PRIVATE_DIR` 对它无效。

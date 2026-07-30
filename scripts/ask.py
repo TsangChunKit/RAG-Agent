@@ -2,6 +2,7 @@
 answer() 组装"长期记忆 + 检索片段 + 问题"喂给 LLM，支持多 workspace。
 CLI 与 Streamlit 前端共用 answer() 这一个入口，不重复实现检索/问答逻辑（见 §M7）。
 """
+import hashlib
 import json
 import re
 from collections import Counter, defaultdict
@@ -18,6 +19,7 @@ from config import (
     CHAT_MEMORY_PATH,
     DB_DIR,
     GRAPH_JSON_PATH,
+    GRAPH_NODE_EMBEDDINGS_PATH,
     LANCEDB_TABLE_NAME,
     LONG_TERM_MEMORY_PATH,
     RERANKER_MIN_KEEP,
@@ -264,17 +266,13 @@ def restore_system_instruction_version(ts: str, workspace_id: Optional[str] = No
     return content
 
 
-_table = None
-_all_chunks_cache: Optional[pd.DataFrame] = None
-
-
 def _get_table(workspace_id: Optional[str] = None):
-    """获取 LanceDB 表（workspace 感知）。"""
-    global _table
-    if _table is None:
-        db = lancedb.connect(str(DB_DIR(workspace_id)))
-        _table = db.open_table(LANCEDB_TABLE_NAME)
-    return _table
+    """获取 LanceDB 表（workspace 感知）。每次都重新连接——本地文件连接是 ms 级成本，
+    不缓存以避免 process 存活期间跨 workspace 切换时沿用旧连接（2026-07-30 真实事故：
+    process 里查过一次 counseling workspace 后，即便 UI 切到别的 workspace，检索一直
+    沿用 counseling 的表）。"""
+    db = lancedb.connect(str(DB_DIR(workspace_id)))
+    return db.open_table(LANCEDB_TABLE_NAME)
 
 
 def sanitize(q: str) -> str:
@@ -282,12 +280,10 @@ def sanitize(q: str) -> str:
     return re.sub(r"['\"\\]", "", q)
 
 
-def _load_all_chunks(force: bool = False) -> pd.DataFrame:
-    global _all_chunks_cache
-    if _all_chunks_cache is None or force:
-        table = _get_table()
-        _all_chunks_cache = table.to_pandas().sort_values(["source_file", "chunk_index"])
-    return _all_chunks_cache
+def _load_all_chunks(workspace_id: Optional[str] = None) -> pd.DataFrame:
+    """加载全部 chunks（workspace 感知）。每次都重新读——同上，不缓存。"""
+    table = _get_table(workspace_id)
+    return table.to_pandas().sort_values(["source_file", "chunk_index"])
 
 
 def _merge_windows(by_file: dict, needed: set, hit_rank: dict, hit_score: Optional[dict] = None) -> list[dict]:
@@ -358,10 +354,11 @@ def _filter_by_score(hits: pd.DataFrame, min_score: float, min_keep: int) -> pd.
     return keep
 
 
-def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
+def retrieve(query: str, k: Optional[int] = None, workspace_id: Optional[str] = None) -> list[dict]:
     """混合检索（稠密语义 + ngram 关键词，RRF 融合）→ 可选 cross-encoder 精排 → 父块/窗口扩展。
     流程：hybrid 取 topN 候选 → bge-reranker-v2-m3 精排取 final_top_k → 父块扩展。
-    k / 窗口扩展 / rerank 开关及数量均取「⚙️ 索引设置」当前值（可在 UI 改，下次问答即生效，无需重建）。"""
+    k / 窗口扩展 / rerank 开关及数量均取「⚙️ 索引设置」当前值（可在 UI 改，下次问答即生效，无需重建）。
+    workspace_id: workspace ID（None = 当前 workspace）。"""
     # 繁→简归一化一次，后面 embed / FTS / reranker 三条腿共用（索引侧的 text 也是简体，见
     # scripts/text_norm.py）。使用者打繁体时不做这一步，ngram FTS 零命中、dense 也会漏。
     query = to_simplified(query)
@@ -371,7 +368,7 @@ def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
     window_expand = rp["window_expand"]
     rk = index_settings.reranker_params()
     use_reranker = bool(rk["use_reranker"])
-    table = _get_table()
+    table = _get_table(workspace_id)
     q_vec = embed_one(query)
     rrf = RRFReranker()
 
@@ -395,7 +392,7 @@ def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
             min_keep=int(rk.get("min_keep", RERANKER_MIN_KEEP) or 0),
         )
 
-    all_df = _load_all_chunks()
+    all_df = _load_all_chunks(workspace_id)
     by_file = {f: g.set_index("chunk_index") for f, g in all_df.groupby("source_file")}
 
     needed = set()
@@ -420,12 +417,14 @@ def retrieve(query: str, k: Optional[int] = None) -> list[dict]:
     return windows
 
 
-def _retrieve_within_date(anchor_vec, date: str, k: int, window_expand: int) -> list[dict]:
+def _retrieve_within_date(
+    anchor_vec, date: str, k: int, window_expand: int, workspace_id: Optional[str] = None
+) -> list[dict]:
     """在某一天的块里做一次定向检索：用锚点概念向量对当天所有块算余弦相似度，取最相关的 k 个，
     再做（该证据日专属的、通常更宽的）父块扩展并合并成窗口。全程在内存里（当天块本就在
-    _load_all_chunks() 缓存的 DataFrame 里，且带 vector 列），一天也就十几块，暴力算即可——
+    _load_all_chunks() 返回的 DataFrame 里，且带 vector 列），一天也就十几块，暴力算即可——
     不新开 LanceDB 查询、不走 FTS/reranker。返回的窗口带 via_graph_evidence 标记。"""
-    all_df = _load_all_chunks()
+    all_df = _load_all_chunks(workspace_id)
     day = all_df[all_df["session_date"] == date]
     if day.empty or k <= 0:
         return []
@@ -498,24 +497,19 @@ def _load_chat_memory(workspace_id: Optional[str] = None) -> str:
     return "（还没有生成 AI 对话记忆。）"
 
 
-_graph_cache: Optional[dict] = None
-_graph_node_embeddings: Optional[dict] = None
-
-
 def _load_graph(workspace_id: Optional[str] = None) -> Optional[dict]:
-    """加载并合并图谱（workspace 感知）。
+    """加载并合并图谱（workspace 感知）。每次都重新读——parse 小 JSON 是 ms 级成本，
+    不缓存以避免跨 workspace 切换沿用旧图谱，同时也顺带修掉"图谱重新生成后需要重启
+    process 才生效"的问题。
 
     合并真实图谱 + AI 对话图谱。合并是纯 Python 操作，不产生额外 LLM 调用。
     任一份不存在就优雅降级；都不存在返回 None。
     """
-    global _graph_cache
-    if _graph_cache is None:
-        graph_path = GRAPH_JSON_PATH(workspace_id)
-        chat_graph_path = CHAT_GRAPH_JSON_PATH(workspace_id)
-        therapy_graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.exists() else None
-        chat_graph = json.loads(chat_graph_path.read_text(encoding="utf-8")) if chat_graph_path.exists() else None
-        _graph_cache = merge_graphs(therapy_graph, chat_graph)
-    return _graph_cache
+    graph_path = GRAPH_JSON_PATH(workspace_id)
+    chat_graph_path = CHAT_GRAPH_JSON_PATH(workspace_id)
+    therapy_graph = json.loads(graph_path.read_text(encoding="utf-8")) if graph_path.exists() else None
+    chat_graph = json.loads(chat_graph_path.read_text(encoding="utf-8")) if chat_graph_path.exists() else None
+    return merge_graphs(therapy_graph, chat_graph)
 
 
 # 标签取自单一真相源（scripts/graph_utils），新增节点/关系类型无需再在这里同步。
@@ -564,22 +558,78 @@ def _node_embed_text(node: dict) -> str:
     return f"{node['label']}{domain}：{node['description']}"
 
 
-def find_relevant_graph_nodes(question: str, graph: dict, top_k: int = GRAPH_NODE_MATCH_TOP_K) -> list[dict]:
+def _node_text_hash(node: dict) -> str:
+    """单节点内容指纹，用于判断该节点的 embedding 是否需要重算（新增/描述变动）。"""
+    return hashlib.sha256(_node_embed_text(node).encode("utf-8")).hexdigest()
+
+
+def _load_persisted_node_embeddings(workspace_id: Optional[str] = None) -> dict:
+    """读磁盘上持久化的图谱锚点节点 embedding（workspace 感知）。
+    返回 {node_id: (text_hash, vector)}；文件不存在/读取失败/缺栏位都视为全部 cache miss，
+    不抛异常（保证不影响正常问答流程）。"""
+    path = GRAPH_NODE_EMBEDDINGS_PATH(workspace_id)
+    if not path.exists():
+        return {}
+    try:
+        data = np.load(path, allow_pickle=False)
+        return {
+            str(node_id): (str(text_hash), vector)
+            for node_id, text_hash, vector in zip(data["node_ids"], data["text_hashes"], data["vectors"])
+        }
+    except Exception:  # noqa: BLE001 — 缓存文件损坏时应静默退化成全量重算，不阻断问答
+        return {}
+
+
+def _save_persisted_node_embeddings(workspace_id: Optional[str], entries: dict) -> None:
+    """把 {node_id: (text_hash, vector)} 整份覆写到磁盘（不在 entries 里的旧节点自然被丢弃，
+    不会无限累积）。写入失败（磁盘满/权限）只打印警告，不抛异常、不影响本次回答。"""
+    if not entries:
+        return
+    node_ids = list(entries.keys())
+    text_hashes = [entries[nid][0] for nid in node_ids]
+    vectors = np.stack([np.asarray(entries[nid][1], dtype=np.float32) for nid in node_ids])
+    path = GRAPH_NODE_EMBEDDINGS_PATH(workspace_id)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.savez(path, node_ids=np.array(node_ids), text_hashes=np.array(text_hashes), vectors=vectors)
+    except OSError as e:
+        print(f"[ask] 写入图谱节点 embedding 缓存失败，不影响本次回答：{e}")
+
+
+def find_relevant_graph_nodes(
+    question: str, graph: dict, top_k: int = GRAPH_NODE_MATCH_TOP_K, workspace_id: Optional[str] = None
+) -> list[dict]:
     """把问题和图谱里每个节点的（标签+描述）做语义相似度匹配，返回最相关的几个节点
     （高于 GRAPH_NODE_MATCH_THRESHOLD 才算数），用于把检索"锚定"到图谱里的概念上，
     而不是只依赖使用者问题原始措辞的字面/语义匹配。
+
+    节点向量按 workspace 持久化在磁盘（见 GRAPH_NODE_EMBEDDINGS_PATH），且按节点逐一用内容
+    哈希判断是否需要重新 embed：图谱重新生成后通常只有新增/描述变动的少数节点要重算，其余
+    节点直接复用磁盘里的向量，不必整批重新 embed（省下的是 BGE-M3 调用，秒级成本）。
     """
-    global _graph_node_embeddings
     nodes = [n for n in graph["nodes"] if n["type"] in GRAPH_ANCHOR_TYPES]
     if not nodes:
         return []
 
-    if _graph_node_embeddings is None:
-        texts = [_node_embed_text(n) for n in nodes]
+    persisted = _load_persisted_node_embeddings(workspace_id)
+    current: dict = {}
+    to_embed = []
+    for n in nodes:
+        h = _node_text_hash(n)
+        cached = persisted.get(n["id"])
+        if cached is not None and cached[0] == h:
+            current[n["id"]] = cached
+        else:
+            to_embed.append(n)
+
+    if to_embed:
+        texts = [_node_embed_text(n) for n in to_embed]
         from scripts.embedder import embed
 
         vecs = embed(texts)["dense_vecs"]
-        _graph_node_embeddings = {n["id"]: v for n, v in zip(nodes, vecs)}
+        for n, v in zip(to_embed, vecs):
+            current[n["id"]] = (_node_text_hash(n), v)
+        _save_persisted_node_embeddings(workspace_id, current)
 
     # 图谱节点的标签/描述是简体（从简体语料提炼），繁体问题不归一化会匹配不上
     q_vec = embed_one(to_simplified(question))
@@ -587,7 +637,7 @@ def find_relevant_graph_nodes(question: str, graph: dict, top_k: int = GRAPH_NOD
 
     scored = []
     for n in nodes:
-        v = _graph_node_embeddings[n["id"]]
+        v = np.asarray(current[n["id"]][1], dtype=np.float32)
         v_norm = v / (np.linalg.norm(v) + 1e-9)
         sim = float(np.dot(q_norm, v_norm))
         if sim >= GRAPH_NODE_MATCH_THRESHOLD:

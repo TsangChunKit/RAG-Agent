@@ -374,16 +374,15 @@ class TestQueryNormalization:
         """图谱锚点匹配也要归一化：图谱节点文本是简体，繁体问题否则匹配不上"""
         import scripts.ask as ask_mod
 
-        graph = {
-            "nodes": [
-                {"id": "schema:a", "type": "belief", "label": "我不值得", "description": "核心信念", "domain": ""}
-            ],
-            "edges": [],
-        }
+        node = {"id": "schema:a", "type": "belief", "label": "我不值得", "description": "核心信念", "domain": ""}
+        graph = {"nodes": [node], "edges": []}
         vec = np.ones(8)
         mock_embed.return_value = vec
 
-        with patch.object(ask_mod, "_graph_node_embeddings", {"schema:a": vec}):
+        # 让节点向量直接命中磁盘缓存（避免这个测试还要 mock scripts.embedder.embed）：
+        # 只关心 embed_one(问题) 有没有被正确归一化调用。
+        persisted = {"schema:a": (ask_mod._node_text_hash(node), vec)}
+        with patch("scripts.ask._load_persisted_node_embeddings", return_value=persisted):
             ask_mod.find_relevant_graph_nodes("我喜歡抽水煙", graph)
 
         mock_embed.assert_called_once_with("我喜欢抽水烟")
@@ -459,10 +458,6 @@ class TestGraphLoading:
     def test_load_graph_valid(self, tmp_path):
         """测试加载有效图谱"""
         from scripts.ask import _load_graph
-        import scripts.ask
-
-        # 清空 cache（避免之前测试的缓存）
-        scripts.ask._graph_cache = None
 
         graph_file = tmp_path / "graph.json"
         graph_data = {
@@ -490,10 +485,6 @@ class TestGraphLoading:
     def test_load_graph_missing(self, tmp_path):
         """测试图谱文件不存在"""
         from scripts.ask import _load_graph
-        import scripts.ask
-
-        # 清空 cache（避免之前测试的缓存）
-        scripts.ask._graph_cache = None
 
         missing_file = tmp_path / "graph.json"
 
@@ -511,10 +502,6 @@ class TestGraphLoading:
         """测试无效 JSON"""
         from scripts.ask import _load_graph
 
-        # 清空 cache（避免之前测试的缓存）
-        import scripts.ask
-        scripts.ask._graph_cache = None
-
         graph_file = tmp_path / "graph.json"
         graph_file.write_text("{invalid json")
 
@@ -531,6 +518,177 @@ class TestGraphLoading:
                 except json.JSONDecodeError:
                     # 预期行为：JSON 解析失败
                     pass
+
+
+class TestWorkspaceCacheIsolation:
+    """cross-workspace 快取隔离回归测试（2026-07-30 真实事故）：process 曾经查询过某个
+    workspace 之后切到另一个 workspace，检索/图谱结果不能继续沿用旧 workspace 的连接/数据——
+    这正是「在八字紫微 workspace 问问题却撈到心理咨询 chunks」的成因：_get_table /
+    _load_all_chunks / _load_graph / _graph_node_embeddings 曾经是不分 workspace 的全域快取，
+    第一次查完某个 workspace 后就锁死，无视之后传入的 workspace_id。"""
+
+    def test_get_table_reconnects_per_workspace(self):
+        import scripts.ask as ask_mod
+
+        table_a, table_b = MagicMock(name="table_a"), MagicMock(name="table_b")
+        db_a, db_b = MagicMock(), MagicMock()
+        db_a.open_table.return_value = table_a
+        db_b.open_table.return_value = table_b
+
+        with patch("scripts.ask.DB_DIR", side_effect=lambda workspace_id=None: Path(f"/fake/{workspace_id}/db")), \
+             patch("scripts.ask.lancedb.connect", side_effect=lambda p: db_a if "ws_a" in p else db_b):
+            result_a = ask_mod._get_table(workspace_id="ws_a")
+            result_b = ask_mod._get_table(workspace_id="ws_b")
+
+        assert result_a is table_a
+        assert result_b is table_b
+
+    def test_load_all_chunks_reflects_workspace_switch(self):
+        import scripts.ask as ask_mod
+
+        df_a = pd.DataFrame({"source_file": ["counseling.txt"], "chunk_index": [0]})
+        df_b = pd.DataFrame({"source_file": ["bazi.txt"], "chunk_index": [0]})
+        table_a, table_b = MagicMock(), MagicMock()
+        table_a.to_pandas.return_value = df_a
+        table_b.to_pandas.return_value = df_b
+
+        def fake_get_table(workspace_id=None):
+            return table_a if workspace_id == "ws_a" else table_b
+
+        with patch("scripts.ask._get_table", side_effect=fake_get_table):
+            result_a = ask_mod._load_all_chunks(workspace_id="ws_a")
+            result_b = ask_mod._load_all_chunks(workspace_id="ws_b")
+
+        assert result_a["source_file"].iloc[0] == "counseling.txt"
+        assert result_b["source_file"].iloc[0] == "bazi.txt"
+
+    def test_load_graph_reflects_workspace_switch(self, tmp_path):
+        import scripts.ask as ask_mod
+
+        graph_a_path = tmp_path / "a_graph.json"
+        graph_b_path = tmp_path / "b_graph.json"
+        graph_a_path.write_text(json.dumps(
+            {"nodes": [{"id": "n_counseling", "label": "咨询节点", "centrality": 0.5}], "edges": []}
+        ))
+        graph_b_path.write_text(json.dumps(
+            {"nodes": [{"id": "n_bazi", "label": "八字节点", "centrality": 0.5}], "edges": []}
+        ))
+        missing_chat_path = tmp_path / "missing_chat.json"  # 两个 workspace 都不存在对话图谱
+
+        def fake_graph_path(workspace_id=None):
+            return graph_a_path if workspace_id == "ws_a" else graph_b_path
+
+        with patch("scripts.ask.GRAPH_JSON_PATH", side_effect=fake_graph_path), \
+             patch("scripts.ask.CHAT_GRAPH_JSON_PATH", return_value=missing_chat_path):
+            result_a = ask_mod._load_graph(workspace_id="ws_a")
+            result_b = ask_mod._load_graph(workspace_id="ws_b")
+
+        assert result_a["nodes"][0]["id"] == "n_counseling"
+        assert result_b["nodes"][0]["id"] == "n_bazi"
+
+    @patch("scripts.embedder.embed")
+    @patch("scripts.ask.embed_one")
+    def test_graph_node_embeddings_isolated_per_workspace_file(self, mock_embed_one, mock_embed, tmp_path):
+        """不同 workspace 的持久化向量各自存在自己的文件，互不干扰（原本的全域 dict 快取
+        没有这个隔离，第二个 workspace 会 KeyError 或答非所问）。"""
+        from scripts.ask import find_relevant_graph_nodes
+
+        mock_embed_one.return_value = np.array([0.5] * 8)
+        mock_embed.side_effect = [
+            {"dense_vecs": [np.array([0.6] * 8)]},
+            {"dense_vecs": [np.array([0.6] * 8)]},
+        ]
+
+        graph_a = {"nodes": [{"id": "n_counseling", "label": "咨询议题", "type": "schema", "description": "d"}], "edges": []}
+        graph_b = {"nodes": [{"id": "n_bazi", "label": "八字格局", "type": "schema", "description": "d"}], "edges": []}
+
+        path_a, path_b = tmp_path / "ws_a.npz", tmp_path / "ws_b.npz"
+
+        def fake_path(workspace_id=None):
+            return path_a if workspace_id == "ws_a" else path_b
+
+        with patch("scripts.ask.GRAPH_NODE_EMBEDDINGS_PATH", side_effect=fake_path):
+            result_a = find_relevant_graph_nodes("问题", graph_a, top_k=1, workspace_id="ws_a")
+            result_b = find_relevant_graph_nodes("问题", graph_b, top_k=1, workspace_id="ws_b")
+
+        assert mock_embed.call_count == 2
+        assert result_a and result_a[0]["id"] == "n_counseling"
+        assert result_b and result_b[0]["id"] == "n_bazi"
+        assert path_a.exists() and path_b.exists()
+        assert list(np.load(path_a)["node_ids"]) == ["n_counseling"]
+        assert list(np.load(path_b)["node_ids"]) == ["n_bazi"]
+
+    @patch("scripts.embedder.embed")
+    @patch("scripts.ask.embed_one")
+    def test_graph_node_embeddings_cache_hit_skips_embed(self, mock_embed_one, mock_embed, tmp_path):
+        """同一个 workspace 里 anchor 节点集合完全没变时，第二次调用应该全部命中磁盘缓存，
+        不再呼叫 embed()。"""
+        from scripts.ask import find_relevant_graph_nodes
+
+        mock_embed_one.return_value = np.array([0.5] * 8)
+        mock_embed.return_value = {"dense_vecs": [np.array([0.6] * 8)]}
+
+        node = {"id": "n1", "label": "议题", "type": "schema", "description": "d"}
+        graph = {"nodes": [node], "edges": []}
+        path = tmp_path / "ws.npz"
+
+        with patch("scripts.ask.GRAPH_NODE_EMBEDDINGS_PATH", return_value=path):
+            find_relevant_graph_nodes("问题", graph, top_k=1, workspace_id="ws")
+            find_relevant_graph_nodes("问题", graph, top_k=1, workspace_id="ws")
+
+        assert mock_embed.call_count == 1
+
+    @patch("scripts.embedder.embed")
+    @patch("scripts.ask.embed_one")
+    def test_graph_node_embeddings_only_embeds_new_node_incrementally(self, mock_embed_one, mock_embed, tmp_path):
+        """图谱新增一个节点、其余节点不变时，只补算新节点——这是这次设计改动最关键的行为：
+        增量补算，不是「一个节点变了就整批重算」。"""
+        from scripts.ask import find_relevant_graph_nodes
+
+        mock_embed_one.return_value = np.array([0.5] * 8)
+        node1 = {"id": "n1", "label": "议题一", "type": "schema", "description": "d1"}
+        node2 = {"id": "n2", "label": "议题二", "type": "schema", "description": "d2"}
+        path = tmp_path / "ws.npz"
+
+        mock_embed.side_effect = [
+            {"dense_vecs": [np.array([0.6] * 8)]},  # 第一次：只有 n1
+            {"dense_vecs": [np.array([0.4] * 8)]},  # 第二次：只补算新节点 n2
+        ]
+
+        with patch("scripts.ask.GRAPH_NODE_EMBEDDINGS_PATH", return_value=path):
+            find_relevant_graph_nodes("问题", {"nodes": [node1], "edges": []}, top_k=2, workspace_id="ws")
+            find_relevant_graph_nodes("问题", {"nodes": [node1, node2], "edges": []}, top_k=2, workspace_id="ws")
+
+        assert mock_embed.call_count == 2
+        second_call_texts = mock_embed.call_args_list[1].args[0]
+        assert len(second_call_texts) == 1
+        assert "议题二" in second_call_texts[0]
+
+    @patch("scripts.embedder.embed")
+    @patch("scripts.ask.embed_one")
+    def test_graph_node_embeddings_recomputes_when_description_changes(self, mock_embed_one, mock_embed, tmp_path):
+        """既有节点 id 不变但 description 变了，视为需要重算，并正确覆写磁盘里那一笔
+        （而不是沿用跟新描述对不上的旧向量）。"""
+        from scripts.ask import find_relevant_graph_nodes
+        import scripts.ask as ask_mod
+
+        mock_embed_one.return_value = np.array([0.5] * 8)
+        node_v1 = {"id": "n1", "label": "议题", "type": "schema", "description": "旧描述"}
+        node_v2 = {"id": "n1", "label": "议题", "type": "schema", "description": "新描述"}
+        path = tmp_path / "ws.npz"
+
+        mock_embed.side_effect = [
+            {"dense_vecs": [np.array([0.6] * 8)]},
+            {"dense_vecs": [np.array([0.2] * 8)]},
+        ]
+
+        with patch("scripts.ask.GRAPH_NODE_EMBEDDINGS_PATH", return_value=path):
+            find_relevant_graph_nodes("问题", {"nodes": [node_v1], "edges": []}, top_k=1, workspace_id="ws")
+            find_relevant_graph_nodes("问题", {"nodes": [node_v2], "edges": []}, top_k=1, workspace_id="ws")
+
+        assert mock_embed.call_count == 2
+        data = np.load(path)
+        assert list(data["text_hashes"]) == [ask_mod._node_text_hash(node_v2)]
 
 
 class TestGraphFormatting:
@@ -892,13 +1050,9 @@ class TestGraphRAG:
 
     @patch("scripts.embedder.embed")
     @patch("scripts.ask.embed_one")
-    def test_find_relevant_graph_nodes_basic(self, mock_embed_one, mock_embed):
+    def test_find_relevant_graph_nodes_basic(self, mock_embed_one, mock_embed, tmp_path):
         """测试查找相关图谱节点"""
         from scripts.ask import find_relevant_graph_nodes
-
-        # 清空缓存
-        import scripts.ask
-        scripts.ask._graph_node_embeddings = None
 
         # Mock embed_one（查询向量）
         mock_embed_one.return_value = np.array([0.5] * 1024)
@@ -920,7 +1074,9 @@ class TestGraphRAG:
             "edges": [],
         }
 
-        result = find_relevant_graph_nodes("测试问题", graph, top_k=2)
+        # 用 tmp_path 隔离持久化缓存文件，避免读写到真实 workspace 的磁盘缓存
+        with patch("scripts.ask.GRAPH_NODE_EMBEDDINGS_PATH", return_value=tmp_path / "cache.npz"):
+            result = find_relevant_graph_nodes("测试问题", graph, top_k=2)
 
         # 应该返回相关节点
         assert len(result) <= 2
