@@ -1,24 +1,51 @@
 {
   "nodes": [
     {
-      "id": "chat:event:收到微软口头offer",
-      "type": "event",
-      "label": "收到微软口头offer",
+      "id": "chat:coping:大胃王",
+      "type": "coping",
+      "label": "大胃王",
       "domain": "",
-      "description": "2026-07-06收到微軟大公司的口頭offer，薪資福利比預期好，但同時引發對背景調查出問題和災難性事件的強烈焦慮。",
+      "description": "吞咽忧愁、烦恼、焦虑以维持前行、避免停下的保护部分，导致身体疲惫、无生命力感。",
       "related_dates": [
-        "2026-07-06"
+        "2026-07-25",
+        "2026-07-30"
       ],
       "source": "chat",
-      "degree_centrality": 0.0,
+      "degree_centrality": 0.75,
+      "betweenness_centrality": 0.5
+    },
+    {
+      "id": "chat:mode:消防员",
+      "type": "coping",
+      "label": "消防员",
+      "domain": "",
+      "description": "IFS中的消防员模式，通过看影片等分心行为转移注意力，避免面对内在痛苦。",
+      "related_dates": [
+        "2026-07-23"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.25,
       "betweenness_centrality": 0.0
     },
     {
-      "id": "chat:event:12岁内在小孩浮现",
-      "type": "event",
-      "label": "12岁内在小孩浮现",
+      "id": "chat:person:12岁内在小孩",
+      "type": "person",
+      "label": "12岁内在小孩",
       "domain": "",
-      "description": "2026-07-23 IFS工作中浮现12岁从佛山搬到香港的内在小孩，位置在心脏，状态是挣扎打滚，核心恐惧是环境改变后活不下去，只能靠自己。",
+      "description": "12岁从佛山搬到香港的内在小孩，感到必须靠自己，渴望陪伴妈妈。",
+      "related_dates": [
+        "2026-07-23"
+      ],
+      "source": "chat",
+      "degree_centrality": 0.25,
+      "betweenness_centrality": 0.0
+    },
+    {
+      "id": "chat:event:12岁搬家煮饭记忆",
+      "type": "event",
+      "label": "12岁搬家煮饭记忆",
+      "domain": "",
+      "description": "12岁时对妈妈说“我宁愿一个人在家也想陪在妈妈身边，可以帮忙煮饭吃”。",
       "related_dates": [
         "2026-07-23"
       ],
@@ -27,120 +54,75 @@
       "betweenness_centrality": 0.0
     },
     {
-      "id": "chat:event:公司上市计划公布",
-      "type": "event",
-      "label": "公司上市计划公布",
-      "domain": "",
-      "description": "2026-07-21听到cloudmile公司上市计划在2027年第一季度，产生错过机会的遗憾和疑虑。",
-      "related_dates": [
-        "2026-07-21"
-      ],
-      "source": "chat",
-      "degree_centrality": 0.0,
-      "betweenness_centrality": 0.0
-    },
-    {
-      "id": "chat:event:误用API key",
-      "type": "event",
-      "label": "误用API key",
-      "domain": "",
-      "description": "2026-07-30发现误用公司Amazon Bedrock API key导致300USD费用，引发是否主动报告的尴尬和紧张。",
-      "related_dates": [
-        "2026-07-30"
-      ],
-      "source": "chat",
-      "degree_centrality": 0.0,
-      "betweenness_centrality": 0.0
-    },
-    {
-      "id": "chat:coping:用水烟排解忧愁",
+      "id": "chat:emotion:空落落感",
       "type": "coping",
-      "label": "用水烟排解忧愁",
+      "label": "空落落感",
       "domain": "",
-      "description": "通过抽水烟来排解忧愁、烦恼、焦虑，烟雾吞吐时可以短暂休息，不用思考，作为放哨休息的方式。",
-      "related_dates": [
-        "2026-07-25"
-      ],
-      "source": "chat",
-      "degree_centrality": 0.0,
-      "betweenness_centrality": 0.0
-    },
-    {
-      "id": "chat:schema:停下即死亡信念",
-      "type": "schema",
-      "label": "停下即死亡信念",
-      "domain": "其他",
-      "description": "认为停下就会死亡的信念，源于长期生存焦虑和必须高效的内化规则。",
+      "description": "停止旧习惯（如打游戏）后产生的空虚、无所适从的感觉。",
       "related_dates": [
         "2026-07-20"
       ],
       "source": "chat",
-      "degree_centrality": 0.0,
+      "degree_centrality": 0.25,
       "betweenness_centrality": 0.0
     }
   ],
   "edges": [
     {
-      "source": "chat:event:收到微软口头offer",
-      "target": "event:419",
+      "source": "chat:coping:大胃王",
+      "target": "mode:6",
       "relation_type": "relates_to",
-      "relation": "这个事件是收到口头Offer的延续，触发了相似的背景调查和试用期焦虑。",
+      "relation": "大胃王是守门员模式的延伸，通过吞咽焦虑来维持控制和安全感。",
       "evidence_dates": [
-        "2026-07-06"
-      ]
-    },
-    {
-      "source": "chat:event:12岁内在小孩浮现",
-      "target": "event:312",
-      "relation_type": "relates_to",
-      "relation": "这个事件是六年级搬家事件的详细内在记忆浮现，强化了只能靠自己的信念。",
-      "evidence_dates": [
-        "2026-07-23"
-      ]
-    },
-    {
-      "source": "chat:event:公司上市计划公布",
-      "target": "event:126",
-      "relation_type": "relates_to",
-      "relation": "这个事件与离职事件相关，引发了是否选错的遗憾和疑虑。",
-      "evidence_dates": [
-        "2026-07-21"
-      ]
-    },
-    {
-      "source": "chat:event:误用API key",
-      "target": "event:126",
-      "relation_type": "relates_to",
-      "relation": "这个事件发生在离职交接期间，激活了怕给团队添麻烦的愧疚。",
-      "evidence_dates": [
+        "2026-07-25",
         "2026-07-30"
       ]
     },
     {
-      "source": "chat:coping:用水烟排解忧愁",
-      "target": "mode:374",
+      "source": "chat:person:12岁内在小孩",
+      "target": "mode:0",
       "relation_type": "relates_to",
-      "relation": "这个应对模式是守门员模式下的防御方式，用来应对必须高效和生存焦虑的压力。",
-      "evidence_dates": [
-        "2026-07-25"
-      ]
-    },
-    {
-      "source": "chat:schema:停下即死亡信念",
-      "target": "mode:374",
-      "relation_type": "relates_to",
-      "relation": "这个信念是惩罚性父母模式（守门员）的核心规则之一，强化了不能停下的焦虑。",
-      "evidence_dates": [
-        "2026-07-20"
-      ]
-    },
-    {
-      "source": "chat:event:12岁内在小孩浮现",
-      "target": "schema:278",
-      "relation_type": "relates_to",
-      "relation": "这个事件激活了被抛弃/不稳定图式，核心是环境改变后活不下去的恐惧。",
+      "relation": "12岁内在小孩是脆弱儿童模式的具体体现，源于搬家失去安全感。",
       "evidence_dates": [
         "2026-07-23"
+      ]
+    },
+    {
+      "source": "chat:event:12岁搬家煮饭记忆",
+      "target": "event:312",
+      "relation_type": "relates_to",
+      "relation": "该记忆是六年级搬家事件的延伸，体现了渴望联结与靠自己的冲突。",
+      "evidence_dates": [
+        "2026-07-23"
+      ]
+    },
+    {
+      "source": "chat:mode:消防员",
+      "target": "chat:coping:大胃王",
+      "relation_type": "co_occurs",
+      "relation": "消防员通过分心帮助大胃王暂时卸下吞咽的焦虑负担。",
+      "evidence_dates": [
+        "2026-07-23"
+      ]
+    },
+    {
+      "source": "chat:emotion:空落落感",
+      "target": "chat:coping:大胃王",
+      "relation_type": "manifested_in",
+      "relation": "空落落感是大胃王无法继续吞咽新焦虑时的外显表现。",
+      "evidence_dates": [
+        "2026-07-20",
+        "2026-07-30"
+      ]
+    },
+    {
+      "source": "chat:person:12岁内在小孩",
+      "target": "chat:coping:大胃王",
+      "relation_type": "triggers",
+      "relation": "12岁内在小孩的恐惧激活大胃王持续吞咽焦虑以求生存。",
+      "evidence_dates": [
+        "2026-07-23",
+        "2026-07-25"
       ]
     }
   ]
