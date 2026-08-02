@@ -105,8 +105,14 @@ REPO="$HOME/Documents/Project/RAG-Agent"
 
 hermes mcp add counseling-rag \
   --command "$REPO/.venv/bin/python" \
-  --args -m scripts.mcp_rag_search
+  --args -m scripts.mcp_rag_search \
+  --env "PYTHONPATH=$REPO"
 ```
+
+> **必加 `PYTHONPATH=$REPO`**：Hermes 啟動 stdio MCP 時**不會**把 cwd 設到 repo root，
+> 也沒有 config 的 `cwd` 欄位。只有 `python -m scripts.mcp_rag_search` 時，
+> 若找不到 `scripts` 套件會直接 `ModuleNotFoundError` 然後 Connection closed。
+> （`mcp_rag_search.main()` 裡的 `os.chdir` 來不及救，因為 `-m` 在 import 前就失敗。）
 
 或在 `~/.hermes/config.yaml` 手動寫：
 
@@ -115,6 +121,8 @@ mcp_servers:
   counseling-rag:
     command: "/Users/YOU/Documents/Project/RAG-Agent/.venv/bin/python"
     args: ["-m", "scripts.mcp_rag_search"]
+    env:
+      PYTHONPATH: "/Users/YOU/Documents/Project/RAG-Agent"
     # 首次 retrieve 會載入 BGE-M3，可能 >30s
     timeout: 180
 ```
