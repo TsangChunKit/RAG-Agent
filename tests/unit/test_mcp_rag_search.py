@@ -1,11 +1,25 @@
 """MCP RAG search 單元測試。
 
-只測薄包裝邏輯（序列化 / 預設 workspace / 錯誤路徑），一律 mock `ask.retrieve`，
+只測薄包裝邏輯（序列化 / 預設 workspace / 錯誤路徑 / 設定追蹤），一律 mock，
 不載 BGE、不連真 LanceDB。
 """
 from __future__ import annotations
 
 import pytest
+
+
+_FAKE_SETTINGS = {
+    "source": "private.nosync/index_settings.json (Streamlit ⚙️ 索引設置)",
+    "retrieval": {"top_k": 8, "window_expand": 1},
+    "reranker": {
+        "use_reranker": True,
+        "rerank_top_k": 30,
+        "final_top_k": 4,
+        "min_score": 0.2,
+        "min_keep": 2,
+    },
+    "notes": {"k_override": "...", "tracks_ui": True},
+}
 
 
 # ── serialize_window ────────────────────────────────────────────────────
@@ -43,11 +57,37 @@ class TestSerializeWindow:
         assert out["chunk_index_range"] is None
 
 
+# ── get_index_settings / tracks UI ──────────────────────────────────────
+
+
+class TestGetIndexSettings:
+    def test_returns_live_ui_settings(self, monkeypatch):
+        from scripts import mcp_rag_search as m
+
+        monkeypatch.setattr(m, "_load_query_time_settings", lambda: dict(_FAKE_SETTINGS))
+        result = m.get_index_settings()
+        assert result["ok"] is True
+        assert result["settings"]["retrieval"]["top_k"] == 8
+        assert result["settings"]["reranker"]["min_score"] == 0.2
+        assert result["settings"]["notes"]["tracks_ui"] is True
+
+    def test_load_failure_visible(self, monkeypatch):
+        from scripts import mcp_rag_search as m
+
+        def boom():
+            raise RuntimeError("settings broken")
+
+        monkeypatch.setattr(m, "_load_query_time_settings", boom)
+        result = m.get_index_settings()
+        assert result["ok"] is False
+        assert "broken" in result["error"]
+
+
 # ── search_sessions ─────────────────────────────────────────────────────
 
 
 class TestSearchSessions:
-    def test_happy_path_default_workspace(self, monkeypatch):
+    def test_happy_path_includes_settings_used(self, monkeypatch):
         from scripts import mcp_rag_search as m
 
         calls = []
@@ -69,12 +109,16 @@ class TestSearchSessions:
             ]
 
         monkeypatch.setattr(m, "_retrieve", fake_retrieve)
+        monkeypatch.setattr(m, "_load_query_time_settings", lambda: dict(_FAKE_SETTINGS))
         result = m.search_sessions("買遊戲電腦")
         assert result["ok"] is True
         assert result["workspace_id"] == "counseling"
         assert result["count"] == 1
         assert result["results"][0]["text"] == "命中"
-        assert result["results"][0]["chunk_index_range"] == [0, 1]
+        assert result["k_override"] is None
+        assert result["settings_used"]["reranker"]["final_top_k"] == 4
+        assert result["settings_used"]["notes"]["tracks_ui"] is True
+        # 預設 k=None → 完全交給 UI / retrieve
         assert calls == [("買遊戲電腦", None, "counseling")]
 
     def test_explicit_k_and_workspace(self, monkeypatch):
@@ -89,17 +133,22 @@ class TestSearchSessions:
             return []
 
         monkeypatch.setattr(m, "_retrieve", fake_retrieve)
+        monkeypatch.setattr(m, "_load_query_time_settings", lambda: dict(_FAKE_SETTINGS))
         result = m.search_sessions("q", k=3, workspace_id="bazhai-ziwu")
         assert result["ok"] is True
         assert result["count"] == 0
+        assert result["k_override"] == 3
+        assert "settings_used" in result
         assert captured == {"query": "q", "k": 3, "workspace_id": "bazhai-ziwu"}
 
-    def test_empty_query_rejected(self):
-        from scripts.mcp_rag_search import search_sessions
+    def test_empty_query_rejected_still_attaches_settings(self, monkeypatch):
+        from scripts import mcp_rag_search as m
 
-        result = search_sessions("   ")
+        monkeypatch.setattr(m, "_load_query_time_settings", lambda: dict(_FAKE_SETTINGS))
+        result = m.search_sessions("   ")
         assert result["ok"] is False
         assert "query" in result["error"].lower() or "空" in result["error"]
+        assert result["settings_used"]["retrieval"]["top_k"] == 8
 
     def test_retrieve_value_error_visible(self, monkeypatch):
         from scripts import mcp_rag_search as m
@@ -108,10 +157,12 @@ class TestSearchSessions:
             raise ValueError("Table 'sessions' was not found")
 
         monkeypatch.setattr(m, "_retrieve", boom)
+        monkeypatch.setattr(m, "_load_query_time_settings", lambda: dict(_FAKE_SETTINGS))
         result = m.search_sessions("anything")
         assert result["ok"] is False
         assert "sessions" in result["error"]
         assert result["workspace_id"] == "counseling"
+        assert result["settings_used"]["notes"]["tracks_ui"] is True
 
 
 # ── list_workspaces_info ────────────────────────────────────────────────

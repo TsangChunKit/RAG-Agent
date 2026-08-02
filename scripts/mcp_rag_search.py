@@ -3,6 +3,11 @@
 薄包裝：把既有 `scripts.ask.retrieve()` 外露成 MCP tools，不重寫向量檢索。
 預設 workspace = counseling。只做索引搜尋，不呼叫 `answer()` / LLM。
 
+**索引參數與 UI 共用同一真相源**：`private.nosync/index_settings.json`
+（Streamlit「⚙️ 索引設置」）。每次 search 都重新讀檔，無 MCP 獨立配置、
+不寫回設定檔。查詢期參數（top_k / final_top_k / min_score 等）改 UI 後
+下一次 MCP 搜尋即生效。
+
 啟動（stdio，給 Hermes 用）：
 
     uv run --group mcp python -m scripts.mcp_rag_search
@@ -25,7 +30,7 @@ if str(_ROOT) not in sys.path:
 DEFAULT_WORKSPACE = "counseling"
 
 
-# ── 可注入的依賴點（測試 monkeypatch 這兩個名字，不碰真 LanceDB / 真 workspace 目錄）──
+# ── 可注入的依賴點（測試 monkeypatch，不碰真 LanceDB / 真設定檔）──────────
 
 
 def _retrieve(query: str, k: Optional[int] = None, workspace_id: Optional[str] = None):
@@ -39,6 +44,36 @@ def _list_workspaces():
     from scripts.workspace_manager import list_workspaces
 
     return list_workspaces()
+
+
+def _load_query_time_settings() -> dict[str, Any]:
+    """從 index_settings 讀「當前與 UI 一致」的查詢期參數（每次呼叫重新讀檔）。"""
+    from scripts import index_settings
+
+    retrieval = index_settings.retrieval_params()
+    reranker = index_settings.reranker_params()
+    # 只暴露查詢期、會影響 MCP 搜尋結果的字段（不含 model/device 等需重啟的）
+    return {
+        "source": "private.nosync/index_settings.json (Streamlit ⚙️ 索引設置)",
+        "retrieval": {
+            "top_k": retrieval["top_k"],
+            "window_expand": retrieval["window_expand"],
+        },
+        "reranker": {
+            "use_reranker": reranker["use_reranker"],
+            "rerank_top_k": reranker["rerank_top_k"],
+            "final_top_k": reranker["final_top_k"],
+            "min_score": reranker["min_score"],
+            "min_keep": reranker["min_keep"],
+        },
+        "notes": {
+            "k_override": (
+                "search_sessions 的 k 僅在 use_reranker=false 時作為 hybrid limit；"
+                "開了 reranker 時最終條數由 final_top_k + min_score/min_keep 決定（與 UI 相同）。"
+            ),
+            "tracks_ui": True,
+        },
+    }
 
 
 # ── 純函式（單元測試主目標）──────────────────────────────────────────────
@@ -62,6 +97,18 @@ def serialize_window(window: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def get_index_settings() -> dict[str, Any]:
+    """唯讀：回傳與 Streamlit「⚙️ 索引設置」當前一致的查詢期參數。
+
+    不寫檔、不改設定。MCP 沒有獨立索引配置。
+    """
+    try:
+        settings = _load_query_time_settings()
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+    return {"ok": True, "settings": settings}
+
+
 def search_sessions(
     query: str,
     k: Optional[int] = None,
@@ -69,33 +116,54 @@ def search_sessions(
 ) -> dict[str, Any]:
     """混合檢索 counseling（或其他）workspace 的諮詢片段。
 
+    索引參數一律跟 UI（index_settings.json）；本函式不維護獨立配置。
+    k=None（建議預設）→ 完全使用 UI 的 top_k / final_top_k / min_score。
+    k 有值 → 僅在關 reranker 時覆寫 hybrid limit；開 reranker 時仍以 UI 為準。
+
     Returns:
-        {"ok": True, "query", "workspace_id", "count", "results": [...]}
-        或 {"ok": False, "error": str, "workspace_id": str}
+        成功: ok, query, workspace_id, count, results, settings_used
+        失敗: ok=False, error, workspace_id, settings_used?（盡量附上）
     """
     q = (query or "").strip()
+    settings_used: dict[str, Any] | None
+    try:
+        settings_used = _load_query_time_settings()
+    except Exception:
+        settings_used = None
+
     if not q:
-        return {
+        out: dict[str, Any] = {
             "ok": False,
             "error": "query 不能為空",
             "workspace_id": workspace_id,
         }
+        if settings_used is not None:
+            out["settings_used"] = settings_used
+        return out
     try:
+        # k=None → retrieve 內部讀 UI top_k / final_top_k 等
         windows = _retrieve(q, k=k, workspace_id=workspace_id)
     except Exception as e:  # 空庫 ValueError 等：失敗可見，不靜默
-        return {
+        out = {
             "ok": False,
             "error": str(e),
             "workspace_id": workspace_id,
         }
+        if settings_used is not None:
+            out["settings_used"] = settings_used
+        return out
     results = [serialize_window(w) for w in windows]
-    return {
+    out = {
         "ok": True,
         "query": q,
         "workspace_id": workspace_id,
         "count": len(results),
         "results": results,
+        "k_override": k,
     }
+    if settings_used is not None:
+        out["settings_used"] = settings_used
+    return out
 
 
 def list_workspaces_info() -> dict[str, Any]:
@@ -134,8 +202,10 @@ def create_mcp():
         name="rag-agent-search",
         instructions=(
             "Search the local RAG-Agent session vector DB (default workspace: counseling). "
-            "Use search_sessions for hybrid retrieval over therapy transcripts. "
-            "Results are private personal counseling notes — quote dates/sources; do not invent."
+            "Retrieval knobs (top_k, final_top_k, min_score, etc.) always follow Streamlit "
+            "「⚙️ 索引設置」/ private.nosync/index_settings.json — there is no separate MCP config. "
+            "Use get_index_settings to inspect current values; search_sessions returns settings_used. "
+            "Results are private counseling notes — quote dates/sources; do not invent."
         ),
     )
 
@@ -145,13 +215,24 @@ def create_mcp():
         k: Optional[int] = None,
         workspace_id: str = DEFAULT_WORKSPACE,
     ) -> dict[str, Any]:
-        """Hybrid-search counseling (or other) session transcripts in the local LanceDB index.
+        """Hybrid-search counseling session transcripts (local LanceDB).
 
-        Use when the user asks about past counseling sessions, themes, dates, or quotes from
-        therapy notes. Default workspace_id is "counseling". Returns ranked text windows with
-        session_date / source_file / score. Does NOT call the LLM — search only.
+        Index/retrieval settings always track the Streamlit UI (index_settings.json):
+        top_k, window_expand, use_reranker, rerank_top_k, final_top_k, min_score, min_keep.
+        Leave k=null to fully follow UI. If use_reranker is on, final count is final_top_k
+        then min_score filter (k is ignored for count). Returns settings_used for visibility.
+        Does NOT call the LLM — search only.
         """
         return search_sessions(query=query, k=k, workspace_id=workspace_id)
+
+    @mcp.tool(name="get_index_settings")
+    def _get_index_settings() -> dict[str, Any]:
+        """Read-only: current query-time index settings from Streamlit UI (shared with MCP).
+
+        Same file as ⚙️ 索引設置. Use before/after search to verify top_k / min_score / etc.
+        Does not write or change settings.
+        """
+        return get_index_settings()
 
     @mcp.tool(name="list_workspaces")
     def _list_workspaces_tool() -> dict[str, Any]:

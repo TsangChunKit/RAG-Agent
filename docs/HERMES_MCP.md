@@ -16,7 +16,7 @@ Hermes Agent
   │  MCP stdio（本機，敏感資料不走 HTTP）
   ▼
 scripts/mcp_rag_search.py   # FastMCP server
-  │  search_sessions / list_workspaces
+  │  search_sessions / get_index_settings / list_workspaces
   ▼
 scripts.ask.retrieve(query, workspace_id="counseling")
   │
@@ -26,10 +26,31 @@ private.nosync/workspaces/counseling/db/sessions.lance
 
 | Tool | 作用 |
 |------|------|
-| `search_sessions` | hybrid 檢索（dense + FTS + RRF → rerank → 父塊窗口）。預設 `workspace_id=counseling` |
+| `search_sessions` | hybrid 檢索（dense + FTS + RRF → rerank → 父塊窗口）。預設 `workspace_id=counseling`。回傳含 `settings_used` |
+| `get_index_settings` | **唯讀**當前查詢期索引參數（與 Streamlit「⚙️ 索引設置」同一檔） |
 | `list_workspaces` | 列出本機可用 workspace id |
 
-v1 **不做**：`answer()`、GraphRAG 完整問答、寫庫、遠端 HTTP MCP。
+### 索引參數一直追蹤 UI（單一真相源）
+
+MCP **沒有**獨立的索引配置。查詢期參數與 Streamlit 共用：
+
+```text
+private.nosync/index_settings.json
+        ↑ 讀
+Streamlit「⚙️ 索引設置」  ──寫──→  同一檔  ←──讀──  MCP / ask.retrieve()
+```
+
+| 參數 | 誰改 | MCP 是否跟隨 |
+|------|------|--------------|
+| `top_k` / `window_expand` | UI | ✅ 每次 search 重新讀檔 |
+| `use_reranker` / `rerank_top_k` / `final_top_k` | UI | ✅ |
+| `min_score` / `min_keep` | UI | ✅ |
+| `search_sessions(k=…)` | 可選覆寫 | ⚠️ 僅在 **關** reranker 時當 hybrid limit；**開** reranker 時最終條數仍由 UI 的 `final_top_k` + `min_score` 決定 |
+
+建議：MCP 呼叫時 **不要傳 k**（保持 null），完全跟 UI。  
+改 UI 存檔後，**下一次** MCP 搜尋即生效（無需重啟 Hermes；若 MCP 子進程已載入 BGE 模型仍可繼續用，只是設定從檔重讀）。
+
+v1 **不做**：`answer()`、GraphRAG 完整問答、寫庫、遠端 HTTP MCP、在 MCP 裡改寫 index_settings。
 
 ---
 
@@ -108,6 +129,7 @@ hermes mcp test counseling-rag
 通過後，Hermes 會把工具註冊成類似：
 
 - `mcp_counseling_rag_search_sessions`
+- `mcp_counseling_rag_get_index_settings`
 - `mcp_counseling_rag_list_workspaces`
 
 （前綴 = `mcp_<server名>_<tool名>`）
@@ -149,6 +171,9 @@ uv run --group mcp fastmcp call scripts/mcp_rag_search.py \
   search_sessions query="買遊戲電腦" --json
 
 uv run --group mcp fastmcp call scripts/mcp_rag_search.py \
+  get_index_settings --json
+
+uv run --group mcp fastmcp call scripts/mcp_rag_search.py \
   list_workspaces --json
 ```
 
@@ -156,9 +181,10 @@ uv run --group mcp fastmcp call scripts/mcp_rag_search.py \
 
 ```bash
 uv run --group mcp python -c "
-from scripts.mcp_rag_search import search_sessions, list_workspaces_info
+from scripts.mcp_rag_search import search_sessions, list_workspaces_info, get_index_settings
+print(get_index_settings())
 print(list_workspaces_info())
-print(search_sessions('買遊戲電腦', k=3))
+print(search_sessions('買遊戲電腦'))  # k=None → 完全跟 UI
 "
 ```
 
@@ -188,6 +214,19 @@ uv run --group mcp python -m scripts.mcp_rag_search
   "query": "買遊戲電腦",
   "workspace_id": "counseling",
   "count": 2,
+  "k_override": null,
+  "settings_used": {
+    "source": "private.nosync/index_settings.json (Streamlit ⚙️ 索引設置)",
+    "retrieval": { "top_k": 8, "window_expand": 1 },
+    "reranker": {
+      "use_reranker": true,
+      "rerank_top_k": 30,
+      "final_top_k": 4,
+      "min_score": 0.2,
+      "min_keep": 2
+    },
+    "notes": { "tracks_ui": true, "k_override": "..." }
+  },
   "results": [
     {
       "source_file": "...txt",
@@ -204,13 +243,14 @@ uv run --group mcp python -m scripts.mcp_rag_search
 }
 ```
 
-失敗（空 query、空庫、其他例外）——**不靜默回空列表**：
+失敗（空 query、空庫、其他例外）——**不靜默回空列表**（盡量仍附 `settings_used`）：
 
 ```json
 {
   "ok": false,
   "error": "Table 'sessions' was not found",
-  "workspace_id": "counseling"
+  "workspace_id": "counseling",
+  "settings_used": { "...": "與 UI 當前值相同" }
 }
 ```
 

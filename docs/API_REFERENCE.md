@@ -291,6 +291,15 @@ def serialize_window(window: dict[str, Any]) -> dict[str, Any]:
     """把 retrieve() 窗口轉成 JSON-safe dict（tuple → list 等）。"""
 ```
 
+#### `get_index_settings()`
+```python
+def get_index_settings() -> dict[str, Any]:
+    """
+    唯讀：與 Streamlit「⚙️ 索引設置」當前一致的查詢期參數
+    （private.nosync/index_settings.json）。MCP 無獨立配置、不寫檔。
+    """
+```
+
 #### `search_sessions()`
 ```python
 def search_sessions(
@@ -299,12 +308,12 @@ def search_sessions(
     workspace_id: str = "counseling",
 ) -> dict[str, Any]:
     """
-    混合檢索（呼叫 ask.retrieve）。
+    混合檢索（呼叫 ask.retrieve）。索引參數與 UI 共用 index_settings.json；
+    每次呼叫重新讀檔。k=None（建議）= 完全跟隨 UI。
 
     Returns:
-        成功: {"ok": True, "query", "workspace_id", "count", "results": [serialize_window...]}
-        失敗: {"ok": False, "error": str, "workspace_id": str}
-              （空 query、空庫 ValueError 等；不靜默回空列表）
+        成功: {"ok", "query", "workspace_id", "count", "results", "k_override", "settings_used"}
+        失敗: {"ok": False, "error", "workspace_id", "settings_used"?}
     """
 ```
 
@@ -317,7 +326,7 @@ def list_workspaces_info() -> dict[str, Any]:
 #### `create_mcp()` / `main()`
 ```python
 def create_mcp():
-    """建立 FastMCP 實例，註冊 tools: search_sessions, list_workspaces。缺 fastmcp 時 ImportError。"""
+    """建立 FastMCP 實例，註冊 tools: search_sessions, get_index_settings, list_workspaces。"""
 
 def main() -> None:
     """stdio MCP 入口：chdir 到 repo root 後 mcp.run()。"""
@@ -327,7 +336,8 @@ def main() -> None:
 
 | Tool | 參數 | 說明 |
 |------|------|------|
-| `search_sessions` | `query`, `k=None`, `workspace_id="counseling"` | 只搜尋，不呼叫 LLM |
+| `search_sessions` | `query`, `k=None`, `workspace_id="counseling"` | 只搜尋；`settings_used` 跟 UI |
+| `get_index_settings` | （無） | 唯讀 UI 查詢期參數 |
 | `list_workspaces` | （無） | 列出可用 workspace |
 
 ---

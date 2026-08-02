@@ -117,14 +117,15 @@ ParsedSession
 ```
 Hermes Agent（~/.hermes）
     ↓ MCP stdio
-[mcp_rag_search.py] FastMCP tools: search_sessions / list_workspaces
+[mcp_rag_search.py] FastMCP tools: search_sessions / get_index_settings / list_workspaces
     ↓
-[ask.py:retrieve()]  （與 UI 共用同一真相源）
+[ask.py:retrieve()]  （與 UI 共用 index_settings.json 真相源）
     ↓
 LanceDB workspace（預設 counseling）
 ```
 
 - **只外露檢索**，不呼叫 `answer()` / LLM。
+- **索引參數一直追蹤 UI**：無 MCP 獨立配置；每次 search 重讀 `private.nosync/index_settings.json`，回傳 `settings_used`。
 - 依賴 `uv` dependency group `mcp`（`fastmcp`）；主應用不裝也可運行。
 - 接線、測試、timeout 見 [HERMES_MCP.md](HERMES_MCP.md)。
 
