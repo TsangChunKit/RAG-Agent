@@ -685,9 +685,11 @@ scripts/index_settings.py   # 索引运行时参数（检索/分块/embedding/FT
 scripts/index_records.py    # 已索引记录清单 + 索引变更记录（供「📚 已索引的咨询记录」用）
 scripts/reranker.py         # bge-reranker-v2-m3 cross-encoder 精排（本地，供 ask.retrieve 用）
 scripts/text_norm.py        # 繁→简归一化（检索层不变量：索引字段与 query 都转简体，展示原文不动）
+scripts/mcp_rag_search.py   # Hermes Agent MCP：外露 retrieve() 做 counseling 索引搜尋（見 docs/HERMES_MCP.md）
 scripts/launchd/            # launchd 常驻服务的 plist 源文件
 scripts/counseling_agent_ctl.sh  # start/stop/status 服务开关（配合 ~/.zshrc 别名）
 eval/eval_questions.yaml    # 检索质量评估问题集
+docs/HERMES_MCP.md          # Hermes MCP 使用 / 測試 / uv 環境說明
 
 —— private.nosync/（个人数据；除标 🔑 的凭证文件外，都可进 git）——
 private.nosync/.env                    # 🔑 GEMINI_API_KEY / XAI_API_KEY / HERMES_API_KEY（凭证，.gitignore 已排除，勿提交）
@@ -704,6 +706,35 @@ private.nosync/data/graph_fragments/   # map 步产物：每份逐字稿一张�
 private.nosync/data/graph.json         # 真实咨询心智地图（map-reduce 归并产物，~425 节点/10 层，手动/低频重新生成）
 private.nosync/data/chat_graph.json    # AI 对话记忆心智地图（便宜，随聊天自动更新）
 ```
+
+## 八·b、Hermes Agent 讀 counseling 向量庫（MCP）
+
+若要用 **Nous Hermes Agent**（`hermes` CLI / gateway）搜尋本機 counseling 索引，
+不要重做向量庫——接本專案的 MCP server 即可（與 Streamlit 共用 `ask.retrieve()`）。
+
+完整說明（**uv 依賴組、接線、單元 / FastMCP / Hermes 測試步驟**）：
+
+→ **[docs/HERMES_MCP.md](docs/HERMES_MCP.md)**
+
+最短路徑：
+
+```bash
+# 1) uv 安裝 MCP 依賴組（fastmcp；主應用不需要）
+uv sync --group mcp
+
+# 2) 註冊到 Hermes（路徑改成你的 repo）
+REPO="$PWD"
+hermes mcp add counseling-rag \
+  --command "$REPO/.venv/bin/python" \
+  --args -m scripts.mcp_rag_search
+
+# 3) 測試
+hermes mcp test counseling-rag
+uv run --group mcp fastmcp list scripts/mcp_rag_search.py --json
+uv run pytest tests/unit/test_mcp_rag_search.py -v
+```
+
+> 注意：這和側邊欄 **LLM provider = hermes**（本地 grok 代理）是兩回事。
 
 ## 九、数据与凭证边界
 

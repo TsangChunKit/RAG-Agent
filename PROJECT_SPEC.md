@@ -524,6 +524,8 @@ LanceDB 支持**追加新行而不重建全表**(append column / add data),所�
 ### M2 — 向量化 + 建库 + 混合检索
 - `embedder.py` + `ingest.py`:BGE-M3 编码,写入 LanceDB,建 FTS 索引。
 - `ask.py` 的 `retrieve()`:混合检索 + 父块扩展(先不接 LLM,只打印检索结果)。
+- `mcp_rag_search.py`（2026-08）:把 `retrieve()` 经 MCP stdio 外露给 **Nous Hermes Agent**
+  （默认 workspace=counseling；只搜不答）。接线 / 测试 / `uv --group mcp` 见 `docs/HERMES_MCP.md`。
 - **验收**:用 eval 问题测,人工看检索出的片段是否命中、是否够完整(不细碎)。
 
 ### M3 — Gemini 问答 + 流派路由

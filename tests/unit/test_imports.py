@@ -66,6 +66,13 @@ class TestImports:
         from scripts import llm
         assert llm is not None
 
+    def test_import_mcp_rag_search(self):
+        """MCP 檢索模組可導入（不要求已裝 fastmcp；純函式路徑不依賴它）。"""
+        from scripts import mcp_rag_search
+        assert mcp_rag_search is not None
+        assert hasattr(mcp_rag_search, "search_sessions")
+        assert hasattr(mcp_rag_search, "serialize_window")
+
     def test_import_all_scripts(self):
         """一次性导入所有核心模块。"""
         from scripts import (
@@ -75,11 +82,13 @@ class TestImports:
             graph_schema_loader,
             ingest,
             llm,
+            mcp_rag_search,
             parse,
             settings,
             workspace_manager,
         )
         # 如果能到这里，说明所有导入都成功
+        assert mcp_rag_search is not None
         assert True
 
 

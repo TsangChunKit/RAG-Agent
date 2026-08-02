@@ -61,6 +61,13 @@ dev = [
     # 不再声明 pytest-watch：2018 年后无维护，是唯一把已死的 docopt 拖进依赖图的包。
     # 要 watch 时用 `uv run --with pytest-watcher ptw . -- tests/unit -q`
 ]
+# Hermes / 外部 Agent 用的 MCP 檢索 server（scripts/mcp_rag_search.py）。
+# 主應用（Streamlit / ingest / ask）不需要；要接 Hermes 時：
+#   uv sync --group mcp
+# 詳見 docs/HERMES_MCP.md。
+mcp = [
+    "fastmcp>=2.0",
+]
 
 [tool.uv]
 # scripts/ 没有 __init__.py，本项目不是要被安装的发行包（靠 pythonpath 直接 import）。

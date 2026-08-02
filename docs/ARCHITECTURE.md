@@ -112,6 +112,22 @@ ParsedSession
 **关键模块依赖**：
 - `ask.py` → `embedder.py`, `llm.py`, `graph_utils.py`, `reranker.py`, `text_norm.py`, `workspace_manager.py`
 
+### 4b. 外部 Agent 檢索（Hermes MCP）
+
+```
+Hermes Agent（~/.hermes）
+    ↓ MCP stdio
+[mcp_rag_search.py] FastMCP tools: search_sessions / list_workspaces
+    ↓
+[ask.py:retrieve()]  （與 UI 共用同一真相源）
+    ↓
+LanceDB workspace（預設 counseling）
+```
+
+- **只外露檢索**，不呼叫 `answer()` / LLM。
+- 依賴 `uv` dependency group `mcp`（`fastmcp`）；主應用不裝也可運行。
+- 接線、測試、timeout 見 [HERMES_MCP.md](HERMES_MCP.md)。
+
 #### 简繁归一化（系统不变量）
 
 语料库全是简体（转写工具输出），使用者常打繁体。规则：
@@ -182,7 +198,8 @@ Layer 5: 应用
 ├─ update_memory.py   # 记忆更新
 ├─ ingest_new.py      # 增量入库编排（parse→chunk→ingest→summarize→update_memory）
 │                     #   + pending_raw_files() / ingest_pending()：待入库判定的单一真相源
-└─ context_cache.py   # 缓存管理
+├─ context_cache.py   # 缓存管理
+└─ mcp_rag_search.py  # Hermes MCP：薄包裝 retrieve()（可選依賴 group mcp / fastmcp）
 
 Layer 5.5: 常驻看门狗（launchd，非 Streamlit 进程）
 ├─ raw_ingest_watcher.py    # 每 2 分钟扫 raw/，调 ingest_new.pending_raw_files() + ingest_new_file()

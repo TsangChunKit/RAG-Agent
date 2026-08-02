@@ -273,6 +273,65 @@ append-only、永久保留，不做清理）。Streamlit「⚙️ System Instruc
 
 ---
 
+## scripts/mcp_rag_search.py
+
+Hermes / 外部 Agent 用的 **MCP 檢索 server**（stdio）。薄包裝 `ask.retrieve()`，
+預設 workspace `counseling`。完整接線與測試見 [HERMES_MCP.md](HERMES_MCP.md)。
+
+依賴：uv group `mcp`（`fastmcp`）。主應用不需要。
+
+```bash
+uv sync --group mcp
+uv run --group mcp python -m scripts.mcp_rag_search
+```
+
+#### `serialize_window()`
+```python
+def serialize_window(window: dict[str, Any]) -> dict[str, Any]:
+    """把 retrieve() 窗口轉成 JSON-safe dict（tuple → list 等）。"""
+```
+
+#### `search_sessions()`
+```python
+def search_sessions(
+    query: str,
+    k: Optional[int] = None,
+    workspace_id: str = "counseling",
+) -> dict[str, Any]:
+    """
+    混合檢索（呼叫 ask.retrieve）。
+
+    Returns:
+        成功: {"ok": True, "query", "workspace_id", "count", "results": [serialize_window...]}
+        失敗: {"ok": False, "error": str, "workspace_id": str}
+              （空 query、空庫 ValueError 等；不靜默回空列表）
+    """
+```
+
+#### `list_workspaces_info()`
+```python
+def list_workspaces_info() -> dict[str, Any]:
+    """列出本機 workspace。成功: {"ok", "count", "workspaces": [{name, display_name, created_at}]}。"""
+```
+
+#### `create_mcp()` / `main()`
+```python
+def create_mcp():
+    """建立 FastMCP 實例，註冊 tools: search_sessions, list_workspaces。缺 fastmcp 時 ImportError。"""
+
+def main() -> None:
+    """stdio MCP 入口：chdir 到 repo root 後 mcp.run()。"""
+```
+
+**MCP tools（Hermes 端名稱會加 `mcp_<server>_` 前綴）**：
+
+| Tool | 參數 | 說明 |
+|------|------|------|
+| `search_sessions` | `query`, `k=None`, `workspace_id="counseling"` | 只搜尋，不呼叫 LLM |
+| `list_workspaces` | （無） | 列出可用 workspace |
+
+---
+
 ## scripts/workspace_manager.py
 
 ### 核心函数
