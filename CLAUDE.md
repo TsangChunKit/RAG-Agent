@@ -482,35 +482,115 @@ def validate_input(text: str) -> bool:
 
 ### 如何安裝 Hook？
 
+> **2026-08-08 更新**：pytest 的輸出改用 `tee` 即時串流到終端（同時仍存一份到暫存檔供失敗時
+> `tail`），並加了 `set -o pipefail`。原因：舊版把 `pytest ... > "$COVERAGE_OUTPUT" 2>&1` 整段
+> 輸出吃進暫存檔，測試跑的那 ~12–13 秒終端完全沒有任何輸出，Claude Code（無論是人在旁邊看，
+> 還是 Claude Code 自己判斷 tool call 是否已返回）都容易把這段靜默誤判成「指令卡住/沒完成」，
+> 即使 commit 其實已經成功。
+
 ```bash
 # 創建 hook 文件
 cat > .git/hooks/pre-commit << 'EOF'
 #!/bin/bash
 # Pre-commit hook: 運行測試和檢查
+# 確保代碼質量，防止低質量代碼進入 git 歷史
 
+set -e  # 任何命令失敗立即退出
+set -o pipefail  # pytest | tee 的管線要看 pytest 的 exit code，不是 tee 的
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🔍 Running pre-commit checks..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 
-# 1. 靜態檢查
-echo "📝 Static code check..."
-python scripts/check_code_patterns.py
-if [ $? -ne 0 ]; then
-    echo "❌ Static check failed! Fix errors before committing."
+# 檢查是否在項目根目錄
+if [ ! -f "pytest.ini" ]; then
+    echo "❌ Error: Not in project root directory"
     exit 1
 fi
 
-# 2. 單元測試 + 覆蓋率（合併為一次 pytest 呼叫）
-echo "🧪 Unit tests + coverage..."
-source .venv/bin/activate
-pytest tests/unit/ --cov=scripts --cov-report=term-missing --cov-fail-under=70 --tb=short -q
-if [ $? -ne 0 ]; then
-    echo "❌ Unit tests or coverage failed! Fix before committing."
-    echo "Run: pytest tests/unit/ --cov=scripts --cov-report=html -v"
-    echo "Then open: htmlcov/index.html"
-    exit 1
+# 激活虛擬環境
+if [ -d ".venv" ]; then
+    source .venv/bin/activate
+else
+    echo "⚠️  Warning: .venv not found, using system Python"
 fi
 
-echo "✅ All checks passed!"
-exit 0
+# 統計變量
+CHECKS_PASSED=0
+CHECKS_FAILED=0
+
+# ============================================================================
+# 檢查 1: 靜態代碼檢查
+# ============================================================================
+echo "📝 [1/2] Static code patterns check..."
+if python scripts/check_code_patterns.py; then
+    echo "✅ Static check passed"
+    ((CHECKS_PASSED++))
+else
+    echo "❌ Static check FAILED"
+    echo "   Fix errors with: python scripts/check_code_patterns.py"
+    ((CHECKS_FAILED++))
+fi
+echo ""
+
+# ============================================================================
+# 檢查 2: 單元測試 + 覆蓋率（合併為一次 pytest 呼叫，tests/unit/ 已包含
+# test_imports.py，不再需要獨立跑一次 import smoke test）
+# ============================================================================
+echo "🧪 [2/2] Unit tests + coverage (threshold: 70%)..."
+
+# 創建臨時文件存儲覆蓋率輸出（同時用 tee 即時串流到終端，
+# 避免這幾秒鐘完全沒有輸出、讓 Claude Code 誤判指令沒有返回/卡住）
+COVERAGE_OUTPUT=$(mktemp)
+
+if pytest tests/unit/ --cov=scripts --cov-report=term-missing --cov-fail-under=70 --tb=short -q 2>&1 | tee "$COVERAGE_OUTPUT"; then
+    echo "✅ Unit tests + coverage passed (≥ 70%)"
+    ((CHECKS_PASSED++))
+
+    # 提取當前覆蓋率
+    CURRENT_COV=$(grep "^TOTAL" "$COVERAGE_OUTPUT" | awk '{print $4}')
+    if [ ! -z "$CURRENT_COV" ]; then
+        echo "   Current coverage: $CURRENT_COV"
+    fi
+else
+    echo "❌ Unit tests or coverage check FAILED"
+    echo ""
+    tail -30 "$COVERAGE_OUTPUT"
+    echo ""
+    echo "   📖 View detailed report:"
+    echo "      pytest --cov=scripts --cov-report=html"
+    echo "      open htmlcov/index.html"
+    ((CHECKS_FAILED++))
+fi
+
+rm -f "$COVERAGE_OUTPUT"
+echo ""
+
+# ============================================================================
+# 最終結果
+# ============================================================================
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ $CHECKS_FAILED -eq 0 ]; then
+    echo "✅ All pre-commit checks passed! ($CHECKS_PASSED/2)"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    exit 0
+else
+    echo "❌ Pre-commit checks FAILED! ($CHECKS_PASSED passed, $CHECKS_FAILED failed)"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "🔧 How to fix:"
+    echo "   1. Review error messages above"
+    echo "   2. Fix the issues"
+    echo "   3. Run: git add -A"
+    echo "   4. Try commit again"
+    echo ""
+    echo "⚠️  To bypass (emergency only):"
+    echo "   git commit --no-verify -m \"...\""
+    echo "   (Remember to fix issues immediately after!)"
+    echo ""
+    exit 1
+fi
 EOF
 
 # 賦予執行權限
