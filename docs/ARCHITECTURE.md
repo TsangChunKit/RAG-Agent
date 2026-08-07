@@ -53,6 +53,30 @@ raw/ 新增 .txt  ───────┼─ UI「📚 已索引的咨询记录
 变更记录全都没跑，而看门狗永远不会重试它（2026-07-26 真实事故，见 `tests/unit/test_ingest_new.py`
 的 `TestFailureLeavesNoPhantomIndex`）。反过来最坏只是下次重试一遍，是可恢复的。
 
+#### 1c. 补摘要通路：已入库但摘要生成失败时的手动补跑
+
+`ingest_new_file()` 内部是「先 `ingest()` 成功、再写 `chunks.jsonl`」，但**摘要这一步在它之后**：
+chunks/向量化已经成功落地后，若 `summarize_session()`（调 LLM）失败（典型场景：2026-08-08
+真实事故，hermes 的 xAI OAuth 凭证过期，LLM 调用返回 401），这份文件就会永久卡在「已入库、
+但没摘要」的状态——它不会出现在 `pending_raw_files()`（因为 chunks 已经在库里了），看门狗也
+不会重试它，只能靠下面这条独立通路手动补：
+
+```
+[index_records.list_indexed_records()]  ← has_summary 判定的现状快照（真相源不变，仍是它）
+                     ↓
+        [ingest_new.missing_summary_files()]   ← 「哪些已入库但缺摘要」的单一真相源
+                     ↓
+     UI「📚 已索引的咨询记录」→「🔁 补生成摘要」按钮
+                     ↓
+        [ingest_new.regenerate_missing_summaries()]
+        只重跑 parse → summarize → summary_path 落盘 → changelog(action="summary") → update_memory
+        （不碰 chunks/LanceDB，那些已经在库里了）
+```
+
+跟 §1b 的「待入库」判定是同一种模式（单一真相源 + 批量执行 + 局部失败不拖累整批），但判定
+来源不同：`pending_raw_files()` 看 `chunks.jsonl`，`missing_summary_files()` 复用
+`index_records.list_indexed_records()` 的 `has_summary` 字段，不重新发明一套判断逻辑。
+
 ### 2. 摘要生成流程
 
 ```
@@ -199,6 +223,8 @@ Layer 5: 应用
 ├─ update_memory.py   # 记忆更新
 ├─ ingest_new.py      # 增量入库编排（parse→chunk→ingest→summarize→update_memory）
 │                     #   + pending_raw_files() / ingest_pending()：待入库判定的单一真相源
+│                     #   + missing_summary_files() / regenerate_missing_summaries()：
+│                     #     已入库但缺摘要的补跑判定（§1c）
 ├─ context_cache.py   # 缓存管理
 └─ mcp_rag_search.py  # Hermes MCP：薄包裝 retrieve()（可選依賴 group mcp / fastmcp）
 

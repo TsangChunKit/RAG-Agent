@@ -504,6 +504,10 @@ LanceDB 支持**追加新行而不重建全表**(append column / add data),所�
 > UI「📚 已索引的咨询记录」里的「⚡ 立即入库」按钮、以及上面这条命令。三者共用
 > `ingest_new.pending_raw_files()` 判定「哪些还没入库」，实现细节见 `docs/ARCHITECTURE.md` §1b。
 > 多一条不依赖看门狗的手动入口是刻意的冗余：看门狗是单点，挂了/指错目录时系统仍要能推进。
+> **2026-08-08 补充**：入库和摘要是两个独立步骤，摘要那步失败（比如 LLM API 认证过期）
+> 不会撤销已成功的入库，也不会被 `pending_raw_files()` 抓到、更不会被看门狗重试。同一个
+> UI 弹窗里另加了「🔁 补生成摘要」按钮，走 `ingest_new.missing_summary_files()` /
+> `regenerate_missing_summaries()`，只补摘要这一步，见 `docs/ARCHITECTURE.md` §1c。
 
 ---
 

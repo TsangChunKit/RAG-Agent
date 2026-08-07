@@ -49,7 +49,7 @@
 | **批处理脚本** ||||
 | update_memory.py | 35 | 89% | 40% | P2 | ✅ 达标（未覆盖的只有 `__main__`）|
 | update_chat_memory.py | 51 | 92% | 40% | P2 | ✅ 达标（同上）|
-| ingest_new.py | 94 | 87% | 40% | P2 | ✅ 达标（同上）|
+| ingest_new.py | 114 | 89% | 40% | P2 | ✅ 达标（2026-08-08 新增 `missing_summary_files()` / `regenerate_missing_summaries()`，供「🔁 补生成摘要」按钮用，未覆盖的仍只有 `__main__`）|
 | chat_memory_watcher.py | 62 | 82% | 40% | P2 | ✅ 达标（未覆盖的是常驻 while 循环）|
 | raw_ingest_watcher.py | 36 | 67% | 40% | P2 | ✅ 达标（未覆盖的 12 行全是 `__main__` 常驻循环；文件从 59 行缩到 36 行，是因为待入库判定挪进了 ingest_new.py）|
 | **工具脚本（低优先级）** ||||

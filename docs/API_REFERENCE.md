@@ -812,6 +812,48 @@ for f in result["failed"]:
     st.error(f"❌ {f['file']}：{f['error']}")
 ```
 
+#### `missing_summary_files()`
+```python
+def missing_summary_files(workspace_id: Optional[str] = None) -> List[str]:
+    """
+    已入库但摘要 JSON 还没生成的 source_file 列表（workspace 感知）。
+
+    直接复用 index_records.list_indexed_records() 的 has_summary 判定，不重新发明一套
+    判断逻辑。典型成因：chunks/向量化都成功了，但摘要那步 LLM 调用失败（比如 API key/
+    OAuth 过期）——这类文件不会出现在 pending_raw_files() 里（chunks.jsonl 已经有它），
+    看门狗也不会重试，只能靠这个函数找回来。
+
+    Args:
+        workspace_id: workspace 名称，None = 当前 workspace
+
+    Returns:
+        缺摘要的 source_file 文件名列表
+    """
+```
+
+#### `regenerate_missing_summaries()`
+```python
+def regenerate_missing_summaries(workspace_id: Optional[str] = None) -> Dict[str, list]:
+    """
+    把已入库但缺摘要的文件逐份补生成摘要（UI「🔁 补生成摘要」按钮的后端）。
+    只重跑摘要这一步，不碰 chunks/LanceDB。一份失败不影响其余，失败信息原样返回给
+    调用方渲染（不打印、不抛出）。至少成功一份才会刷新长期记忆。
+
+    Returns:
+        {"generated": [文件名, ...], "failed": [{"file": 文件名, "error": 错误信息}, ...]}
+    """
+```
+
+用法（app.py「📚 已索引的咨询记录」弹窗里就是这么用的）：
+```python
+missing = missing_summary_files()
+if missing:
+    result = regenerate_missing_summaries()
+    st.success("已补生成摘要：" + "、".join(result["generated"]))
+    for f in result["failed"]:
+        st.error(f"❌ {f['file']}：{f['error']}")
+```
+
 ---
 
 ## scripts/settings.py

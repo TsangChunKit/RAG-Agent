@@ -21,7 +21,13 @@ from unittest.mock import MagicMock
 import pytest
 
 from scripts import ingest_new as inew
-from scripts.ingest_new import ingest_new_file, ingest_pending, pending_raw_files
+from scripts.ingest_new import (
+    ingest_new_file,
+    ingest_pending,
+    missing_summary_files,
+    pending_raw_files,
+    regenerate_missing_summaries,
+)
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────
@@ -379,3 +385,164 @@ class TestIngestPending:
         assert result["failed"] == [
             {"file": "a_bad.txt", "error": "文件名没有 14 位日期前缀"}
         ]
+
+
+# ── 补摘要清单（已入库但摘要生成失败时的手动补跑通路）──────────────────────
+
+
+def _indexed_record(source_file, session_date="2026-07-25", n_chunks=10, has_summary=False):
+    return {
+        "source_file": source_file,
+        "session_date": session_date,
+        "n_chunks": n_chunks,
+        "has_summary": has_summary,
+    }
+
+
+class TestMissingSummaryFiles:
+    def test_empty_when_all_have_summary(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [_indexed_record("a.txt", has_summary=True)],
+        )
+        assert missing_summary_files() == []
+
+    def test_filters_to_records_missing_summary(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [
+                _indexed_record("a.txt", has_summary=True),
+                _indexed_record("b.txt", has_summary=False),
+                _indexed_record("c.txt", has_summary=False),
+            ],
+        )
+        assert missing_summary_files() == ["b.txt", "c.txt"]
+
+    def test_empty_when_nothing_indexed(self, env, monkeypatch):
+        monkeypatch.setattr(inew, "list_indexed_records", lambda ws=None: [])
+        assert missing_summary_files() == []
+
+    def test_passes_workspace_id_through(self, env, monkeypatch):
+        seen = []
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: seen.append(ws) or [],
+        )
+        missing_summary_files(workspace_id="counseling")
+        assert seen == ["counseling"]
+
+
+class TestRegenerateMissingSummaries:
+    """补摘要跟 ingest_pending() 是同一种「批量 + 局部失败不拖累整批」的模式，
+    区别是只重跑摘要这一步，不碰 chunks/LanceDB（那些已经在库里了）。"""
+
+    def test_nothing_missing(self, env, monkeypatch):
+        monkeypatch.setattr(inew, "list_indexed_records", lambda ws=None: [])
+
+        result = regenerate_missing_summaries()
+
+        assert result == {"generated": [], "failed": []}
+        env["mocks"]["update_memory"].assert_not_called()
+
+    def test_generates_for_each_missing_file(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [
+                _indexed_record("a.txt", has_summary=False),
+                _indexed_record("b.txt", has_summary=False),
+            ],
+        )
+
+        result = regenerate_missing_summaries()
+
+        assert result == {"generated": ["a.txt", "b.txt"], "failed": []}
+        assert env["mocks"]["summarize"].call_count == 2
+        env["mocks"]["update_memory"].assert_called_once()
+
+    def test_writes_summary_json_to_disk(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [_indexed_record("20260725120000-咨询.txt", has_summary=False)],
+        )
+
+        regenerate_missing_summaries()
+
+        out = env["summaries"] / "20260725120000-咨询.json"
+        assert out.exists()
+        assert json.loads(out.read_text(encoding="utf-8"))["session_date"] == "2026-07-25"
+
+    def test_records_summary_change_action(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [_indexed_record("a.txt", has_summary=False)],
+        )
+
+        regenerate_missing_summaries()
+
+        # 落地用 session.source_file/session.session_date（跟 ingest_new_file 一致的约定：
+        # 以实际 parse 出来的会话为准，而不是清单里的文件名字符串）
+        env["mocks"]["record"].assert_called_once_with(
+            "summary", "20260725120000-咨询.txt", "2026-07-25",
+            note="补生成摘要", workspace_id=None,
+        )
+
+    def test_calls_parse_transcript_with_raw_dir_path(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [_indexed_record("20260725120000-咨询.txt", has_summary=False)],
+        )
+
+        regenerate_missing_summaries()
+
+        env["mocks"]["parse"].assert_called_once_with(env["raw"] / "20260725120000-咨询.txt")
+
+    def test_one_failure_does_not_block_others(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [
+                _indexed_record("bad.txt", has_summary=False),
+                _indexed_record("ok.txt", has_summary=False),
+            ],
+        )
+
+        def half_broken(path):
+            if "bad" in path.name:
+                raise RuntimeError("LLM 调用失败：401")
+            return env["session"]
+
+        monkeypatch.setattr(inew, "parse_transcript", half_broken)
+
+        result = regenerate_missing_summaries()
+
+        assert result["generated"] == ["ok.txt"]
+        assert result["failed"] == [{"file": "bad.txt", "error": "LLM 调用失败：401"}]
+        env["mocks"]["update_memory"].assert_called_once()  # 还有成功的一份，仍要刷新长期记忆
+
+    def test_update_memory_not_called_when_all_fail(self, env, monkeypatch):
+        monkeypatch.setattr(
+            inew, "list_indexed_records",
+            lambda ws=None: [_indexed_record("bad.txt", has_summary=False)],
+        )
+        monkeypatch.setattr(inew, "parse_transcript", MagicMock(side_effect=RuntimeError("401")))
+
+        result = regenerate_missing_summaries()
+
+        assert result == {"generated": [], "failed": [{"file": "bad.txt", "error": "401"}]}
+        env["mocks"]["update_memory"].assert_not_called()
+
+    def test_passes_workspace_id_through(self, env, monkeypatch):
+        seen = {}
+
+        def _list_indexed_records(ws=None):
+            seen["list_ws"] = ws
+            return [_indexed_record("a.txt", has_summary=False)]
+
+        monkeypatch.setattr(inew, "list_indexed_records", _list_indexed_records)
+
+        regenerate_missing_summaries(workspace_id="counseling")
+
+        assert seen["list_ws"] == "counseling"
+        env["mocks"]["load_summaries"].assert_called_once_with("counseling")
+        env["mocks"]["update_memory"].assert_called_once_with(
+            env["mocks"]["load_summaries"].return_value, "counseling"
+        )

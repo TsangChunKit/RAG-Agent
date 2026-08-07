@@ -27,7 +27,7 @@ from pathlib import Path
 
 from config import RAW_DIR
 from scripts.chunk import CHUNKS_JSONL_PATH, chunk_session
-from scripts.index_records import append_change_record
+from scripts.index_records import append_change_record, list_indexed_records
 from scripts.ingest import ingest
 from scripts.parse import parse_transcript
 from scripts.summarize import summarize_session, summary_path
@@ -170,6 +170,62 @@ def ingest_pending(
             result["ingested"].append(p.name)
         except Exception as e:  # noqa: BLE001 — 一份坏文件不该拖垮整批
             result["failed"].append({"file": p.name, "error": str(e)})
+    return result
+
+
+def missing_summary_files(workspace_id: Optional[str] = None) -> List[str]:
+    """已入库但摘要 JSON 还没生成的 source_file 列表（workspace 感知）。
+
+    是「补生成摘要」这条通路的单一真相源：直接复用 index_records.list_indexed_records()
+    的 has_summary 判定（同一份 chunks.jsonl 现状快照），不重新发明一套判断逻辑。
+    典型成因：入库时 chunks/向量化都成功了，但后面那步 LLM 摘要调用失败（比如 API key/
+    OAuth 过期）——ingest_pending() 会把这份记进 failed，但 chunks 已经落了地，
+    所以它不会再出现在 pending_raw_files() 里，得靠这个函数才找得回来。
+
+    Args:
+        workspace_id: workspace 名称，None = 当前 workspace
+
+    Returns:
+        缺摘要的 source_file 文件名列表
+    """
+    return [r["source_file"] for r in list_indexed_records(workspace_id) if not r["has_summary"]]
+
+
+def regenerate_missing_summaries(workspace_id: Optional[str] = None) -> Dict[str, list]:
+    """把已入库但缺摘要的文件逐份补生成摘要（UI「🔁 补生成摘要」按钮的后端）。
+
+    只重跑摘要这一步，不碰 chunks/LanceDB（那些已经在库里了）——跟 ingest_pending()
+    是同一种「批量 + 局部失败不拖累整批」的模式，失败信息原样返回给调用方渲染，
+    不打印、不抛出。至少成功一份才会刷新长期记忆（update_memory 开销不小，全军覆没时不必跑）。
+
+    Args:
+        workspace_id: workspace 名称，None = 当前 workspace
+
+    Returns:
+        {"generated": [文件名, ...], "failed": [{"file": 文件名, "error": 错误信息}, ...]}
+    """
+    result: Dict[str, list] = {"generated": [], "failed": []}
+    raw_dir = RAW_DIR(workspace_id)
+
+    for source_file in missing_summary_files(workspace_id):
+        try:
+            session = parse_transcript(raw_dir / source_file)
+            summary = summarize_session(session)
+            out_path = summary_path(session.source_file, workspace_id)
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+            append_change_record(
+                "summary", session.source_file, session.session_date,
+                note="补生成摘要", workspace_id=workspace_id,
+            )
+            result["generated"].append(source_file)
+        except Exception as e:  # noqa: BLE001 — 一份坏文件不该拖垮整批
+            result["failed"].append({"file": source_file, "error": str(e)})
+
+    if result["generated"]:
+        summaries = load_summaries(workspace_id)
+        update_memory(summaries, workspace_id)
+
     return result
 
 

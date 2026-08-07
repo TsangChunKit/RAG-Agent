@@ -22,7 +22,7 @@ from scripts.ask import (
     save_system_instruction,
 )
 from scripts.chat_store import delete_session, list_sessions, load_session, make_title, new_session_id, save_session
-from scripts.ingest_new import ingest_pending, pending_raw_files
+from scripts.ingest_new import ingest_pending, missing_summary_files, pending_raw_files, regenerate_missing_summaries
 
 # 开了热重载（.streamlit/config.toml 的 runOnSave + watchdog）后，Streamlit 的 LocalSourcesWatcher
 # 每次 rerun 都会遍历 sys.modules 找「本项目内被 import 的模块」来监听。途中它会去解析每个模块的
@@ -242,6 +242,27 @@ def indexed_records_dialog():
             "（`private.nosync/workspaces/<workspace>/data/raw/`），"
             "上面就会出现「立即入库」按钮；也可以跑 `python -m scripts.ingest_new <文件>`。"
         )
+
+    # 补摘要提示 + 手动触发：已入库但摘要生成失败的记录（常见于 LLM 调用出错，比如
+    # API key / OAuth 过期），chunks/向量化已经成功、不会再出现在「待入库」清单里，
+    # 只能靠这里手动补跑——跟上面「⚡ 立即入库」是同一种模式，只是补的是摘要这一步。
+    missing = missing_summary_files()
+    if missing:
+        st.warning(f"📝 有 **{len(missing)}** 份已入库但还没有摘要：" + "、".join(missing))
+        st.caption(
+            "通常是生成摘要时 LLM 调用失败（比如 API key / OAuth 过期），不影响检索，"
+            "但会让长期记忆缺这几场内容。点下面补跑，只重新生成摘要，不会重复入库或重复向量化。"
+        )
+        if st.button(f"🔁 补生成这 {len(missing)} 份摘要", use_container_width=True):
+            with st.spinner("正在补生成摘要（调 LLM，请耐心等）…"):
+                result = regenerate_missing_summaries()
+            if result["generated"]:
+                st.success("已补生成摘要：" + "、".join(result["generated"]))
+            for f in result["failed"]:
+                st.error(f"❌ {f['file']}：{f['error']}")
+            if not result["failed"]:
+                st.rerun()
+        st.divider()
 
     st.markdown("##### 🧾 变更记录（最近 30 条）")
     st.caption("每次新增 / 重建 / 跳过入库都会自动记一行，方便回溯「什么时候进了哪份记录」。")
