@@ -3,3 +3,5 @@
 {"ts": "2026-07-21T00:32:36+08:00", "action": "added", "source_file": "20260719150340-转写_Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-07-19", "n_chunks": 54, "note": "新逐字稿入库"}
 {"ts": "2026-07-26T13:01:09+08:00", "action": "added", "source_file": "20260726110034-转写_Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-07-26", "n_chunks": 61, "note": "新逐字稿入库"}
 {"ts": "2026-07-30T21:45:25+08:00", "action": "full_rebuild", "source_file": "(全部)", "session_date": "", "n_chunks": 3110, "note": "UI 全量重建"}
+{"ts": "2026-08-08T06:11:00+08:00", "action": "added", "source_file": "20260802110203-转写_Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-08-02", "n_chunks": 54, "note": "新逐字稿入库"}
+{"ts": "2026-08-08T06:17:26+08:00", "action": "added", "source_file": "20260805100139-转写_Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-08-05", "n_chunks": 56, "note": "新逐字稿入库"}
