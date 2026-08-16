@@ -3,126 +3,96 @@
     {
       "id": "chat:coping:大胃王",
       "type": "coping",
-      "label": "大胃王",
+      "label": "大胃王保护者",
       "domain": "",
-      "description": "吞咽忧愁、烦恼、焦虑以维持前行、避免停下的保护部分，导致身体疲惫、无生命力感。",
+      "description": "吞噬焦虑、忧愁和烦恼以维持日常功能的保护部分，当情绪来临时吞下让Andy继续前进，但长期导致身体疲惫与生命力缺失。",
       "related_dates": [
         "2026-07-25",
         "2026-07-30"
       ],
       "source": "chat",
-      "degree_centrality": 0.75,
-      "betweenness_centrality": 0.5
-    },
-    {
-      "id": "chat:mode:消防员",
-      "type": "coping",
-      "label": "消防员",
-      "domain": "",
-      "description": "IFS中的消防员模式，通过看影片等分心行为转移注意力，避免面对内在痛苦。",
-      "related_dates": [
-        "2026-07-23"
-      ],
-      "source": "chat",
-      "degree_centrality": 0.25,
-      "betweenness_centrality": 0.0
-    },
-    {
-      "id": "chat:person:12岁内在小孩",
-      "type": "person",
-      "label": "12岁内在小孩",
-      "domain": "",
-      "description": "12岁从佛山搬到香港的内在小孩，感到必须靠自己，渴望陪伴妈妈。",
-      "related_dates": [
-        "2026-07-23"
-      ],
-      "source": "chat",
-      "degree_centrality": 0.25,
-      "betweenness_centrality": 0.0
-    },
-    {
-      "id": "chat:event:12岁搬家煮饭记忆",
-      "type": "event",
-      "label": "12岁搬家煮饭记忆",
-      "domain": "",
-      "description": "12岁时对妈妈说“我宁愿一个人在家也想陪在妈妈身边，可以帮忙煮饭吃”。",
-      "related_dates": [
-        "2026-07-23"
-      ],
-      "source": "chat",
-      "degree_centrality": 0.0,
-      "betweenness_centrality": 0.0
-    },
-    {
-      "id": "chat:emotion:空落落感",
-      "type": "coping",
-      "label": "空落落感",
-      "domain": "",
-      "description": "停止旧习惯（如打游戏）后产生的空虚、无所适从的感觉。",
-      "related_dates": [
-        "2026-07-20"
-      ],
-      "source": "chat",
-      "degree_centrality": 0.25,
+      "degree_centrality": 1,
       "betweenness_centrality": 0.0
     }
   ],
   "edges": [
     {
       "source": "chat:coping:大胃王",
-      "target": "mode:6",
+      "target": "mode:4",
       "relation_type": "relates_to",
-      "relation": "大胃王是守门员模式的延伸，通过吞咽焦虑来维持控制和安全感。",
+      "relation": "是大胃王作为疏离保护者模式的具象化，通过吞噬情绪来规避深度情感连接和失败恐惧",
       "evidence_dates": [
         "2026-07-25",
         "2026-07-30"
       ]
     },
     {
-      "source": "chat:person:12岁内在小孩",
-      "target": "mode:0",
+      "source": "chat:coping:大胃王",
+      "target": "coping:17",
       "relation_type": "relates_to",
-      "relation": "12岁内在小孩是脆弱儿童模式的具体体现，源于搬家失去安全感。",
+      "relation": "通过吞噬焦虑来回避深层创伤体验和强烈情绪",
       "evidence_dates": [
-        "2026-07-23"
+        "2026-07-25",
+        "2026-07-30"
       ]
     },
     {
-      "source": "chat:event:12岁搬家煮饭记忆",
-      "target": "event:312",
-      "relation_type": "relates_to",
-      "relation": "该记忆是六年级搬家事件的延伸，体现了渴望联结与靠自己的冲突。",
-      "evidence_dates": [
-        "2026-07-23"
-      ]
-    },
-    {
-      "source": "chat:mode:消防员",
-      "target": "chat:coping:大胃王",
-      "relation_type": "co_occurs",
-      "relation": "消防员通过分心帮助大胃王暂时卸下吞咽的焦虑负担。",
-      "evidence_dates": [
-        "2026-07-23"
-      ]
-    },
-    {
-      "source": "chat:emotion:空落落感",
-      "target": "chat:coping:大胃王",
+      "source": "chat:coping:大胃王",
+      "target": "emotion:53",
       "relation_type": "manifested_in",
-      "relation": "空落落感是大胃王无法继续吞咽新焦虑时的外显表现。",
+      "relation": "大胃王吞噬后导致的空虚、无生命力感觉在空闲时浮现",
       "evidence_dates": [
         "2026-07-20",
         "2026-07-30"
       ]
     },
     {
-      "source": "chat:person:12岁内在小孩",
-      "target": "chat:coping:大胃王",
-      "relation_type": "triggers",
-      "relation": "12岁内在小孩的恐惧激活大胃王持续吞咽焦虑以求生存。",
+      "source": "chat:coping:大胃王",
+      "target": "mode:6",
+      "relation_type": "relates_to",
+      "relation": "与惩罚性父母模式共同作用，守门员检查后大胃王接管吞噬",
       "evidence_dates": [
-        "2026-07-23",
+        "2026-07-30"
+      ]
+    },
+    {
+      "source": "chat:coping:大胃王",
+      "target": "schema:31",
+      "relation_type": "triggers",
+      "relation": "脆弱与伤害图式激活时，大胃王启动吞噬以防御灾难性事件",
+      "evidence_dates": [
+        "2026-07-06",
         "2026-07-25"
+      ]
+    },
+    {
+      "source": "chat:coping:大胃王",
+      "target": "need:15",
+      "relation_type": "conflicts_with",
+      "relation": "大胃王吞噬阻碍了被无条件接纳的体验，导致持续计算与防御",
+      "evidence_dates": [
+        "2026-07-05",
+        "2026-07-25"
+      ]
+    },
+    {
+      "source": "chat:coping:大胃王",
+      "target": "event:126",
+      "relation_type": "manifested_in",
+      "relation": "辞职交接过程中的焦虑被大胃王吞噬，导致胸腔沉紧与无力",
+      "evidence_dates": [
+        "2026-07-30",
+        "2026-08-08"
+      ]
+    },
+    {
+      "source": "chat:coping:大胃王",
+      "target": "mode:290",
+      "relation_type": "co_occurs",
+      "relation": "批判者模式凝视下，大胃王作为消防员出现吞噬以转移注意力",
+      "evidence_dates": [
+        "2026-07-21",
+        "2026-07-30"
       ]
     }
   ]

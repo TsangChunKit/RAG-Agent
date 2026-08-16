@@ -21,16 +21,16 @@
   "reranker": {
     "use_reranker": true,
     "rerank_top_k": 30,
-    "final_top_k": 6,
+    "final_top_k": 10,
     "min_score": 0.2,
-    "min_keep": 2,
+    "min_keep": 4,
     "model": "BAAI/bge-reranker-v2-m3",
     "device": "mps",
     "use_fp16": true
   },
   "graph_evidence": {
-    "max_dates": 3,
-    "fragments_per_date": 1,
+    "max_dates": 5,
+    "fragments_per_date": 3,
     "window_expand": 1,
     "include_summary": true
   }
