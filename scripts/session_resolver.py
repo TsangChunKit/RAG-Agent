@@ -18,6 +18,7 @@
 """
 import json
 import re
+from datetime import date
 from typing import Optional
 
 from config import SUMMARIES_DIR
@@ -47,12 +48,29 @@ _RECENT_N = re.compile(rf"(?:最近|最后|最後|前|近)({_NUM_OR_CN})\s*(?:�
 # 单次指代：「上上次」必须先于「上次」判断（否则会被「上次」子串抢先命中）。
 _PREV_PREV = re.compile(r"上上(?:一)?次")
 _LAST_ONE = re.compile(r"上一次|上次|最近一?次|最新一?次|上回|最近的?那?次")
+# 「今天/今日」——2026-08-16 真实事故：使用者问「今天的咨询记录」，_detect_intent 之前
+# 完全不认这个词（只认「上次/最近N次/第N次」这类相对次序），意图判定为 None，问题退回
+# 普通检索只拿到零散片段。这里补上"当天有咨询就整份塞进上下文"这条路。
+_TODAY_WORDS = re.compile(r"今天|今日")
 
 
 def _to_int(s: str) -> Optional[int]:
     if s.isdigit():
         return int(s)
     return _CN_NUM.get(s)
+
+
+def _today_str() -> str:
+    """今天的日期字符串（YYYY-MM-DD）。抽成函数方便测试用 monkeypatch 固定「今天」。"""
+    return date.today().isoformat()
+
+
+def _item_date(item) -> str:
+    """从 therapy_dates_ordered() 的 (date, path) 或 list_sessions() 的 session dict
+    里统一取出可比较的 YYYY-MM-DD 日期字符串。"""
+    if isinstance(item, tuple):
+        return item[0]
+    return str(item.get("updated_at", ""))[:10]
 
 
 def therapy_dates_ordered(workspace_id: Optional[str] = None) -> list[tuple[str, object]]:
@@ -68,7 +86,7 @@ def therapy_dates_ordered(workspace_id: Optional[str] = None) -> list[tuple[str,
 
 
 def _detect_intent(question: str):
-    """返回 ('nth', k) | ('recent_n', k) | ('last_offset', k) | None。"""
+    """返回 ('nth', k) | ('recent_n', k) | ('last_offset', k) | ('today', None) | None。"""
     if m := _NTH.search(question):
         k = _to_int(m.group(1))
         return ("nth", k) if k else None
@@ -79,6 +97,8 @@ def _detect_intent(question: str):
         return ("last_offset", 2)
     if _LAST_ONE.search(question):
         return ("last_offset", 1)
+    if _TODAY_WORDS.search(question):
+        return ("today", None)
     return None
 
 
@@ -92,6 +112,9 @@ def _apply_intent(ordered: list, intent) -> list:
         return [ordered[-k]] if 1 <= k <= n else []
     if kind == "recent_n":  # 最近 k 次，取末尾 k 份
         return ordered[-k:] if k > 0 else []
+    if kind == "today":  # 今天有几份就取几份（当天没有会话时返回空，交回普通检索兜底）
+        today = _today_str()
+        return [item for item in ordered if _item_date(item) == today]
     return []
 
 

@@ -93,6 +93,15 @@ class TestIntentDetection:
         assert _detect_intent("最近2次諮詢") == ("recent_n", 2)
         assert _detect_intent("第二場咨商") == ("nth", 2)
 
+    def test_detect_intent_today(self):
+        """测试「今天/今日」模式。"""
+        assert _detect_intent("今天的咨询记录") == ("today", None)
+        assert _detect_intent("今日對話說了什麼") == ("today", None)
+
+    def test_detect_intent_today_priority(self):
+        """测试优先级：「今天」不应抢过更具体的次序引用。"""
+        assert _detect_intent("今天是第2次咨询") == ("nth", 2)
+
 
 class TestApplyIntent:
     """测试意图应用逻辑（_apply_intent）。"""
@@ -147,6 +156,33 @@ class TestApplyIntent:
         assert _apply_intent([], ("nth", 1)) == []
         assert _apply_intent([], ("last_offset", 1)) == []
         assert _apply_intent([], ("recent_n", 3)) == []
+
+    def test_apply_today_match_tuple_items(self, monkeypatch):
+        """测试「今天」匹配 therapy_dates_ordered() 的 (date, path) 元组。"""
+        import scripts.session_resolver as sr
+
+        monkeypatch.setattr(sr, "_today_str", lambda: "2026-08-16")
+        ordered = [("2026-08-02", "a.txt"), ("2026-08-16", "b.txt")]
+        assert _apply_intent(ordered, ("today", None)) == [("2026-08-16", "b.txt")]
+
+    def test_apply_today_match_dict_items(self, monkeypatch):
+        """测试「今天」匹配 list_sessions() 的 session dict（按 updated_at 前 10 位）。"""
+        import scripts.session_resolver as sr
+
+        monkeypatch.setattr(sr, "_today_str", lambda: "2026-08-16")
+        ordered = [
+            {"id": "s1", "updated_at": "2026-08-02T10:00:00"},
+            {"id": "s2", "updated_at": "2026-08-16T15:09:00"},
+        ]
+        assert _apply_intent(ordered, ("today", None)) == [ordered[1]]
+
+    def test_apply_today_no_match(self, monkeypatch):
+        """测试「今天」没有对应会话时返回空列表（交回普通检索兜底）。"""
+        import scripts.session_resolver as sr
+
+        monkeypatch.setattr(sr, "_today_str", lambda: "2026-08-16")
+        ordered = [("2026-08-02", "a.txt")]
+        assert _apply_intent(ordered, ("today", None)) == []
 
 
 class TestTherapyDatesOrdered:
@@ -374,6 +410,68 @@ class TestResolve:
         # 优先识别为咨询
         assert len(result["therapy_dates"]) > 0
         assert result["chat_session_ids"] == []
+
+    def test_resolve_therapy_today(self, tmp_path, monkeypatch):
+        """测试咨询「今天」解析（2026-08-16 真实场景：英文月份日期解析失败，改用「今天」应能补上）。"""
+        import scripts.session_resolver as sr
+
+        monkeypatch.setattr(sr, "_today_str", lambda: "2026-08-16")
+
+        raw_dir = tmp_path / "data" / "raw"
+        raw_dir.mkdir(parents=True)
+        files = [
+            raw_dir / "20260805100139_s1.txt",
+            raw_dir / "20260816150936_s2.txt",
+        ]
+        for f in files:
+            f.write_text("content")
+
+        with patch("scripts.session_resolver.iter_raw_files") as mock_iter:
+            mock_iter.return_value = files
+
+            result = resolve("读取今天的咨询记录, 你看见了什么？", workspace_id="test")
+
+        assert result["therapy_dates"] == ["2026-08-16"]
+        assert result["chat_session_ids"] == []
+        assert result["overflow"] is False
+
+    def test_resolve_therapy_today_no_session(self, tmp_path, monkeypatch):
+        """测试「今天」当天没有咨询时，优雅返回空（不报错、交回普通检索兜底）。"""
+        import scripts.session_resolver as sr
+
+        monkeypatch.setattr(sr, "_today_str", lambda: "2026-08-16")
+
+        raw_dir = tmp_path / "data" / "raw"
+        raw_dir.mkdir(parents=True)
+        files = [raw_dir / "20260805100139_s1.txt"]
+        for f in files:
+            f.write_text("content")
+
+        with patch("scripts.session_resolver.iter_raw_files") as mock_iter:
+            mock_iter.return_value = files
+
+            result = resolve("今天的咨询记录", workspace_id="test")
+
+        assert result["therapy_dates"] == []
+        assert result["overflow"] is False
+
+    def test_resolve_chat_today(self, monkeypatch):
+        """测试对话「今天」解析。"""
+        import scripts.session_resolver as sr
+
+        monkeypatch.setattr(sr, "_today_str", lambda: "2026-08-16")
+        mock_sessions = [
+            {"id": "s2", "title": "今天", "updated_at": "2026-08-16T15:09:00"},
+            {"id": "s1", "title": "之前", "updated_at": "2026-08-02T10:00:00"},
+        ]
+
+        with patch("scripts.session_resolver.list_sessions") as mock_list:
+            mock_list.return_value = mock_sessions
+
+            result = resolve("今天聊天说了什么？", workspace_id="test")
+
+        assert result["chat_session_ids"] == ["s2"]
+        assert result["therapy_dates"] == []
 
     def test_resolve_chat_only_keywords(self):
         """测试纯对话关键词。"""

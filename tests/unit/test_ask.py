@@ -88,6 +88,33 @@ class TestDateParsing:
         dates = extract_mentioned_dates("最近的工作压力")
         assert dates == []
 
+    def test_extract_mentioned_dates_no_duplicate_with_numeric(self):
+        """测试英文月份正则不会跟数字月份正则重复计数同一个日期"""
+        from scripts.ask import extract_mentioned_dates
+
+        dates = extract_mentioned_dates("2026-07-04 的咨询")
+        assert dates == ["2026-07-04"]
+
+    def test_extract_mentioned_dates_english_month_abbrev(self):
+        """测试英文月份缩写（如 2026-aug-16），大小写不敏感"""
+        from scripts.ask import extract_mentioned_dates
+
+        assert extract_mentioned_dates("读取今天2026-aug-16的咨询记录") == ["2026-08-16"]
+        assert extract_mentioned_dates("2026-Aug-16 的咨询") == ["2026-08-16"]
+        assert extract_mentioned_dates("2026/AUG/16 的咨询") == ["2026-08-16"]
+
+    def test_extract_mentioned_dates_english_month_full_name(self):
+        """测试英文月份全名（如 2026-august-16）"""
+        from scripts.ask import extract_mentioned_dates
+
+        assert extract_mentioned_dates("2026-august-16 的咨询") == ["2026-08-16"]
+
+    def test_extract_mentioned_dates_english_month_invalid(self):
+        """测试无法识别的英文单词不应被误判成月份"""
+        from scripts.ask import extract_mentioned_dates
+
+        assert extract_mentioned_dates("2026-xyz-16 的咨询") == []
+
 
 class TestSystemInstruction:
     """System Instruction 管理测试"""

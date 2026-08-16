@@ -68,6 +68,17 @@ _CN_NUM_TO_INT = {
 _NUM_OR_CN = r"(?:[一二三四五六七八九十]{1,3}|\d{1,2})"
 DATE_MENTION_RE = re.compile(rf"(\d{{4}})[年\-/]({_NUM_OR_CN})[月\-/]({_NUM_OR_CN})[日號号]?")
 
+# 英文月份（缩写或全名，大小写不敏感）——补上 DATE_MENTION_RE 漏掉的 "2026-aug-16" 这类写法
+# （2026-08-16 真实事故：使用者打了英文月份缩写，两条日期解析全部落空，问题退回普通 chunk
+# 检索，只拿到零散片段而不是整份逐字稿）。
+_EN_MONTH_TO_INT = {
+    "jan": 1, "january": 1, "feb": 2, "february": 2, "mar": 3, "march": 3,
+    "apr": 4, "april": 4, "may": 5, "jun": 6, "june": 6, "jul": 7, "july": 7,
+    "aug": 8, "august": 8, "sep": 9, "sept": 9, "september": 9, "oct": 10, "october": 10,
+    "nov": 11, "november": 11, "dec": 12, "december": 12,
+}
+EN_MONTH_DATE_RE = re.compile(r"(\d{4})[\-/\s]([A-Za-z]+)[\-/\s](\d{1,2})日?", re.IGNORECASE)
+
 
 def _to_int(s: str) -> Optional[int]:
     if s.isdigit():
@@ -746,14 +757,22 @@ def _format_retrieved(windows: list[dict]) -> str:
 
 
 def extract_mentioned_dates(question: str) -> list[str]:
-    """从问题里提取形如 2026年7月4日 / 2026-07-04 / 2026/7/4 / 2026年七月4號 的具体日期，
-    月/日支持中文数字，返回去重后的 YYYY-MM-DD 列表。"""
+    """从问题里提取形如 2026年7月4日 / 2026-07-04 / 2026/7/4 / 2026年七月4號 / 2026-Aug-16
+    （英文月份缩写或全名，大小写不敏感）的具体日期，月/日支持中文数字，返回去重后的 YYYY-MM-DD 列表。"""
     dates = []
     for y, mo, d in DATE_MENTION_RE.findall(question):
         year, month, day = _to_int(y), _to_int(mo), _to_int(d)
         if year is None or month is None or day is None:
             continue
         if not (1 <= month <= 12 and 1 <= day <= 31):
+            continue
+        dates.append(f"{year:04d}-{month:02d}-{day:02d}")
+    for y, mo_name, d in EN_MONTH_DATE_RE.findall(question):
+        month = _EN_MONTH_TO_INT.get(mo_name.lower())
+        if month is None:
+            continue
+        year, day = int(y), int(d)
+        if not (1 <= day <= 31):
             continue
         dates.append(f"{year:04d}-{month:02d}-{day:02d}")
     seen = set()
