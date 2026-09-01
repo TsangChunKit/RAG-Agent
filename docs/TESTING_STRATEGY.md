@@ -90,9 +90,9 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 ```
 
 **当前状态**（2026-09-01 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
-- 覆盖率：71.60%（已过 hook 的 70% 闸门，目标 ≥ 80%）
+- 覆盖率：71.96%（已过 hook 的 70% 闸门，目标 ≥ 80%）
 - 单元测试文件：30 个（tests/unit/）
-- 测试结果：794 通过 / 0 失败 / 1 跳过
+- 测试结果：802 通过 / 0 失败 / 1 跳过
 
 > 📉 比 2026-07-25 的 72.72% 略降，原因是这一轮加了 autouse 硬隔离（见下方「测试隔离的三道闸门」），
 > `import app` 不再顺带执行部分模块级代码 → app.py 31% → 25%。用 1.2 个覆盖率点换掉"测试会污染
@@ -100,7 +100,7 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 
 > ✅ 集成测试（`pytest tests/integration/ --integration`）**73 passed / 0 failed**
 > （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
-> 是 **821 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+> 现为 **876 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
 ### 服务控制脚本回归测试
 

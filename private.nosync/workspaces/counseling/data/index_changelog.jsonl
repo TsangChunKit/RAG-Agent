@@ -9,3 +9,4 @@
 {"ts": "2026-08-08T06:56:00+08:00", "action": "summary", "source_file": "20260802110203-转写_Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-08-02", "n_chunks": 0, "note": "补生成摘要"}
 {"ts": "2026-08-16T16:27:32+08:00", "action": "added", "source_file": "20260816150936-转写_Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-08-16", "n_chunks": 59, "note": "新逐字稿入库"}
 {"ts": "2026-09-01T20:18:36+08:00", "action": "added", "source_file": "20260901124144-Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-09-01", "n_chunks": 41, "note": "新逐字稿入库"}
+{"ts": "2026-09-01T23:18:41+08:00", "action": "summary", "source_file": "20260901124144-Andy预定的会议-逐字稿文本-1.txt", "session_date": "2026-09-01", "n_chunks": 0, "note": "补生成摘要"}
