@@ -89,10 +89,10 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 # 目标：覆盖率 ≥ 80%
 ```
 
-**当前状态**（2026-07-26 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
-- 覆盖率：71.5%（已过 hook 的 70% 闸门，目标 ≥ 80%）
-- 单元测试文件：28 个（tests/unit/）
-- 测试结果：747 通过 / 0 失败 / 1 跳过
+**当前状态**（2026-09-01 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
+- 覆盖率：71.60%（已过 hook 的 70% 闸门，目标 ≥ 80%）
+- 单元测试文件：30 个（tests/unit/）
+- 测试结果：794 通过 / 0 失败 / 1 跳过
 
 > 📉 比 2026-07-25 的 72.72% 略降，原因是这一轮加了 autouse 硬隔离（见下方「测试隔离的三道闸门」），
 > `import app` 不再顺带执行部分模块级代码 → app.py 31% → 25%。用 1.2 个覆盖率点换掉"测试会污染
@@ -102,6 +102,15 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 > （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
 > 是 **821 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
+### 服务控制脚本回归测试
+
+`tests/unit/test_counseling_agent_ctl.py` 用替身 `launchctl` 执行真实 shell 脚本，确认：
+- `start` / `stop` 只管理 Streamlit 与两个看门狗
+- `status` 不调用或报告 Tailscale
+- repo 不提供自动连接 Tailscale 的 launchd job
+
+这组测试保证应用服务不依赖 Tailscale；远端私网只在用户手动执行 `tailscale up` 时启用。
+
 ### 测试隔离的两道闸门（`tests/conftest.py`，autouse）
 
 写在 conftest 顶层且 autouse，因为"让每个测试自己记得隔离"已被证明不可靠：
@@ -109,7 +118,7 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 | 闸门 | 作用 |
 |-----|-----|
 | `isolate_data_root` | 把 `workspace_manager.WORKSPACES_ROOT` / `PRIVATE_DIR`、`INDEX_SETTINGS_PATH`、`GEMINI_SETTINGS_PATH`、`ENV_PATH` 钉进 `tmp_path`，清 `CURRENT_WORKSPACE` 与 `st.session_state`，并预置一个 `default-ws`（要"零个 workspace"的测试用 `empty_workspaces_root`）|
-| `block_real_llm_calls` | 在 `genai.Client` / `openai.OpenAI` 构造函数上设断路器，漏 mock 时**大声报错**而不是静默出网 |
+| `block_real_llm_calls` | 在 `genai.Client` / `openai.OpenAI` 构造函数及 `llm.run_subprocess`（Copilot CLI）上设断路器，漏 mock 时**大声报错**而不是静默出网 |
 
 > 2026-07-30 移除的第三道闸门 `reset_module_caches`（曾清 `ask._table` / `ask._all_chunks_cache`）：
 > 这两个模块级单例本身已经被删掉（`scripts/ask.py` 的 `_get_table()` / `_load_all_chunks()`
@@ -125,6 +134,10 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 3. **不要 patch `streamlit.session_state`**（曾有 autouse fixture 做 `patch("streamlit.session_state", {})`）：
    `{}` 没有属性赋值语义，`set_current_workspace()` 里的 `st.session_state.current_workspace = x`
    会直接 `AttributeError`，workspace 切换测了个假。清理已由 `isolate_data_root` 统一负责。
+
+`tests/unit/test_llm.py::TestCopilotCLIProvider` 额外锁定本机 CLI 通路：无工具参数、单/多轮 prompt
+序列化、JSON 验证，以及未安装、超时、非零退出和空响应的错误可见性。测试只 mock
+`scripts.llm.run_subprocess`，绝不真的消耗 Copilot 请求。
 
 ### 集成测试专用 fixtures（`tests/integration/conftest.py`）
 

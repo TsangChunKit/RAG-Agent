@@ -158,16 +158,20 @@ Gemini，而是「稳定骨干进缓存 + 命中问题的局部邻域动态拼�
 
 ## 一、日常使用：服务已经自动启动
 
-四个服务都设置成 **登入 Mac 时自动启动、意外退出自动重启**（用 macOS launchd 管理），
+三个应用服务都设置成 **登入 Mac 时自动启动、意外退出自动重启**（用 macOS launchd 管理），
 正常情况下你什么都不用做，直接打开下面的网址用就行：
 
 - 本机浏览器：http://localhost:8501
-- 手机/其他设备（需要该设备也登入同一个 Tailscale 账号并保持连接）：http://100.64.84.111:8501
+- 手机/其他设备：需要时先手动执行 `tailscale up`，并让该设备登入同一个 Tailscale 账号，
+  再访问 http://100.64.84.111:8501；用完可执行 `tailscale down`
   （这个地址已经存在 macOS 备忘录「心理咨询AI助手 - 访问地址」里）
+
+Tailscale 与应用服务完全解耦：未连接时，网页和两个看门狗仍会正常运行；
+`start-counseling-agent` 不会自动启动或连接 Tailscale。
 
 > ⚠️ **2026-07-26 起的当前状态：自动启动暂时不可用，需要你做一次手动授权。**
 >
-> 在此之前，这四份 plist 里的三份（Streamlit / 聊天记忆看门狗 / raw 入库看门狗）其实还指着
+> 在此之前，这三份应用 plist（Streamlit / 聊天记忆看门狗 / raw 入库看门狗）其实还指着
 > **旧项目** `心理咨詢agent`，所以本项目 `workspaces/counseling/data/raw/` 里的新逐字稿一直
 > 没人扫——新文件不自动入库的根因就是这个。plist 已改指向 RAG-Agent（并显式传
 > `--workspace counseling`），但改完起不来，报 `Operation not permitted:
@@ -201,14 +205,14 @@ Gemini，而是「稳定骨干进缓存 + 命中问题的局部邻域动态拼�
 临时关掉/重开时用的）：
 
 ```bash
-start-counseling-agent    # 启动网页 + 聊天记忆看门狗 + raw 入库看门狗（并确保 Tailscale 在线）
-stop-counseling-agent     # 停掉网页 + 两个看门狗（保留 Tailscale，因为它是全局私网）
-status-counseling-agent   # 查看四个服务状态 + 健康检查 + Tailscale 私网地址
+start-counseling-agent    # 启动网页 + 聊天记忆看门狗 + raw 入库看门狗
+stop-counseling-agent     # 停掉网页 + 两个看门狗
+status-counseling-agent   # 查看三个应用服务状态 + Streamlit 健康检查
 ```
 
 底层是 [scripts/counseling_agent_ctl.sh](scripts/counseling_agent_ctl.sh)（`start|stop|restart|status`），
-别名只是 `bash <该脚本> <命令>` 的薄封装。注意 `stop` **不会**断开 Tailscale——它是你整台
-机器的私网，别的设备/服务也在用；真要断网另跑 `tailscale down`。
+别名只是 `bash <该脚本> <命令>` 的薄封装。这个脚本不管理 Tailscale；远端访问按需手动执行
+`tailscale up` / `tailscale down`。
 
 ## 二、检查服务是不是正常运行
 
@@ -216,9 +220,9 @@ status-counseling-agent   # 查看四个服务状态 + 健康检查 + Tailscale 
 status-counseling-agent            # 最省事：一条命令看全部（别名）
 
 # 或手动逐项查：
-launchctl list | grep aitherapist  # 四个服务状态（第二列 exit code，0 = 正常）
+launchctl list | grep aitherapist  # 三个应用服务状态（第二列 exit code，0 = 正常）
 curl -s http://localhost:8501/_stcore/health   # Streamlit 健康检查，应输出 ok
-tailscale status                   # Tailscale 连接状态
+tailscale status                   # 可选：需要远端访问时才检查 Tailscale
 ```
 
 ## 三、如果服务没起来（比如刚装完 launchd，或怀疑哪里坏了）
@@ -260,9 +264,9 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.andytsang.aitherapis
 launchctl bootout gui/$(id -u)/com.andytsang.aitherapist.rawingestwatcher 2>/dev/null; sleep 2
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.andytsang.aitherapist.rawingestwatcher.plist
 
-# 重新连接 Tailscale
-launchctl bootout gui/$(id -u)/com.andytsang.aitherapist.tailscale 2>/dev/null; sleep 2
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.andytsang.aitherapist.tailscale.plist
+# 需要远端访问时手动连接 Tailscale；用完可执行 tailscale down
+open -a Tailscale
+tailscale up
 ```
 
 ### 查看日志排查问题
@@ -271,16 +275,15 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.andytsang.aitherapis
 cat /tmp/streamlit.log
 cat /tmp/chat_memory_watcher.log
 cat /tmp/raw_ingest_watcher.log
-cat /tmp/aitherapist_tailscale.log
 ```
 
 ### 如果 launchd 配置本身坏了/需要重装
 
-`scripts/launchd/` 目录下是四份 plist 源文件（和 `~/Library/LaunchAgents/` 里生效的那份保持同步）：
+`scripts/launchd/` 目录下是三份应用 plist 源文件（和 `~/Library/LaunchAgents/` 里生效的那份保持同步）：
 
 ```bash
 cp "/Users/andytsang/Documents/Project/RAG-Agent/scripts/launchd/"*.plist ~/Library/LaunchAgents/
-for label in com.andytsang.aitherapist.tailscale com.andytsang.aitherapist.streamlit com.andytsang.aitherapist.chatmemorywatcher com.andytsang.aitherapist.rawingestwatcher; do
+for label in com.andytsang.aitherapist.streamlit com.andytsang.aitherapist.chatmemorywatcher com.andytsang.aitherapist.rawingestwatcher; do
   launchctl bootout "gui/$(id -u)/$label" 2>/dev/null
   launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/$label.plist
 done
@@ -397,7 +400,7 @@ python -m scripts.ingest
 建索引和检索都**不出网**。唯一出网的是问答 / 摘要时调 LLM（默认 hermes：走本地代理再转 xAI；
 用 grok 时直连 xAI，见 §七）。侧边栏「📚 已索引的咨询记录」
 可以看当前索引了哪些逐字稿（日期 / 片段数 / 是否已生成摘要）+ 最近的变更记录；
-「⚙️ 索引设置」可以像「⚙️ Gemini 设置」一样在 UI 里直接调检索 / 分块 / 向量化 / 分词 / Reranker 精排参数
+「⚙️ 索引设置」可以像「⚙️ LLM 设置」一样在 UI 里直接调检索 / 分块 / 向量化 / 分词 / Reranker 精排参数
 （弹窗顶部还有一张「哪些参数改完需要全量重建」的速查表）。
 
 心智地图页面看到的图，是 `private.nosync/data/graph.json`（真实咨询）和
@@ -448,7 +451,7 @@ mkdir -p private.nosync/data
 # 默认后端 hermes 走本地代理（key 任意、base_url 默认 http://127.0.0.1:8645/v1），这步可省；
 # 用 grok 直连 xAI 时写 XAI_API_KEY。gemini 当前停用（见 §七），GEMINI_API_KEY 暂时用不上。
 echo "XAI_API_KEY=你的key" > private.nosync/.env
-#    （provider 选择本身也可以直接在 UI「⚙️ Gemini 设置」里切，无需写进 .env）
+#    （provider 选择本身也可以直接在 UI「⚙️ LLM 设置」里切，无需写进 .env）
 #    （务必确认没有设 ANTHROPIC_API_KEY 环境变量，否则 Claude Code 会改走 API 计费而不是
 #     Pro 订阅——见 PROJECT_SPEC.md §4.3）
 
@@ -460,9 +463,9 @@ python -m scripts.update_memory  # 汇总生成 LONG_TERM_MEMORY.md
 python -m scripts.build_graph    # map-reduce 生成真实咨询心智地图 graph.json（直接读 raw/ 逐字稿，
                                  # 每份抽一张子图缓存到 data/graph_fragments/，再归并；首次是全量，较慢）
 
-# 5. Tailscale：安装 Tailscale.app，登入同一个账号（这台新机器会出现在设备列表里）
+# 5. 可选远端访问：安装 Tailscale.app；需要时才执行 tailscale up
 
-# 6. 参考 scripts/launchd/ 里的四份 plist，改好路径后装到 ~/Library/LaunchAgents/
+# 6. 参考 scripts/launchd/ 里的三份应用 plist，改好路径后装到 ~/Library/LaunchAgents/
 #    （见上面"如果 launchd 配置本身坏了"那一节的命令）
 ```
 
@@ -493,13 +496,13 @@ Time Machine 开着且盘在，就已经有一份本地备份。
 
 | 想调整什么 | 在哪改 |
 |---|---|
-| **LLM 后端 provider（grok / hermes；gemini 停用中）** | Streamlit 侧边栏「⚙️ Gemini 设置」→ 🔀 LLM 后端 provider（见下方「LLM 后端 provider」小节）|
-| **Gemini API Key** | 「⚙️ Gemini 设置」→ API Key（留空=保留现有，填入=覆盖；provider 停用中，仅保留备用）|
-| **xAI（Grok）API Key** | 「⚙️ Gemini 设置」→ API Key 区（用 provider=grok 时）|
-| **Hermes Base URL / API Key** | 「⚙️ Gemini 设置」→ Hermes 区（用 provider=hermes 时；key 任意，代理自己夹 OAuth）|
-| **对话（问答）的 模型 / 思考深度 / 温度 / 最大输出 token** | 「⚙️ Gemini 设置」左栏（切到 grok/hermes 后「模型」框填对应模型名，如 grok-4.5）|
-| **摘要类任务的 模型 / 思考深度 / 温度** | 「⚙️ Gemini 设置」右栏 |
-| **摘要类的最大输出 token（按任务分档）** | 「⚙️ Gemini 设置」右栏：文本摘要类 / 对话记忆图谱 / 真实咨询图谱 各一个（图谱输出大，别调太低否则会截断）|
+| **LLM 后端 provider（grok / hermes / copilot_cli；gemini 停用中）** | Streamlit 侧边栏「⚙️ LLM 设置」→ 🔀 LLM 后端 provider（见下方「LLM 后端 provider」小节）|
+| **Gemini API Key** | 「⚙️ LLM 设置」→ API Key（留空=保留现有，填入=覆盖；provider 停用中，仅保留备用）|
+| **xAI（Grok）API Key** | 「⚙️ LLM 设置」→ API Key 区（用 provider=grok 时）|
+| **Hermes Base URL / API Key** | 「⚙️ LLM 设置」→ Hermes 区（用 provider=hermes 时；key 任意，代理自己夹 OAuth）|
+| **对话（问答）的 模型 / 思考深度 / 温度 / 最大输出 token** | 「⚙️ LLM 设置」左栏（模型如 grok-4.5 / gpt-5.6-sol）|
+| **摘要类任务的 模型 / 思考深度 / 温度** | 「⚙️ LLM 设置」右栏 |
+| **摘要类的最大输出 token（按任务分档）** | 「⚙️ LLM 设置」右栏：文本摘要类 / 对话记忆图谱 / 真实咨询图谱 各一个（图谱输出大，别调太低否则会截断）|
 | AI 人设/流派路由规则 | 「⚙️ 编辑 System Instruction」（支持版本历史：每次保存自动记一条 + AI 生成变更摘要，可展开查看历史版本全文并恢复）|
 | **检索 top_k / 父块窗口扩展** | 「⚙️ 索引设置」→ 检索（改完下一次问答立即生效）|
 | **分块大小 / 重叠** | 「⚙️ 索引设置」→ 分块（只影响之后新入库的记录；要对历史生效点弹窗底部「全量重建」）|
@@ -524,21 +527,23 @@ Hermes base_url，是凭证，已被 `.gitignore` 排除）；索引参数存在
 > 因为模型在进程内缓存成单例，要重启 Streamlit 服务、下次加载模型时才会读到新值（批大小在下次建 rows
 > 时即生效）。UI 里每处都标了这个区别。
 
-### LLM 后端 provider（grok / hermes；gemini 暂时停用）
+### LLM 后端 provider（grok / hermes / copilot_cli；gemini 暂时停用）
 
 所有对 LLM 的调用都收口在 [scripts/llm.py](scripts/llm.py) 的 `ask_llm()`，通过一个 provider 开关在
-后端间切换（在「⚙️ Gemini 设置」→ 🔀 LLM 后端 provider 里选，**下一次调用即生效、无需重启**）：
+后端间切换（在「⚙️ LLM 设置」→ 🔀 LLM 后端 provider 里选，**下一次调用即生效、无需重启**）：
 
 | provider | 是什么 | key / 端点 | 备注 |
 |---|---|---|---|
 | **hermes**（默认） | 本地 **Hermes Agent Gateway** 代理（OpenAI 兼容，转发到 xAI grok、自己夹 OAuth）| Base URL 默认 `http://127.0.0.1:8645/v1`，key 任意（默认 `sk-unused`）| 模型填 `grok-4.5`（摘要用更便宜的 `grok-4.3`）；走本地代理、不用自己管 xAI 额度 |
 | **grok** | xAI 直连（OpenAI 兼容 `api.x.ai/v1`）| `XAI_API_KEY` | 需 xAI 账号有额度；模型填 `grok-4.5` 等 |
+| **copilot_cli** | 本机已登录的 GitHub Copilot CLI | 不需要 API key 或 HTTP gateway | 模型如 `gpt-5.6-sol`；每次调用都禁用工具、MCP、项目 instructions 和 remote export；CLI 不提供稳定 token usage，UI 中用量显示为 0 |
 | ~~**gemini**~~ | Google Gemini 直连（唯一支持 **Explicit Cache**）| `GEMINI_API_KEY` | ⛔ **2026-07-25 起暂时停用**，见下方「gemini 为什么停用」|
 
 要点：
 
 - **切后端后记得同步改「模型」框**：provider 只决定走哪个后端，对话/摘要各自的模型名仍在
-  「⚙️ Gemini 设置」左右两栏的「模型」框里填（hermes/grok 填 `grok-4.5` / `grok-4.3`）。
+  「⚙️ LLM 设置」左右两栏的「模型」框里填（hermes/grok 填 grok 模型，copilot_cli 填 Copilot
+  可用模型，例如 `gpt-5.6-sol`）。
 - **grok / hermes 是 OpenAI 兼容后端，共用同一套代码**（`scripts/llm.py` 的 `_OPENAI_PROVIDERS`
   注册表 + `_ask_openai_compatible()`）。要再加任何 OpenAI 兼容网关，只需在注册表加一行 +
   在 `scripts/settings.py` 的 `VALID_PROVIDERS` 加个名字。
@@ -549,6 +554,9 @@ Hermes base_url，是凭证，已被 `.gitignore` 排除）；索引参数存在
   直接返回 None，问答自动退回把 system instruction + 长期记忆 + 骨干图内联进上下文（功能不变，
   只是省不到那部分缓存费）。gemini 停用期间这条通路一直是内联。
 - **依赖**：grok/hermes 走 `openai` SDK（已在 `requirements.txt`）指向对应 base_url。
+- **copilot_cli 限制**：需要先完成 `copilot` 登录；单次调用 300 秒超时。CLI 没有等价的 temperature /
+  max token 参数，也没有服务端 JSON Schema 约束，因此结构化任务会把 schema 写入 prompt，并在本地
+  拒绝无效 JSON。失败会明确返回「未安装／超时／退出码／空响应／无效 JSON」，不会悄悄切换后端。
 
 #### gemini 为什么停用
 
@@ -686,7 +694,7 @@ scripts/session_graph.py    # map 步：单份逐字稿→细粒度子图（10 �
 scripts/graph_utils.py      # 节点/关系分类单一真相源(NODE_TYPES/RELATION_TYPES) + 归并 resolve_graph + 中心性 + merge_graphs
 scripts/chat_memory_watcher.py   # 聊天记忆看门狗：闲置 30 分钟自动更新 AI 对话记忆 + 其心智地图
 scripts/raw_ingest_watcher.py    # raw 入库看门狗：每 2 分钟扫 data/raw/，新逐字稿自动入库（调 ingest_new）
-scripts/settings.py         # Gemini 运行时参数 + API key 的读写（供「⚙️ Gemini 设置」用）
+scripts/settings.py         # LLM 运行时参数 + API key 的读写（供「⚙️ LLM 设置」用）
 scripts/index_settings.py   # 索引运行时参数（检索/分块/embedding/FTS/reranker）读写（供「⚙️ 索引设置」用）
 scripts/index_records.py    # 已索引记录清单 + 索引变更记录（供「📚 已索引的咨询记录」用）
 scripts/reranker.py         # bge-reranker-v2-m3 cross-encoder 精排（本地，供 ask.retrieve 用）
@@ -753,7 +761,7 @@ uv run pytest tests/unit/test_mcp_rag_search.py -v
 - 代码 / 配置（`*.py`、`system_instruction.md`、`eval/`）不含个人内容，本来就在根目录、可正常进 git。
 - **唯一的出网调用是 LLM API**（问答 / 摘要；默认 hermes→xAI，可切 grok 直连，见 §七），且只发送检索到的
   片段，不整份上传逐字稿。索引这侧（分块 / BGE-M3 向量化 / LanceDB / reranker）全程本地、不出网。
-- 对外访问走 Tailscale 私网，没做公网部署（Vercel / Streamlit Cloud）——单人本地使用，本地网页 +
-  私网就够。
+- 没做公网部署（Vercel / Streamlit Cloud）；默认只需本地网页，需要从其他设备访问时才手动连接
+  Tailscale 私网。
 - 目录名 `private.nosync` 是历史遗留：`.nosync` 后缀会让 iCloud 即便开了同步也不上传该目录（只挡
   iCloud，不挡 git、也不挡 Time Machine）。对现在的用法没有实际约束，改不改名都行。

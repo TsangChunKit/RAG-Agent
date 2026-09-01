@@ -12,6 +12,7 @@
 7. Client 惰性初始化和 key 变更重建
 """
 from dataclasses import dataclass
+import subprocess
 from unittest.mock import MagicMock, patch, Mock
 
 import pytest
@@ -730,6 +731,120 @@ class TestEndToEnd:
         resp2 = ask_llm("Hello Grok")
         assert resp2.text == "OpenAI mocked response"
         assert mock_openai_client.call_count == 1
+
+
+# ── GitHub Copilot CLI Provider 测试 ──────────────────────────────────
+
+
+class TestCopilotCLIProvider:
+    """测试本机 GitHub Copilot CLI provider。"""
+
+    def test_dispatches_with_no_tools_and_normalizes_response(self, mock_gemini_settings):
+        """copilot_cli 应走无工具的非交互命令，并返回统一响应形状。"""
+        mock_gemini_settings["get_provider"].return_value = "copilot_cli"
+        mock_gemini_settings["dialogue_params"].return_value.update(
+            {"model": "gpt-5.6-sol", "thinking_level": "minimal"}
+        )
+
+        completed = subprocess.CompletedProcess([], 0, stdout="CLI answer\n", stderr="")
+        with patch("scripts.llm.run_subprocess", return_value=completed) as mock_run:
+            from scripts.llm import ask_llm
+
+            resp = ask_llm("Hello", system_instruction="Be concise")
+
+        assert resp.text == "CLI answer"
+        assert resp.usage_metadata.total_token_count == 0
+        argv = mock_run.call_args.args[0]
+        assert argv[0] == "copilot"
+        assert "-p" in argv and "-s" in argv
+        assert "--available-tools=" in argv
+        assert "--disable-builtin-mcps" in argv
+        assert "--no-custom-instructions" in argv
+        assert "--no-remote" in argv
+        assert "--no-remote-export" in argv
+        assert "--model" in argv and "gpt-5.6-sol" in argv
+        assert "--effort" in argv and "low" in argv
+        prompt = argv[argv.index("-p") + 1]
+        assert "SYSTEM:\nBe concise" in prompt
+        assert "USER:\nHello" in prompt
+        assert mock_run.call_args.kwargs["text"] is True
+        assert mock_run.call_args.kwargs["capture_output"] is True
+        assert mock_run.call_args.kwargs["timeout"] > 0
+
+    def test_preserves_multiturn_order(self, mock_gemini_settings):
+        """多轮内容应按角色和原顺序序列化进单一 prompt。"""
+        mock_gemini_settings["get_provider"].return_value = "copilot_cli"
+        turns = [
+            {"role": "user", "parts": [{"text": "first"}]},
+            {"role": "model", "parts": [{"text": "second"}]},
+            {"role": "user", "parts": [{"text": "third"}]},
+        ]
+        completed = subprocess.CompletedProcess([], 0, stdout="done", stderr="")
+        with patch("scripts.llm.run_subprocess", return_value=completed) as mock_run:
+            from scripts.llm import ask_llm
+
+            ask_llm(turns)
+
+        prompt = mock_run.call_args.args[0][mock_run.call_args.args[0].index("-p") + 1]
+        assert prompt.index("USER:\nfirst") < prompt.index("ASSISTANT:\nsecond") < prompt.index("USER:\nthird")
+
+    def test_structured_output_requires_valid_json(self, mock_gemini_settings):
+        """结构化输出应把 schema 放进 prompt，并验证 CLI 返回的是 JSON。"""
+        mock_gemini_settings["get_provider"].return_value = "copilot_cli"
+        schema = {
+            "type": "object",
+            "properties": {"summary": {"type": "string"}},
+            "required": ["summary"],
+        }
+        completed = subprocess.CompletedProcess([], 0, stdout='{"summary":"ok"}\n', stderr="")
+        with patch("scripts.llm.run_subprocess", return_value=completed) as mock_run:
+            from scripts.llm import ask_llm
+
+            resp = ask_llm("Summarize", response_schema=schema)
+
+        assert resp.text == '{"summary":"ok"}'
+        prompt = mock_run.call_args.args[0][mock_run.call_args.args[0].index("-p") + 1]
+        assert '"required": ["summary"]' in prompt
+        assert "只输出一个有效的 JSON" in prompt
+
+    def test_structured_output_rejects_invalid_json(self, mock_gemini_settings):
+        mock_gemini_settings["get_provider"].return_value = "copilot_cli"
+        completed = subprocess.CompletedProcess([], 0, stdout="not json", stderr="")
+        with patch("scripts.llm.run_subprocess", return_value=completed):
+            from scripts.llm import ask_llm
+
+            with pytest.raises(RuntimeError, match="无效 JSON"):
+                ask_llm("Summarize", response_schema={"type": "object"})
+
+    @pytest.mark.parametrize(
+        ("side_effect", "message"),
+        [
+            (FileNotFoundError(), "未安装"),
+            (subprocess.TimeoutExpired("copilot", 300), "超时"),
+        ],
+    )
+    def test_actionable_execution_errors(self, mock_gemini_settings, side_effect, message):
+        mock_gemini_settings["get_provider"].return_value = "copilot_cli"
+        with patch("scripts.llm.run_subprocess", side_effect=side_effect):
+            from scripts.llm import ask_llm
+
+            with pytest.raises(RuntimeError, match=message):
+                ask_llm("Hello")
+
+    @pytest.mark.parametrize(
+        ("completed", "message"),
+        [
+            (subprocess.CompletedProcess([], 2, stdout="", stderr="auth failed"), "退出码 2"),
+            (subprocess.CompletedProcess([], 0, stdout="  \n", stderr=""), "空响应"),
+        ],
+    )
+    def test_actionable_process_errors(self, mock_gemini_settings, completed, message):
+        mock_gemini_settings["get_provider"].return_value = "copilot_cli"
+        with patch("scripts.llm.run_subprocess", return_value=completed):
+            from scripts.llm import ask_llm
+
+            with pytest.raises(RuntimeError, match=message):
+                ask_llm("Hello")
 
     def test_main_script_execution(self, mock_gemini_settings, mock_gemini_client, capsys):
         """测试 __main__ 脚本执行"""

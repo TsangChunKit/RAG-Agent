@@ -1,4 +1,4 @@
-"""Gemini 运行时可调参数 + API key 的持久化，供 Streamlit「⚙️ Gemini 设置」UI 读写。
+"""LLM 运行时可调参数 + API key 的持久化，供 Streamlit「⚙️ LLM 设置」UI 读写。
 
 设计要点：
 - 分成 dialogue（问答）和 summary（摘要/长期记忆/心智地图/对话记忆）两组，互不影响。
@@ -7,8 +7,8 @@
 - 文件不存在或缺某个字段时，回退到 config.py 里的默认值——删掉这个文件 = 完全恢复默认。
 - API key 优先用这个文件里的；没有则回退 .env / 环境变量（向后兼容旧的 .env 用法）。
   文件在 private.nosync/（gitignore + iCloud 不同步），和 .env 同级别的本地私密存储。
-- provider（"grok" / "hermes"）是 LLM 后端的手动开关，见 scripts/llm.py。选 grok 时用 xai_api_key
-  （回退环境变量 XAI_API_KEY），模型名在对话/摘要的「模型」框里填 grok 系列（如 grok-4.5）。
+- provider（"grok" / "hermes" / "copilot_cli"）是 LLM 后端的手动开关，见 scripts/llm.py。
+    copilot_cli 使用本机已登录的 GitHub Copilot CLI，不需要 API key。
 - 2026-07-25 起 "gemini" 暂时停用（原因和恢复方式见下方 DISABLED_PROVIDERS），默认 provider 改为
   hermes；config.py 里的默认模型名也跟着换成了 grok 系列。
 """
@@ -36,9 +36,9 @@ from config import (
 # 兼容旧的 .env 存 key 方式：导入时把 private.nosync/.env 读进环境变量，作为 API key 的回退来源。
 load_dotenv(ENV_PATH)
 
-# LLM 后端 provider：默认 hermes。grok = xAI（OpenAI 兼容端点）；hermes = 本地 Hermes Agent
-# Gateway（OpenAI 兼容代理，转发到 xAI grok，见 scripts/llm.py）。grok / hermes 共用同一套调用代码。
-VALID_PROVIDERS = ("grok", "hermes")
+# LLM 后端 provider：默认 hermes。grok / hermes 走 OpenAI 兼容接口；copilot_cli 走本机已登录的
+# GitHub Copilot CLI（无工具非交互模式，见 scripts/llm.py）。
+VALID_PROVIDERS = ("grok", "hermes", "copilot_cli")
 DEFAULT_PROVIDER = "hermes"
 
 # 暂时停用的 provider → 停用原因（UI 会显示，README §七 有同样说明）。

@@ -97,7 +97,7 @@ def system_instruction_dialog():
 _THINKING_LEVELS = ["minimal", "low", "medium", "high"]
 
 
-@st.dialog("⚙️ Gemini 设置", width="large")
+@st.dialog("⚙️ LLM 设置", width="large")
 def gemini_settings_dialog():
     cur = settings.load_for_ui()
     st.caption(
@@ -109,12 +109,12 @@ def gemini_settings_dialog():
     # 选项直接取自 settings.VALID_PROVIDERS，不写死——停用某个后端只改 settings 一处。
     _PROVIDERS = list(settings.VALID_PROVIDERS)
     prov = st.radio(
-        "选用哪个后端（下面的「模型」框请填对应模型名，如 grok-4.5 / grok-4.3）",
+        "选用哪个后端（下面的「模型」框请填对应模型名，如 grok-4.5 / gpt-5.6-sol）",
         _PROVIDERS,
         index=_PROVIDERS.index(cur["provider"]) if cur.get("provider") in _PROVIDERS else 0,
         horizontal=True, key="llm_provider",
-        help="grok = xAI 直连；hermes = 本地 Hermes Agent Gateway 代理（转发到 xAI grok，自己夹 "
-             "OAuth）。两者都是 OpenAI 兼容、无显式缓存，问答会自动退回内联 system instruction。",
+           help="grok = xAI 直连；hermes = 本地 Hermes OpenAI 兼容代理；copilot_cli = 本机已登录的 "
+               "GitHub Copilot CLI（不需要 API key，调用时禁用所有工具）。这些后端都无显式缓存。",
     )
     for _name, _why in (cur.get("disabled_providers") or {}).items():
         st.caption(f"⛔ **{_name}** 暂时停用：{_why}")
@@ -156,7 +156,7 @@ def gemini_settings_dialog():
         st.markdown("##### 💬 对话（问答）")
         d = cur["dialogue"]
         d_model = st.text_input("模型", value=d["model"], key="d_model",
-                                help="如 grok-4.5 / grok-4.3；模型名会更新，用文本框而非写死下拉")
+                    help="如 grok-4.5 / gpt-5.6-sol；模型名会更新，用文本框而非写死下拉")
         d_think = st.selectbox("思考深度 thinking_level", _THINKING_LEVELS, index=_thinking_index(d["thinking_level"]), key="d_think")
         d_temp = st.slider("温度 temperature", 0.0, 2.0, float(d["temperature"]), 0.05, key="d_temp")
         d_max = st.number_input("最大输出 token", 256, 65000, int(d["max_output_tokens"]), 256, key="d_max",
@@ -559,7 +559,7 @@ with st.sidebar:
         help="开启后，历史对话包含完整检索片段。通常不需要开启。\n"
              "注意：深度模式下 context 增长更快，可能更快达到 500K 上限。"
     )
-    if st.button("⚙️ Gemini 设置（模型 / 参数 / API Key）"):
+    if st.button("⚙️ LLM 设置（模型 / 参数 / API Key）"):
         gemini_settings_dialog()
     if st.button("⚙️ 索引设置（本地检索 / 分块 / 向量化）"):
         index_settings_dialog()

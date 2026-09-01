@@ -158,7 +158,8 @@ def block_real_llm_calls(monkeypatch):
     API，`test_max_context_length` 还真把 100 轮 × 1 万字的历史发出去，撞出
     `openai.APIStatusError: Maximum request body size 1048576 exceeded`。
 
-    堵在两个 SDK 的 client 构造函数上（也是 tests/unit/test_llm.py 的 mock 层级），
+    堵在两个 SDK 的 client 构造函数和 Copilot CLI 的进程入口上（也是
+    tests/unit/test_llm.py 的 mock 层级），
     真的需要走这条路的测试自己 patch 同名目标即可——内层 patch 生效，退出时恢复成这里
     的闸门。
     """
@@ -171,6 +172,7 @@ def block_real_llm_calls(monkeypatch):
 
     monkeypatch.setattr("scripts.llm.genai.Client", _blocked)
     monkeypatch.setattr("openai.OpenAI", _blocked)
+    monkeypatch.setattr(llm_module, "run_subprocess", _blocked)
     # client 是模块级缓存，不清会跨测试泄漏（上一个测试的 mock client 被下一个复用，
     # 于是"没 mock"的测试反而莫名其妙地通过）。
     monkeypatch.setattr(llm_module, "_client", None)

@@ -142,7 +142,7 @@ Andy(00:02:03): 我想一下。先分享一下……这周我感觉发生了蛮�
 | Embedding | **BGE-M3**(`BAAI/bge-m3`) | ✅ 验证 | 中文开源标杆;单模型出稠密+稀疏+ColBERT;MIT 许可;本地免费 |
 | Embedding 加载库 | **FlagEmbedding** 的 `BGEM3FlagModel` | ✅ 验证 | 官方库,唯一能一次拿到稠密+稀疏两种向量 |
 | 向量库 | **LanceDB**(开源本地版) | ✅ 验证 | 基于文件、无需起服务、原生混合检索 + 元数据过滤、Apple Silicon 友好 |
-| 问答 LLM | **Google Gemini API** | ✅ 验证 | 使用者已有;中文好;合规(见 §4)<br>现状 2026-07-25:改用 **xAI grok**(经本地 Hermes 代理),Gemini 暂时停用 —— 见 README §七 |
+| 问答 LLM | **可切换 provider** | ✅ 验证 | Hermes / xAI Grok，或本机已登录的 GitHub Copilot CLI；Gemini 暂时停用。见 README §七 |
 | 开发工具 | **Claude Code**(在 Claude Desktop 内,交互式) | ✅ 验证 | 走 Pro 订阅、云无关、原生 MCP;非 Kiro(见 §4.4) |
 | 语言 | **Python 3.12**（uv 管理的 cpython-3.12.x） | ✅ 验证 | `pyproject.toml` 钉 `requires-python = "==3.12.*"`；PEP 604（`X \| None`）合法 |
 | Reranker | `BAAI/bge-reranker-v2-m3` | ✅ 已上线 | 与 BGE-M3 同门;原计划 v1.5 再加,现已实装(`scripts/reranker.py`,可在「⚙️ 索引设置」关掉)<br>用 sentence-transformers 的 `CrossEncoder` 加载而非 `FlagReranker` —— 原因与"分数只能 sigmoid 一次"的坑见 README §七 |
@@ -211,17 +211,18 @@ Andy(00:02:03): 我想一下。先分享一下……这周我感觉发生了蛮�
 
 ## 4. LLM 与合规(务必遵守)
 
-### 4.1 结论:开发用 Claude Code,系统运行用 Gemini API
+### 4.1 结论：开发工具与系统运行时 LLM 分离
 
 | 阶段 | 用什么 | 计费/合规 |
 |---|---|---|
 | **开发**(写代码、调试,人坐在终端前) | **Claude Code**(交互式) | 走 Pro 订阅,合规 ✅ |
-| **系统运行**(脚本自动调 LLM 做问答/摘要) | **Gemini API** | 走 Gemini 计费,合规 ✅ |
+| **系统运行**(脚本自动调 LLM 做问答/摘要) | **显式选择的 provider** | Hermes / xAI API / 本机 GitHub Copilot CLI；各自费用与使用条款由对应账号及服务决定 |
 
-> **现状（2026-07-25，环境更新 2026-07-30）**：系统运行改走 **xAI grok**（默认经本地 Hermes Agent
-> Gateway 代理，也可直连 `api.x.ai`）。Gemini provider 仍停用（产品选择；原 Python 3.9 / google-genai
+> **现状（2026-09-01）**：系统可走 **xAI grok**（默认配置仍是 Hermes OpenAI 兼容代理，也可直连
+> `api.x.ai`），或显式选择 `copilot_cli`，直接使用本机已登录的 GitHub Copilot CLI，不依赖 Hermes
+> HTTP gateway。Gemini provider 仍停用（产品选择；原 Python 3.9 / google-genai
 > 1.x 的 `thinking_level` 技术 blocker 已在 3.12 + google-genai 2.x 下解除，恢复步骤见 README §七）。
-> 合规结论不变：**运行时用 API 计费的后端，开发时用 Claude Code 订阅**，两者不混用。
+> provider 不会在失败时自动切换，避免隐藏费用、行为和故障来源。
 
 ### 4.2 为什么运行时不能用 Claude Pro(重要,已验证)
 

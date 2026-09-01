@@ -198,7 +198,7 @@ Layer 0: 基础设施
 
 Layer 1: 外部服务
 ├─ embedder.py        # BGE-M3 embeddings
-├─ llm.py             # LLM 调用（Gemini/Grok/Hermes）
+├─ llm.py             # LLM 调用（Gemini/Grok/Hermes/Copilot CLI）
 └─ reranker.py        # BGE 重排序
 
 Layer 2: 数据处理
@@ -503,6 +503,11 @@ UI 状态存储在 `st.session_state`：
 1. 在 `scripts/llm.py` 添加新 provider 逻辑（OpenAI 兼容网关只需在 `_OPENAI_PROVIDERS` 注册表加一行）
 2. 更新 `scripts/settings.py` 的 `VALID_PROVIDERS` 支持新 provider 配置
 3. UI 无需改动：`gemini_settings_dialog()` 的 provider 选项直接读 `settings.VALID_PROVIDERS`
+
+`copilot_cli` 是显式选择的本机降级路径：`ask_llm()` 把现有消息格式序列化成单一 prompt，使用
+`copilot -p -s` 调用，并将所有工具/MCP/项目 instructions/remote export 关闭。它不经过 Hermes
+HTTP gateway，也不会在 Hermes 失败时自动触发；这种设计保留用户掌控、让失败来源保持可见。
+CLI 没有稳定 token usage，因此统一响应中的 usage 为 0；结构化输出在本地验证 JSON 语法。
 
 ### 停用 / 恢复某个 Provider
 

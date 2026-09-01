@@ -13,28 +13,23 @@ APP_SERVICES=(
   "com.andytsang.aitherapist.chatmemorywatcher"
   "com.andytsang.aitherapist.rawingestwatcher"
 )
-# Tailscale 是整台机器的私网（远程访问要靠它），start 时确保它在，stop 时不动它
-TAILSCALE_SERVICE="com.andytsang.aitherapist.tailscale"
 
 start() {
-  launchctl bootstrap "gui/$UID_NUM" "$LA/$TAILSCALE_SERVICE.plist" 2>/dev/null \
-    || launchctl kickstart "gui/$UID_NUM/$TAILSCALE_SERVICE" 2>/dev/null || true
   for s in "${APP_SERVICES[@]}"; do
     # 没加载过就 bootstrap 加载；已加载就 kickstart 重新拉起
     launchctl bootstrap "gui/$UID_NUM" "$LA/$s.plist" 2>/dev/null \
       || launchctl kickstart "gui/$UID_NUM/$s" 2>/dev/null || true
   done
-  echo "✅ 已启动网页 + 看门狗（并确保 Tailscale 在线）"
+  echo "✅ 已启动网页 + 看门狗"
   echo
   status
 }
 
 stop() {
-  # 只停应用服务，保留 Tailscale（它是全局私网，别的设备/服务也在用）
   for s in "${APP_SERVICES[@]}"; do
     launchctl bootout "gui/$UID_NUM/$s" 2>/dev/null || true
   done
-  echo "🛑 已停止网页 + 看门狗（Tailscale 保持连接；如需断网另跑 'tailscale down'）"
+  echo "🛑 已停止网页 + 看门狗"
 }
 
 status() {
@@ -46,8 +41,6 @@ status() {
   else
     echo "  未响应（可能还在启动，或已停止）"
   fi
-  echo "— Tailscale —"
-  /usr/local/bin/tailscale ip -4 2>/dev/null | sed 's/^/  私网地址: /' || echo "  未连接"
 }
 
 case "$1" in

@@ -863,10 +863,15 @@ if missing:
 ### Provider 常量
 
 ```python
-VALID_PROVIDERS = ("grok", "hermes")   # 可选后端（UI 选项直接读这个，不要在 app.py 里写死）
+VALID_PROVIDERS = ("grok", "hermes", "copilot_cli")  # UI 选项直接读取
 DEFAULT_PROVIDER = "hermes"            # 非法/缺失/已停用时的回退值，必须 ∈ VALID_PROVIDERS
 DISABLED_PROVIDERS = {"gemini": "……停用原因（UI 会显示）"}  # 与 VALID_PROVIDERS 不相交
 ```
+
+`copilot_cli` 通过本机已登录的 GitHub Copilot CLI 非交互运行：所有工具、内置 MCP、项目 instructions
+和 remote export 均关闭，单次超时 300 秒。它返回相同的 `_Response` 形状，但 token usage 字段为 0；
+`response_schema` 会写入 prompt，返回后至少执行 JSON 语法验证。CLI 不支持等价的 temperature 和
+max-output-tokens 参数。
 
 > `gemini` 当前停用（产品选择）。原 Python 3.9 / google-genai 1.x 的 `thinking_level` 技术
 > blocker 已在 3.12 + google-genai 2.x 下解除。恢复步骤见 README §七「gemini 为什么停用」。

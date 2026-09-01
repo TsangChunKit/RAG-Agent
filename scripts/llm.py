@@ -1,14 +1,14 @@
-"""LLM 问答封装：所有对 LLM 的调用都走这里，通过 provider 开关在 Gemini / Grok(xAI) 之间切换。
+"""LLM 问答封装：所有对 LLM 的调用都走这里，通过 provider 开关切换后端。
 
 运行参数（模型/thinking level/温度/max tokens）、provider 选择、以及两个 provider 的 API key
 都从 scripts/settings.py 读取，后者从 private.nosync/gemini_settings.json 读最新值，可在 Streamlit
-「⚙️ Gemini 设置」里改，改完下一次调用即生效、无需重启。profile 决定用哪一组参数：
+「⚙️ LLM 设置」里改，改完下一次调用即生效、无需重启。profile 决定用哪一组参数：
   - profile="dialogue"（默认）：问答用的参数
   - profile="summary"：摘要/长期记忆/心智地图/对话记忆这类批量提炼任务用的（更便宜的模型等）
 per-call 传入的 model/temperature/thinking_level/max_output_tokens 优先级最高，会覆盖 profile 值
 （摘要脚本用它把 max_output_tokens 按任务档位传进来，见 scripts/settings.summary_max_tokens）。
 
-两个 provider 的返回对象被归一化成同一个形状（.text + .usage_metadata.{prompt,candidates,
+各 provider 的返回对象被归一化成同一个形状（.text + .usage_metadata.{prompt,candidates,
 thoughts,cached,total}_token_count），所以调用方（ask.py/summarize.py/... ）不用关心用的是哪个后端。
 
 Gemini 专有的 Explicit Caching（cached_content）只在 provider=gemini 时有意义；provider 为
@@ -18,12 +18,19 @@ OpenAI 兼容后端（grok / hermes）时 scripts/context_cache.get_cache_name()
 OpenAI 兼容后端（grok = xAI 直连；hermes = 本地 Hermes Agent Gateway 代理，转发到 xAI grok、
 自己夹 OAuth）共用同一套 _ask_openai_compatible()，只是 base_url / key 来源不同（见 _OPENAI_PROVIDERS）。
 
+copilot_cli 后端通过本机已登录的 GitHub Copilot CLI 非交互调用。它明确关闭所有工具、内置 MCP、
+项目 instructions 和 remote export，只把整理后的 prompt 交给模型；CLI 不提供稳定的 token usage，
+所以归一化 usage 字段为 0。response_schema 由 prompt 约束并在返回后做 JSON 语法验证。
+
 ⚠️ 2026-07-25 起 gemini provider 暂时停用（原因和恢复方式见 scripts/settings.DISABLED_PROVIDERS）：
 settings.provider() 不会再返回 "gemini"，所以下面 _ask_gemini() / Explicit Caching 那条分支在真实
 运行路径上进不去。代码原样保留（恢复 gemini 只需改 settings.VALID_PROVIDERS 一行），单元测试也仍
 覆盖它——测试直接 mock get_provider，绕过 settings 这道闸门。
 """
 from dataclasses import dataclass
+import json
+import subprocess
+from subprocess import run as run_subprocess
 from typing import Optional
 
 from google import genai
@@ -40,6 +47,7 @@ from scripts.settings import (
 )
 
 XAI_BASE_URL = "https://api.x.ai/v1"
+COPILOT_CLI_TIMEOUT_SECONDS = 300
 
 # OpenAI 兼容后端注册表：provider 名 → 拿 (base_url, key, 人类可读名, 环境变量名) 的函数。
 # 要再加一个 OpenAI 兼容网关，只需在这里加一行 + 在 settings.VALID_PROVIDERS 里加名字。
@@ -59,7 +67,7 @@ def _get_client() -> genai.Client:
     key = get_api_key()
     if not key:
         raise RuntimeError(
-            "未设置 Gemini API key。请在 Streamlit 侧边栏「⚙️ Gemini 设置」里填写，"
+            "未设置 Gemini API key。请在 Streamlit 侧边栏「⚙️ LLM 设置」里填写，"
             "或写进 private.nosync/.env（GEMINI_API_KEY=...）。"
         )
     if _client is None or key != _client_key:
@@ -73,7 +81,7 @@ def _get_openai_client(provider_name: str):
     base_url, key, label, env_name = _OPENAI_PROVIDERS[provider_name]()
     if not key:
         raise RuntimeError(
-            f"未设置 {label} API key。请在 Streamlit 侧边栏「⚙️ Gemini 设置」里填写，"
+            f"未设置 {label} API key。请在 Streamlit 侧边栏「⚙️ LLM 设置」里填写，"
             f"或写进 private.nosync/.env（{env_name}=...）。"
         )
     cached = _openai_clients.get(provider_name)
@@ -131,6 +139,14 @@ def ask_llm(
     max_output_tokens = max_output_tokens or params.get("max_output_tokens") or 4096
 
     prov = get_provider()
+    if prov == "copilot_cli":
+        return _ask_copilot_cli(
+            contents,
+            system_instruction=system_instruction,
+            response_schema=response_schema,
+            model=model,
+            thinking_level=thinking_level,
+        )
     if prov in _OPENAI_PROVIDERS:
         return _ask_openai_compatible(
             prov,
@@ -219,6 +235,81 @@ def _to_messages(contents, system_instruction):
         text = "".join(part.get("text", "") for part in turn.get("parts", []))
         messages.append({"role": role, "content": text})
     return messages
+
+
+def _copilot_prompt(contents, system_instruction, response_schema):
+    """把单轮/多轮内容序列化成 Copilot CLI 的单一 prompt。"""
+    sections = []
+    for message in _to_messages(contents, system_instruction):
+        sections.append(f"{message['role'].upper()}:\n{message['content']}")
+    if response_schema is not None:
+        schema_text = json.dumps(response_schema, ensure_ascii=False, sort_keys=True)
+        sections.append(
+            "OUTPUT REQUIREMENTS:\n"
+            "只输出一个有效的 JSON 对象，不要 Markdown、代码围栏或额外说明。"
+            "输出必须符合以下 JSON Schema：\n"
+            f"{schema_text}"
+        )
+    return "\n\n".join(sections)
+
+
+def _ask_copilot_cli(
+    contents,
+    *,
+    system_instruction,
+    response_schema,
+    model,
+    thinking_level,
+):
+    """通过本机 GitHub Copilot CLI 调用 LLM；禁用所有工具，避免摘要任务产生副作用。"""
+    prompt = _copilot_prompt(contents, system_instruction, response_schema)
+    argv = [
+        "copilot",
+        "-p",
+        prompt,
+        "-s",
+        "--allow-all-tools",
+        "--available-tools=",
+        "--disable-builtin-mcps",
+        "--no-custom-instructions",
+        "--no-remote",
+        "--no-remote-export",
+        "--no-ask-user",
+        "--no-auto-update",
+    ]
+    if model:
+        argv.extend(["--model", model])
+    effort = _THINKING_TO_EFFORT.get(thinking_level)
+    if effort:
+        argv.extend(["--effort", effort])
+
+    try:
+        completed = run_subprocess(
+            argv,
+            text=True,
+            capture_output=True,
+            timeout=COPILOT_CLI_TIMEOUT_SECONDS,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError("未安装 GitHub Copilot CLI，或 copilot 不在 PATH 中。") from exc
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"GitHub Copilot CLI 调用超时（{COPILOT_CLI_TIMEOUT_SECONDS} 秒）。"
+        ) from exc
+
+    if completed.returncode != 0:
+        detail = completed.stderr.strip()[:1000] or "无错误详情"
+        raise RuntimeError(f"GitHub Copilot CLI 调用失败（退出码 {completed.returncode}）：{detail}")
+
+    text = completed.stdout.strip()
+    if not text:
+        raise RuntimeError("GitHub Copilot CLI 返回空响应。")
+    if response_schema is not None:
+        try:
+            json.loads(text)
+        except json.JSONDecodeError as exc:
+            raise RuntimeError("GitHub Copilot CLI 返回了无效 JSON，无法生成结构化结果。") from exc
+    return _Response(text=text, usage_metadata=_Usage())
 
 
 def _ask_openai_compatible(

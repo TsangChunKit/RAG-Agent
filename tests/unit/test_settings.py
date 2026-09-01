@@ -600,11 +600,12 @@ class TestConstants:
     def test_valid_providers(self):
         """Test VALID_PROVIDERS contains expected values.
 
-        gemini 2026-07-25 起停用（见 TestDisabledProviders），所以只剩两个 OpenAI 兼容后端。
+        gemini 2026-07-25 起停用（见 TestDisabledProviders）。
         """
         assert "grok" in settings.VALID_PROVIDERS
         assert "hermes" in settings.VALID_PROVIDERS
-        assert len(settings.VALID_PROVIDERS) >= 2
+        assert "copilot_cli" in settings.VALID_PROVIDERS
+        assert len(settings.VALID_PROVIDERS) >= 3
 
     def test_default_provider(self):
         """Test DEFAULT_PROVIDER is valid."""
