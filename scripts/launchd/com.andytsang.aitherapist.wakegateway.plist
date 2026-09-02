@@ -3,37 +3,39 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.andytsang.aitherapist.streamlit</string>
+    <string>com.andytsang.aitherapist.wakegateway</string>
     <key>ProgramArguments</key>
     <array>
         <string>/Users/andytsang/Documents/Project/RAG-Agent/.venv/bin/python3</string>
         <string>-m</string>
-        <string>streamlit</string>
-        <string>run</string>
-        <string>app.py</string>
-        <string>--server.headless</string>
-        <string>true</string>
-        <string>--server.port</string>
-        <string>8502</string>
+        <string>scripts.streamlit_wake_server</string>
     </array>
     <key>WorkingDirectory</key>
     <string>/Users/andytsang/Documents/Project/RAG-Agent</string>
-    <!-- 侧边栏的 Workspace 选择器会写 session_state 覆盖它；这个只是「还没选过时」的初始默认，
-         免得靠 workspaces/ 的字母序兜底。 -->
     <key>EnvironmentVariables</key>
     <dict>
-        <key>CURRENT_WORKSPACE</key>
-        <string>counseling</string>
+        <key>RAG_WAKE_HOST</key>
+        <string>0.0.0.0</string>
+        <key>RAG_WAKE_PORT</key>
+        <string>8501</string>
+        <key>RAG_STREAMLIT_HOST</key>
+        <string>127.0.0.1</string>
+        <key>RAG_STREAMLIT_PORT</key>
+        <string>8502</string>
+        <key>RAG_STREAMLIT_IDLE_SECONDS</key>
+        <string>1800</string>
+        <key>RAG_STREAMLIT_CHECK_SECONDS</key>
+        <string>30</string>
     </dict>
     <key>RunAtLoad</key>
-    <false/>
+    <true/>
     <key>KeepAlive</key>
-    <false/>
+    <true/>
     <key>ThrottleInterval</key>
     <integer>10</integer>
     <key>StandardOutPath</key>
-    <string>/tmp/streamlit.log</string>
+    <string>/tmp/streamlit_wake_gateway.log</string>
     <key>StandardErrorPath</key>
-    <string>/tmp/streamlit.log</string>
+    <string>/tmp/streamlit_wake_gateway.log</string>
 </dict>
 </plist>

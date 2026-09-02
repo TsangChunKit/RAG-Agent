@@ -153,6 +153,43 @@ LanceDB workspace（預設 counseling）
 - 依賴 `uv` dependency group `mcp`（`fastmcp`）；主應用不裝也可運行。
 - 接線、測試、timeout 見 [HERMES_MCP.md](HERMES_MCP.md)。
 
+### 4c. Streamlit 按需唤醒与空闲回收
+
+```
+浏览器访问 :8501
+    ↓
+[streamlit_wake_server.py]（轻量、常驻、标准库）
+    ├─ :8502 健康 → 返回启动页并立即跳转
+    └─ :8502 未启动 → counseling_agent_ctl.sh web-start
+                           ↓
+                 launchd kickstart Streamlit :8502
+                           ↓
+                    健康后浏览器跳转
+
+IdleSupervisor（每 30 秒）
+    ├─ Streamlit 未运行 → 清空 idle 计时
+    ├─ :8502 有 ESTABLISHED 客户端 → 清空 idle 计时
+    ├─ 无客户端未满 30 分钟 → 保持运行
+    ├─ 无客户端满 30 分钟 → web-stop（只停 Streamlit）
+    └─ lsof 探测失败 → 记录错误并保持运行（fail safe）
+```
+
+选择这个两端口设计而不是在 8501 做完整反向代理，是为了避免自行实现 Streamlit WebSocket
+代理。8501 是用户固定入口；8502 是实际 UI。跳转用浏览器当前 hostname，只改 port，因此
+`localhost` 与 Tailscale 地址都保持正确。
+
+生命周期由四个 launchd job 分工：
+
+| Job | RunAtLoad / KeepAlive | 作用 |
+|-----|-----------------------|------|
+| wakegateway | true / true | 永远保留可唤醒入口；自身不加载 ML 模型 |
+| streamlit | false / false | 只在 8501 请求或手动 `web-start` 时运行 |
+| rawingestwatcher | true / true | 后台增量入库 |
+| chatmemorywatcher | true / true | 后台聊天记忆更新 |
+
+现有 `stop-counseling-agent` 仍是明确的总开关，会停止全部四个 job；idle supervisor 只调用
+`web-stop`，不能调用总开关，否则会把负责下次唤醒的 gateway 一并停掉。
+
 #### 简繁归一化（系统不变量）
 
 语料库全是简体（转写工具输出），使用者常打繁体。规则：
@@ -228,14 +265,15 @@ Layer 5: 应用
 ├─ context_cache.py   # 缓存管理
 └─ mcp_rag_search.py  # Hermes MCP：薄包裝 retrieve()（可選依賴 group mcp / fastmcp）
 
-Layer 5.5: 常驻看门狗（launchd，非 Streamlit 进程）
+Layer 5.5: 后台服务（launchd，非 Streamlit 进程）
+├─ streamlit_wake_server.py # 8501 固定入口 + 8502 无客户端 30 分钟后的 idle stop
 ├─ raw_ingest_watcher.py    # 每 2 分钟扫 raw/，调 ingest_new.pending_raw_files() + ingest_new_file()
 └─ chat_memory_watcher.py   # 闲置 30 分钟更新 AI 对话记忆 + 其图谱
    ⚠️ 这两个拿不到 Streamlit 的 session_state，必须由 plist 显式传 --workspace
       （见 scripts/launchd/），否则退到「workspaces/ 下字母序第一个」这种隐式行为
 
 Layer 6: UI
-├─ app.py             # Streamlit 主应用（→ ingest_new.pending_raw_files / ingest_pending）
+├─ app.py             # 按需运行的 Streamlit 主应用（→ ingest_new.pending_raw_files / ingest_pending）
 └─ pages/             # Streamlit 页面
 ```
 
@@ -554,10 +592,12 @@ blocker 已在 3.12 + google-genai 2.x 下解除；恢复步骤见 README §七�
 - **Session State**（Streamlit）：对话历史、当前 workspace
 - **磁盘持久化（按 workspace，按内容哈希增量失效）**：图谱锚点节点 embedding
   （`GRAPH_NODE_EMBEDDINGS_PATH`，见 `find_relevant_graph_nodes()`）
+- **进程生命周期回收**：浏览器全部断线 30 分钟后停止 Streamlit，连同进程单例的
+  BGE-M3 embedding / reranker 与 MPS allocation 一起释放；下次从 8501 自动重启
 
 **2026-07-30 移除的反模式**：`scripts/ask.py` 曾经用 module-level 全局变量缓存
 LanceDB table 连接、全量 chunk DataFrame、合并后图谱——这三者都不区分 workspace，
-Streamlit 是单一常驻 process，切换 workspace 不会清空它们，导致"process 里查过一次
+Streamlit 在每次运行期间仍是单一 process，切换 workspace 不会清空它们，导致"process 里查过一次
 A workspace 后，即便 UI 切到 B workspace，检索/图谱一直沿用 A 的数据"（真实事故：
 在「八字紫微」workspace 问问题却撈到「心理咨询」workspace 的 chunks）。修复方式是
 直接砍掉这三处缓存——本地连接/小 JSON 的重新读取是 ms 级成本，不值得为了这点性能

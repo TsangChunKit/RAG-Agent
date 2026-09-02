@@ -89,10 +89,10 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 # 目标：覆盖率 ≥ 80%
 ```
 
-**当前状态**（2026-09-01 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
-- 覆盖率：71.96%（已过 hook 的 70% 闸门，目标 ≥ 80%）
-- 单元测试文件：30 个（tests/unit/）
-- 测试结果：802 通过 / 0 失败 / 1 跳过
+**当前状态**（2026-09-03 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
+- 覆盖率：72.75%（已过 hook 的 70% 闸门，目标 ≥ 80%）
+- 单元测试文件：31 个（tests/unit/）
+- 测试结果：825 通过 / 0 失败 / 1 跳过
 
 > 📉 比 2026-07-25 的 72.72% 略降，原因是这一轮加了 autouse 硬隔离（见下方「测试隔离的三道闸门」），
 > `import app` 不再顺带执行部分模块级代码 → app.py 31% → 25%。用 1.2 个覆盖率点换掉"测试会污染
@@ -100,16 +100,22 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 
 > ✅ 集成测试（`pytest tests/integration/ --integration`）**73 passed / 0 failed**
 > （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
-> 现为 **876 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+> 现为 **899 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
-### 服务控制脚本回归测试
+### 服务生命周期回归测试
 
 `tests/unit/test_counseling_agent_ctl.py` 用替身 `launchctl` 执行真实 shell 脚本，确认：
-- `start` / `stop` 只管理 Streamlit 与两个看门狗
+- `start` / `stop` 管理 wake gateway、Streamlit 与两个看门狗
+- `web-start` / `web-stop` 只管理 Streamlit，不会误停负责唤醒的 gateway
+- Streamlit plist 是 8502、`RunAtLoad=false`、`KeepAlive=false`
+- wake gateway plist 是 8501、默认 idle timeout 为 1800 秒
 - `status` 不调用或报告 Tailscale
 - repo 不提供自动连接 Tailscale 的 launchd job
 
-这组测试保证应用服务不依赖 Tailscale；远端私网只在用户手动执行 `tailscale up` 时启用。
+`tests/unit/test_streamlit_wake_server.py` 覆盖健康探测、控制失败可见性、`lsof` 客户端判断、
+30 分钟边界与重置、探测失败时不误关，以及真实本机 HTTP server 的 wake/status 响应。
+这两组测试共同保证空闲回收不会牺牲固定入口，也不依赖 Tailscale；远端私网只在用户手动执行
+`tailscale up` 时启用。
 
 ### 测试隔离的两道闸门（`tests/conftest.py`，autouse）
 

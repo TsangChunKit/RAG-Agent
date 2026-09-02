@@ -342,6 +342,98 @@ def main() -> None:
 
 ---
 
+## scripts/streamlit_wake_server.py
+
+轻量的 Streamlit 生命周期服务，只依赖 Python 标准库。固定入口监听 `0.0.0.0:8501`；
+实际 Streamlit 监听 `127.0.0.1:8502`（Streamlit 本身仍接受外部接口连接）。访问 8501 时，
+若 8502 尚未启动就调用 `counseling_agent_ctl.sh web-start`，就绪后浏览器自动跳转。
+
+### `streamlit_is_healthy()`
+
+```python
+def streamlit_is_healthy(
+    host: str = STREAMLIT_HOST,
+    port: int = STREAMLIT_PORT,
+    timeout: float = 1.0,
+) -> bool:
+    """探测 /_stcore/health；响应为 ok 才返回 True，连接失败返回 False。"""
+```
+
+### `run_control()`
+
+```python
+def run_control(action: str, *, runner: Runner = subprocess.run) -> None:
+    """
+    调用共享服务控制脚本。action 只允许 web-start / web-stop。
+
+    Raises:
+        ValueError: action 不受支持
+        RuntimeError: 控制脚本返回非零状态
+    """
+```
+
+### `has_active_clients()`
+
+```python
+def has_active_clients(
+    port: int = STREAMLIT_PORT,
+    *,
+    runner: Runner = subprocess.run,
+) -> bool:
+    """
+    用 /usr/sbin/lsof 判断 8502 是否有 ESTABLISHED TCP 连接。
+
+    lsof 无匹配（exit 1 + 空输出）返回 False；探测本身失败会抛 RuntimeError，
+    supervisor 遇到该错误会保留 Streamlit，避免把不可观测误判为空闲。
+    """
+```
+
+### `IdleTracker` / `IdleSupervisor`
+
+```python
+IdleTracker(timeout_seconds: float)
+IdleTracker.observe(
+    *,
+    streamlit_running: bool,
+    has_clients: bool,
+    now: float,
+) -> bool
+
+IdleSupervisor(
+    *,
+    timeout_seconds: float = 1800,
+    health_probe=streamlit_is_healthy,
+    client_probe=has_active_clients,
+    stop_streamlit=lambda: run_control("web-stop"),
+    clock=time.monotonic,
+)
+IdleSupervisor.check_once() -> None
+IdleSupervisor.run_forever(stop_event, interval_seconds=30) -> None
+```
+
+`IdleTracker.observe()` 只有在 Streamlit 持续运行、且持续没有客户端达到 timeout 时返回 True；
+服务停止或重新出现客户端都会清空计时。默认 30 分钟。浏览器保持 Streamlit 分页时，
+WebSocket 属于 established connection，不会误关。
+
+### HTTP 与入口
+
+```python
+create_server(host: str = "0.0.0.0", port: int = 8501) -> ThreadingHTTPServer
+main() -> None
+```
+
+| 路径 | 行为 |
+|------|------|
+| `/` | 确保 Streamlit 启动，返回轮询页；就绪后跳到同一 hostname 的 8502 |
+| `/status` | `{"ready": bool}`，只探测、不触发启动 |
+| `/health`, `/_stcore/health` | gateway 自身健康检查，返回 `ok` |
+| 其他路径 | 返回 404、不触发启动；避免旧 Streamlit 分页的 `/_stcore/*` 轮询误唤醒 |
+
+launchd 环境变量可覆盖 `RAG_WAKE_HOST`、`RAG_WAKE_PORT`、`RAG_STREAMLIT_HOST`、
+`RAG_STREAMLIT_PORT`、`RAG_STREAMLIT_IDLE_SECONDS` 与 `RAG_STREAMLIT_CHECK_SECONDS`。
+
+---
+
 ## scripts/workspace_manager.py
 
 ### 核心函数

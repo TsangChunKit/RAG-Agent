@@ -32,7 +32,7 @@ Workspace 是完全隔离的知识库实例，每个 workspace 有独立的：
 ### 如何使用 Workspace？
 
 #### 1. 在 UI 中切换（推荐）
-1. 访问 http://localhost:8502
+1. 访问 http://localhost:8501（Streamlit 已休眠时会自动唤醒）
 2. 侧边栏顶部的 **🗂️ Workspace** 下拉框选择
 3. 查看当前 workspace 状态（文档数/图谱状态）
 
@@ -156,10 +156,10 @@ Gemini，而是「稳定骨干进缓存 + 命中问题的局部邻域动态拼�
 压缩时会显示透明提示；侧边栏可开启"深度模式"恢复完整历史。正常使用（60 轮内）不会触发
 阶段 2，长对话时每 20-30 轮约消耗 1 美元 LLM 压缩成本。详见 §七「Context 压缩策略」。
 
-## 一、日常使用：服务已经自动启动
+## 一、日常使用：固定入口自动唤醒 Streamlit
 
-三个应用服务都设置成 **登入 Mac 时自动启动、意外退出自动重启**（用 macOS launchd 管理），
-正常情况下你什么都不用做，直接打开下面的网址用就行：
+应用由四个 macOS launchd job 管理：轻量 wake gateway 与两个看门狗在登入时常驻；
+高内存的 Streamlit 按需启动，不再整天常驻。正常情况下直接打开：
 
 - 本机浏览器：http://localhost:8501
 - 手机/其他设备：需要时先手动执行 `tailscale up`，并让该设备登入同一个 Tailscale 账号，
@@ -169,33 +169,10 @@ Gemini，而是「稳定骨干进缓存 + 命中问题的局部邻域动态拼�
 Tailscale 与应用服务完全解耦：未连接时，网页和两个看门狗仍会正常运行；
 `start-counseling-agent` 不会自动启动或连接 Tailscale。
 
-> ⚠️ **2026-07-26 起的当前状态：自动启动暂时不可用，需要你做一次手动授权。**
->
-> 在此之前，这三份应用 plist（Streamlit / 聊天记忆看门狗 / raw 入库看门狗）其实还指着
-> **旧项目** `心理咨詢agent`，所以本项目 `workspaces/counseling/data/raw/` 里的新逐字稿一直
-> 没人扫——新文件不自动入库的根因就是这个。plist 已改指向 RAG-Agent（并显式传
-> `--workspace counseling`），但改完起不来，报 `Operation not permitted:
-> .../RAG-Agent/.venv/pyvenv.cfg`：macOS 的 TCC 把 `~/Documents` 的读取权限**按可执行文件逐个授权**，
-> 旧项目 venv 指向的 `~/.local/bin/python3.11` 早就被授权过，本项目 venv 指向的
-> `/Library/Developer/CommandLineTools/usr/bin/python3` 没有。三个 job 会开机崩溃循环，
-> 所以已先 `bootout` 卸载。
->
-> **二选一恢复**（都是一次性的）：
-> 1. 系统设置 →「隐私与安全性」→「完全磁盘访问权限」→ `+` 加入
->    `/Library/Developer/CommandLineTools/usr/bin/python3`（Finder 里按 `⌘⇧G` 粘路径），
->    然后照 §三「如果 launchd 配置本身坏了」重装三个 job。改动小、可逆，但给了这个解释器全盘权限。
-> 2. 把整个项目挪到 `~/Documents` 之外（如 `~/Projects/RAG-Agent`），TCC 根本不管那些路径。
->    更干净、以后不会再踩，但要改 plist / 别名 / 脚本里的绝对路径。
->
-> **在你处理之前的临时办法**（进程活到下次重启/登出为止，开机不会自启）：
-> ```bash
-> cd "/Users/andytsang/Documents/Project/RAG-Agent" && source .venv/bin/activate
-> nohup streamlit run app.py --server.port 8501 --server.headless true > /tmp/streamlit.log 2>&1 &
-> nohup python -m scripts.raw_ingest_watcher  --workspace counseling > /tmp/raw_ingest_watcher.log 2>&1 &
-> nohup python -m scripts.chat_memory_watcher --workspace counseling > /tmp/chat_memory_watcher.log 2>&1 &
-> ```
-> 从终端启动能跑，正是因为终端本身有 `~/Documents` 授权、子进程继承得到。
-> 看门狗没跑起来时，新逐字稿也可以在 UI 里点「⚡ 立即入库」手动入（见 §四）。
+访问 8501 时，gateway 会启动 8502 上的 Streamlit，健康检查通过后自动跳转。关闭所有
+RAG-Agent 浏览器分页后，Streamlit 连续 **30 分钟没有 TCP 客户端连接**就会自动停止，
+释放 BGE-M3 embedding 与 reranker 占用的统一内存。分页一直开着时 WebSocket 仍连接，
+不会被误判为空闲；下次仍从 8501 进入即可自动恢复。
 
 侧边栏第二页是「心智地图」，可视化核心图式/应对模式/事件的关系图。
 
@@ -205,14 +182,15 @@ Tailscale 与应用服务完全解耦：未连接时，网页和两个看门狗�
 临时关掉/重开时用的）：
 
 ```bash
-start-counseling-agent    # 启动网页 + 聊天记忆看门狗 + raw 入库看门狗
-stop-counseling-agent     # 停掉网页 + 两个看门狗
-status-counseling-agent   # 查看三个应用服务状态 + Streamlit 健康检查
+start-counseling-agent    # 启动 gateway + Streamlit + 两个看门狗
+stop-counseling-agent     # 停掉全部四个应用服务
+status-counseling-agent   # 查看 gateway、Streamlit 与两个看门狗
 ```
 
-底层是 [scripts/counseling_agent_ctl.sh](scripts/counseling_agent_ctl.sh)（`start|stop|restart|status`），
-别名只是 `bash <该脚本> <命令>` 的薄封装。这个脚本不管理 Tailscale；远端访问按需手动执行
-`tailscale up` / `tailscale down`。
+底层是 [scripts/counseling_agent_ctl.sh](scripts/counseling_agent_ctl.sh)。除
+`start|stop|restart|status` 外，还有只影响高内存网页进程的
+`web-start|web-stop`；idle supervisor 就是调用 `web-stop`，不会中断两个看门狗或 gateway。
+这个脚本不管理 Tailscale；远端访问按需手动执行 `tailscale up` / `tailscale down`。
 
 ## 二、检查服务是不是正常运行
 
@@ -220,8 +198,9 @@ status-counseling-agent   # 查看三个应用服务状态 + Streamlit 健康检
 status-counseling-agent            # 最省事：一条命令看全部（别名）
 
 # 或手动逐项查：
-launchctl list | grep aitherapist  # 三个应用服务状态（第二列 exit code，0 = 正常）
-curl -s http://localhost:8501/_stcore/health   # Streamlit 健康检查，应输出 ok
+launchctl list | grep aitherapist  # 四个 job；休眠中的 Streamlit 不会有 PID
+curl -s http://localhost:8501/_stcore/health   # gateway 健康检查，应输出 ok
+curl -s http://localhost:8502/_stcore/health   # Streamlit；休眠时连接失败是正常状态
 tailscale status                   # 可选：需要远端访问时才检查 Tailscale
 ```
 
@@ -247,47 +226,38 @@ tailscale status                   # 可选：需要远端访问时才检查 Tai
 > 有概率撞上 `Bootstrap failed: 5: Input/output error`（服务还没完全卸载）。上面的 `restart`
 > 子命令内置了 `sleep 2` 间隔并对「已加载」用 `kickstart`，不会踩这个race。
 
-### 手动重启单个服务（一般用上面的 `restart` 就够，这里是逐服务的等价写法）
+### 手动开关高内存网页进程
 
 ```bash
 cd "/Users/andytsang/Documents/Project/RAG-Agent"
 
-# 重启 Streamlit（bootout 后留一点时间再 bootstrap，避开上面说的 I/O error race）
-launchctl bootout gui/$(id -u)/com.andytsang.aitherapist.streamlit 2>/dev/null; sleep 2
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.andytsang.aitherapist.streamlit.plist
-
-# 重启聊天记忆看门狗
-launchctl bootout gui/$(id -u)/com.andytsang.aitherapist.chatmemorywatcher 2>/dev/null; sleep 2
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.andytsang.aitherapist.chatmemorywatcher.plist
-
-# 重启 raw 逐字稿入库看门狗
-launchctl bootout gui/$(id -u)/com.andytsang.aitherapist.rawingestwatcher 2>/dev/null; sleep 2
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.andytsang.aitherapist.rawingestwatcher.plist
-
-# 需要远端访问时手动连接 Tailscale；用完可执行 tailscale down
-open -a Tailscale
-tailscale up
+bash scripts/counseling_agent_ctl.sh web-stop   # gateway + 两个看门狗继续运行
+bash scripts/counseling_agent_ctl.sh web-start  # 手动启动 Streamlit（或直接访问 8501）
 ```
 
 ### 查看日志排查问题
 
 ```bash
 cat /tmp/streamlit.log
+cat /tmp/streamlit_wake_gateway.log
 cat /tmp/chat_memory_watcher.log
 cat /tmp/raw_ingest_watcher.log
 ```
 
 ### 如果 launchd 配置本身坏了/需要重装
 
-`scripts/launchd/` 目录下是三份应用 plist 源文件（和 `~/Library/LaunchAgents/` 里生效的那份保持同步）：
+`scripts/launchd/` 目录下是四份应用 plist 源文件（和 `~/Library/LaunchAgents/` 里生效的那份保持同步）：
 
 ```bash
 cp "/Users/andytsang/Documents/Project/RAG-Agent/scripts/launchd/"*.plist ~/Library/LaunchAgents/
-for label in com.andytsang.aitherapist.streamlit com.andytsang.aitherapist.chatmemorywatcher com.andytsang.aitherapist.rawingestwatcher; do
+for label in com.andytsang.aitherapist.wakegateway com.andytsang.aitherapist.streamlit com.andytsang.aitherapist.chatmemorywatcher com.andytsang.aitherapist.rawingestwatcher; do
   launchctl bootout "gui/$(id -u)/$label" 2>/dev/null
   launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/$label.plist
 done
 ```
+
+Streamlit plist 的 `RunAtLoad` / `KeepAlive` 都是 false，所以上述重装只会加载它，不会立即占用
+模型内存；gateway 收到 8501 请求后才 `kickstart`。其余三个 job 会立即启动。
 
 ⚠️ **已知的坑（`Operation not permitted`）**：这个项目目录在 `~/Documents` 底下，而 macOS 的
 TCC（隐私保护）对 launchd 拉起的进程**按可执行文件逐个**授予 `~/Documents` 读取权限。所以现象是：
@@ -465,7 +435,7 @@ python -m scripts.build_graph    # map-reduce 生成真实咨询心智地图 gra
 
 # 5. 可选远端访问：安装 Tailscale.app；需要时才执行 tailscale up
 
-# 6. 参考 scripts/launchd/ 里的三份应用 plist，改好路径后装到 ~/Library/LaunchAgents/
+# 6. 参考 scripts/launchd/ 里的四份应用 plist，改好路径后装到 ~/Library/LaunchAgents/
 #    （见上面"如果 launchd 配置本身坏了"那一节的命令）
 ```
 
@@ -694,6 +664,7 @@ scripts/session_graph.py    # map 步：单份逐字稿→细粒度子图（10 �
 scripts/graph_utils.py      # 节点/关系分类单一真相源(NODE_TYPES/RELATION_TYPES) + 归并 resolve_graph + 中心性 + merge_graphs
 scripts/chat_memory_watcher.py   # 聊天记忆看门狗：闲置 30 分钟自动更新 AI 对话记忆 + 其心智地图
 scripts/raw_ingest_watcher.py    # raw 入库看门狗：每 2 分钟扫 data/raw/，新逐字稿自动入库（调 ingest_new）
+scripts/streamlit_wake_server.py # 8501 轻量入口；按需启动 8502，并在无客户端 30 分钟后停止它
 scripts/settings.py         # LLM 运行时参数 + API key 的读写（供「⚙️ LLM 设置」用）
 scripts/index_settings.py   # 索引运行时参数（检索/分块/embedding/FTS/reranker）读写（供「⚙️ 索引设置」用）
 scripts/index_records.py    # 已索引记录清单 + 索引变更记录（供「📚 已索引的咨询记录」用）
@@ -701,7 +672,7 @@ scripts/reranker.py         # bge-reranker-v2-m3 cross-encoder 精排（本地�
 scripts/text_norm.py        # 繁→简归一化（检索层不变量：索引字段与 query 都转简体，展示原文不动）
 scripts/mcp_rag_search.py   # Hermes Agent MCP：外露 retrieve() 做 counseling 索引搜尋（見 docs/HERMES_MCP.md）
 scripts/launchd/            # launchd 常驻服务的 plist 源文件
-scripts/counseling_agent_ctl.sh  # start/stop/status 服务开关（配合 ~/.zshrc 别名）
+scripts/counseling_agent_ctl.sh  # 全部服务 + web-only 开关（配合 ~/.zshrc 别名）
 eval/eval_questions.yaml    # 检索质量评估问题集
 docs/HERMES_MCP.md          # Hermes MCP 使用 / 測試 / uv 環境說明
 

@@ -73,6 +73,13 @@ class TestImports:
         assert hasattr(mcp_rag_search, "search_sessions")
         assert hasattr(mcp_rag_search, "serialize_window")
 
+    def test_import_streamlit_wake_server(self):
+        """輕量喚醒服務可導入，且不會在 import 時啟動 server。"""
+        from scripts import streamlit_wake_server
+
+        assert streamlit_wake_server is not None
+        assert hasattr(streamlit_wake_server, "create_server")
+
     def test_import_all_scripts(self):
         """一次性导入所有核心模块。"""
         from scripts import (
@@ -85,11 +92,12 @@ class TestImports:
             mcp_rag_search,
             parse,
             settings,
+            streamlit_wake_server,
             workspace_manager,
         )
         # 如果能到这里，说明所有导入都成功
         assert mcp_rag_search is not None
-        assert True
+        assert streamlit_wake_server is not None
 
 
 class TestStreamlitImports:
