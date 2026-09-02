@@ -408,17 +408,26 @@ IdleSupervisor(
     clock=time.monotonic,
 )
 IdleSupervisor.check_once() -> None
+IdleSupervisor.note_wake_activity() -> None
 IdleSupervisor.run_forever(stop_event, interval_seconds=30) -> None
 ```
 
 `IdleTracker.observe()` 只有在 Streamlit 持续运行、且持续没有客户端达到 timeout 时返回 True；
 服务停止或重新出现客户端都会清空计时。默认 30 分钟。浏览器保持 Streamlit 分页时，
-WebSocket 属于 established connection，不会误关。
+WebSocket 属于 established connection，不会误关。客户端探测失败也会清空当前 idle 观察，
+必须重新累积一段完整且可观测的 30 分钟；根页面唤醒请求会通过共享 lifecycle lock 重置观察，
+不会和 supervisor 的 stop 决策竞态。
 
 ### HTTP 与入口
 
 ```python
-create_server(host: str = "0.0.0.0", port: int = 8501) -> ThreadingHTTPServer
+create_server(
+    host: str = "0.0.0.0",
+    port: int = 8501,
+    *,
+    wake_activity=lambda: None,
+    lifecycle_lock=None,
+) -> WakeHTTPServer
 main() -> None
 ```
 

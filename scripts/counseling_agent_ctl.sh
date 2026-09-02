@@ -35,7 +35,21 @@ web_start() {
 }
 
 web_stop() {
-  launchctl kill SIGTERM "gui/$UID_NUM/$STREAMLIT_SERVICE" 2>/dev/null || true
+  local target="gui/$UID_NUM/$STREAMLIT_SERVICE"
+  local job_state
+  if ! job_state="$(launchctl print "$target" 2>/dev/null)"; then
+    echo "🛑 Streamlit 已停止；8501 唤醒入口仍在运行"
+    return 0
+  fi
+  if ! printf '%s\n' "$job_state" | grep -q "state = running"; then
+    echo "🛑 Streamlit 已停止；8501 唤醒入口仍在运行"
+    return 0
+  fi
+  local error
+  if ! error="$(launchctl kill SIGTERM "$target" 2>&1)"; then
+    echo "❌ Streamlit 停止失败：$error" >&2
+    return 1
+  fi
   echo "🛑 已停止 Streamlit；8501 唤醒入口仍在运行"
 }
 

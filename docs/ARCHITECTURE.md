@@ -171,7 +171,7 @@ IdleSupervisor（每 30 秒）
     ├─ :8502 有 ESTABLISHED 客户端 → 清空 idle 计时
     ├─ 无客户端未满 30 分钟 → 保持运行
     ├─ 无客户端满 30 分钟 → web-stop（只停 Streamlit）
-    └─ lsof 探测失败 → 记录错误并保持运行（fail safe）
+    └─ lsof 探测失败 → 重置 idle 观察、记录错误并保持运行（fail safe）
 ```
 
 选择这个两端口设计而不是在 8501 做完整反向代理，是为了避免自行实现 Streamlit WebSocket
@@ -189,6 +189,10 @@ IdleSupervisor（每 30 秒）
 
 现有 `stop-counseling-agent` 仍是明确的总开关，会停止全部四个 job；idle supervisor 只调用
 `web-stop`，不能调用总开关，否则会把负责下次唤醒的 gateway 一并停掉。
+
+gateway 根请求与 idle supervisor 共享一个 lifecycle `RLock`：根请求先重置 idle 观察，再判断
+是否需要 `web-start`；supervisor 只有在同一把锁内完成客户端探测与 stop。因此不会发生
+「请求刚看见 Streamlit 健康、supervisor 随即关掉、轮询页却再也不触发启动」的竞态。
 
 #### 简繁归一化（系统不变量）
 

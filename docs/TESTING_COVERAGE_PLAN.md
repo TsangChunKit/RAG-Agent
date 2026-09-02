@@ -46,7 +46,7 @@
 | index_records.py | 49 | 100% | 60% | P1 | ✅ 达标 |
 | workspace_manager.py | 142 | 75% | 80% | P1 | 🟢 接近 |
 | settings.py | 67 | 100% | 60% | P1 | ✅ 达标 |
-| streamlit_wake_server.py | 140 | 91% | 80% | P1 | ✅ 达标（未覆盖主要是长期运行 loop / KeyboardInterrupt）|
+| streamlit_wake_server.py | 166 | 89% | 80% | P1 | ✅ 达标（未覆盖主要是进程异常与长期运行 loop）|
 | **批处理脚本** ||||
 | update_memory.py | 35 | 89% | 40% | P2 | ✅ 达标（未覆盖的只有 `__main__`）|
 | update_chat_memory.py | 51 | 92% | 40% | P2 | ✅ 达标（同上）|

@@ -89,6 +89,13 @@ def test_has_active_clients_surfaces_lsof_failure() -> None:
         wake.has_active_clients(port=8502, runner=runner)
 
 
+def test_has_active_clients_converts_timeout_to_runtime_error() -> None:
+    runner = Mock(side_effect=subprocess.TimeoutExpired(cmd=["lsof"], timeout=5))
+
+    with pytest.raises(RuntimeError, match="timed out"):
+        wake.has_active_clients(port=8502, runner=runner)
+
+
 def test_run_control_surfaces_command_failure() -> None:
     runner = Mock(
         return_value=subprocess.CompletedProcess(
@@ -150,6 +157,41 @@ def test_idle_supervisor_does_not_stop_when_client_probe_fails() -> None:
     stop.assert_not_called()
 
 
+def test_idle_supervisor_probe_failure_resets_idle_period() -> None:
+    stop = Mock()
+    supervisor = wake.IdleSupervisor(
+        timeout_seconds=10,
+        health_probe=Mock(return_value=True),
+        client_probe=Mock(side_effect=[False, RuntimeError("lsof failed"), False, False]),
+        stop_streamlit=stop,
+        clock=Mock(side_effect=[0.0, 20.0, 29.9]),
+    )
+
+    supervisor.check_once()
+    supervisor.check_once()
+    supervisor.check_once()
+    supervisor.check_once()
+
+    stop.assert_not_called()
+
+
+def test_wake_activity_resets_supervisor_idle_period() -> None:
+    stop = Mock()
+    supervisor = wake.IdleSupervisor(
+        timeout_seconds=10,
+        health_probe=Mock(return_value=True),
+        client_probe=Mock(return_value=False),
+        stop_streamlit=stop,
+        clock=Mock(side_effect=[0.0, 20.0]),
+    )
+
+    supervisor.check_once()
+    supervisor.note_wake_activity()
+    supervisor.check_once()
+
+    stop.assert_not_called()
+
+
 def test_root_request_starts_streamlit_and_returns_wake_page(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -171,6 +213,26 @@ def test_root_request_starts_streamlit_and_returns_wake_page(
     start.assert_called_once_with("web-start")
     assert 'target.port = "8502"' in body
     assert "Streamlit 啟動中" in body
+
+
+def test_root_request_records_wake_activity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    wake_activity = Mock()
+    monkeypatch.setattr(wake, "streamlit_is_healthy", Mock(return_value=True))
+    server = wake.create_server("127.0.0.1", 0, wake_activity=wake_activity)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    try:
+        with urlopen(f"http://127.0.0.1:{server.server_port}/", timeout=2):
+            pass
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    wake_activity.assert_called_once_with()
 
 
 def test_status_request_reports_streamlit_readiness(

@@ -89,18 +89,17 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 # 目标：覆盖率 ≥ 80%
 ```
 
-**当前状态**（2026-09-03 实测 `pytest tests/unit/ --cov=scripts --cov=app`）：
-- 覆盖率：72.75%（已过 hook 的 70% 闸门，目标 ≥ 80%）
+**当前状态**（2026-09-03 实测 `pytest tests/ --integration --cov=scripts --cov=app`）：
+- 覆盖率：73.70%（已过 hook 的 70% 闸门，目标 ≥ 80%）
 - 单元测试文件：31 个（tests/unit/）
-- 测试结果：825 通过 / 0 失败 / 1 跳过
+- 测试结果：904 通过 / 0 失败
 
-> 📉 比 2026-07-25 的 72.72% 略降，原因是这一轮加了 autouse 硬隔离（见下方「测试隔离的三道闸门」），
-> `import app` 不再顺带执行部分模块级代码 → app.py 31% → 25%。用 1.2 个覆盖率点换掉"测试会污染
-> 真实数据、会打真实 API"，是刻意的取舍。
+> `app.py` 仍只有 24%，原因是 autouse 硬隔离（见下方「测试隔离的两道闸门」）令 `import app`
+> 不再顺带执行模块级 UI 代码；这是刻意用覆盖率换取「测试不会污染真实数据、不会打真实 API」。
 
 > ✅ 集成测试（`pytest tests/integration/ --integration`）**73 passed / 0 failed**
 > （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
-> 现为 **899 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+> 现为 **904 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
 ### 服务生命周期回归测试
 

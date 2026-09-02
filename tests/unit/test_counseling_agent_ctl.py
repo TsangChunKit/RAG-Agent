@@ -19,7 +19,12 @@ APP_SERVICES = {
 }
 
 
-def _run_script(tmp_path: Path, command: str) -> tuple[subprocess.CompletedProcess[str], str]:
+def _run_script(
+    tmp_path: Path,
+    command: str,
+    *,
+    fail_kill: bool = False,
+) -> tuple[subprocess.CompletedProcess[str], str]:
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     launchctl_log = tmp_path / "launchctl.log"
@@ -27,6 +32,9 @@ def _run_script(tmp_path: Path, command: str) -> tuple[subprocess.CompletedProce
     launchctl = bin_dir / "launchctl"
     launchctl.write_text(
         '#!/bin/bash\nprintf "%s\\n" "$*" >> "$LAUNCHCTL_LOG"\n'
+        'if [[ "$1" == "print" ]]; then printf "state = running\\n"; fi\n'
+        'if [[ "$1" == "kill" && "$FAIL_KILL" == "1" ]]; then '
+        'printf "permission denied\\n" >&2; exit 1; fi\n'
         'if [[ "$1" == "list" ]]; then printf "123\\t0\\tcom.andytsang.aitherapist.streamlit\\n"; fi\n'
     )
     launchctl.chmod(0o755)
@@ -38,6 +46,7 @@ def _run_script(tmp_path: Path, command: str) -> tuple[subprocess.CompletedProce
     env = os.environ.copy()
     env["HOME"] = str(tmp_path)
     env["LAUNCHCTL_LOG"] = str(launchctl_log)
+    env["FAIL_KILL"] = "1" if fail_kill else "0"
     env["PATH"] = f"{bin_dir}:{env['PATH']}"
     result = subprocess.run(
         ["bash", str(SCRIPT), command],
@@ -83,6 +92,13 @@ def test_web_stop_only_manages_streamlit(tmp_path: Path) -> None:
     assert "com.andytsang.aitherapist.streamlit" in log
     assert "wakegateway" not in log
     assert "watcher" not in log
+
+
+def test_web_stop_surfaces_launchctl_failure(tmp_path: Path) -> None:
+    result, _ = _run_script(tmp_path, "web-stop", fail_kill=True)
+
+    assert result.returncode != 0
+    assert "停止失败" in result.stderr
 
 
 def test_status_does_not_report_tailscale(tmp_path: Path) -> None:

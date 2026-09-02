@@ -11,7 +11,7 @@ import time
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Callable, Protocol
+from typing import Callable, Protocol, cast
 from urllib.error import URLError
 from urllib.parse import urlsplit
 from urllib.request import urlopen
@@ -58,14 +58,19 @@ def run_control(
     if action not in {"web-start", "web-stop"}:
         raise ValueError(f"Unsupported control action: {action}")
 
-    result = runner(
-        ["bash", str(CONTROL_SCRIPT), action],
-        cwd=PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=20,
-        check=False,
-    )
+    try:
+        result = runner(
+            ["bash", str(CONTROL_SCRIPT), action],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"{action} timed out after {exc.timeout} seconds") from exc
+    except OSError as exc:
+        raise RuntimeError(f"{action} could not run: {exc}") from exc
     if result.returncode != 0:
         detail = result.stderr.strip() or result.stdout.strip() or "unknown error"
         raise RuntimeError(f"{action} failed: {detail}")
@@ -77,13 +82,18 @@ def has_active_clients(
     runner: Runner = subprocess.run,
 ) -> bool:
     """Return whether Streamlit has any established TCP client connections."""
-    result = runner(
-        [LSOF_PATH, "-nP", f"-iTCP:{port}", "-sTCP:ESTABLISHED", "-t"],
-        capture_output=True,
-        text=True,
-        timeout=5,
-        check=False,
-    )
+    try:
+        result = runner(
+            [LSOF_PATH, "-nP", f"-iTCP:{port}", "-sTCP:ESTABLISHED", "-t"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError("Streamlit client inspection timed out") from exc
+    except OSError as exc:
+        raise RuntimeError(f"Unable to run Streamlit client inspection: {exc}") from exc
     if result.returncode == 0:
         return bool(result.stdout.strip())
     if result.returncode == 1 and not result.stdout.strip():
@@ -104,6 +114,10 @@ class IdleTracker:
         if self.timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be greater than zero")
 
+    def reset(self) -> None:
+        """Discard the current idle observation period."""
+        self.idle_since = None
+
     def observe(
         self,
         *,
@@ -113,7 +127,7 @@ class IdleTracker:
     ) -> bool:
         """Return ``True`` once the continuous no-client period reaches timeout."""
         if not streamlit_running or has_clients:
-            self.idle_since = None
+            self.reset()
             return False
         if self.idle_since is None:
             self.idle_since = now
@@ -132,38 +146,48 @@ class IdleSupervisor:
         client_probe: Callable[[], bool] = has_active_clients,
         stop_streamlit: Callable[[], None] = lambda: run_control("web-stop"),
         clock: Callable[[], float] = time.monotonic,
+        lifecycle_lock: threading.RLock | None = None,
     ) -> None:
         self._tracker = IdleTracker(timeout_seconds)
         self._health_probe = health_probe
         self._client_probe = client_probe
         self._stop_streamlit = stop_streamlit
         self._clock = clock
+        self._lifecycle_lock = lifecycle_lock or threading.RLock()
+
+    def note_wake_activity(self) -> None:
+        """Reset idle time while a browser is actively requesting a wake."""
+        with self._lifecycle_lock:
+            self._tracker.reset()
 
     def check_once(self) -> None:
         """Perform one fail-safe health/client observation."""
-        running = self._health_probe()
-        if not running:
-            self._tracker.observe(
-                streamlit_running=False, has_clients=False, now=self._clock()
-            )
-            return
+        with self._lifecycle_lock:
+            running = self._health_probe()
+            if not running:
+                self._tracker.reset()
+                return
 
-        try:
-            clients = self._client_probe()
-        except RuntimeError as exc:
-            LOGGER.error("Client probe failed; Streamlit will remain running: %s", exc)
-            return
+            try:
+                clients = self._client_probe()
+            except RuntimeError as exc:
+                self._tracker.reset()
+                LOGGER.error(
+                    "Client probe failed; idle observation reset and Streamlit kept running: %s",
+                    exc,
+                )
+                return
 
-        if self._tracker.observe(
-            streamlit_running=True,
-            has_clients=clients,
-            now=self._clock(),
-        ):
-            LOGGER.info(
-                "Streamlit has been idle for %.0f seconds; stopping it",
-                self._tracker.timeout_seconds,
-            )
-            self._stop_streamlit()
+            if self._tracker.observe(
+                streamlit_running=True,
+                has_clients=clients,
+                now=self._clock(),
+            ):
+                LOGGER.info(
+                    "Streamlit has been idle for %.0f seconds; stopping it",
+                    self._tracker.timeout_seconds,
+                )
+                self._stop_streamlit()
 
     def run_forever(
         self,
@@ -253,17 +277,20 @@ class WakeRequestHandler(BaseHTTPRequestHandler):
             self._write(404, b"not found", "text/plain; charset=utf-8")
             return
 
-        if not streamlit_is_healthy():
-            try:
-                run_control("web-start")
-            except RuntimeError as exc:
-                LOGGER.error("Unable to wake Streamlit: %s", exc)
-                self._write(
-                    503,
-                    "Streamlit 啟動失敗，請檢查 wake gateway 日誌。".encode(),
-                    "text/plain; charset=utf-8",
-                )
-                return
+        server = cast(WakeHTTPServer, self.server)
+        with server.lifecycle_lock:
+            server.wake_activity()
+            if not streamlit_is_healthy():
+                try:
+                    run_control("web-start")
+                except RuntimeError as exc:
+                    LOGGER.error("Unable to wake Streamlit: %s", exc)
+                    self._write(
+                        503,
+                        "Streamlit 啟動失敗，請檢查 wake gateway 日誌。".encode(),
+                        "text/plain; charset=utf-8",
+                    )
+                    return
 
         self._write(200, _WAKE_PAGE.encode(), "text/html; charset=utf-8")
 
@@ -271,11 +298,36 @@ class WakeRequestHandler(BaseHTTPRequestHandler):
         LOGGER.info("%s - %s", self.client_address[0], format % args)
 
 
-def create_server(host: str = WAKE_HOST, port: int = WAKE_PORT) -> ThreadingHTTPServer:
+class WakeHTTPServer(ThreadingHTTPServer):
+    """HTTP server carrying shared wake/idle lifecycle coordination."""
+
+    daemon_threads = True
+
+    def __init__(
+        self,
+        address: tuple[str, int],
+        *,
+        wake_activity: Callable[[], None],
+        lifecycle_lock: threading.RLock,
+    ) -> None:
+        self.wake_activity = wake_activity
+        self.lifecycle_lock = lifecycle_lock
+        super().__init__(address, WakeRequestHandler)
+
+
+def create_server(
+    host: str = WAKE_HOST,
+    port: int = WAKE_PORT,
+    *,
+    wake_activity: Callable[[], None] = lambda: None,
+    lifecycle_lock: threading.RLock | None = None,
+) -> WakeHTTPServer:
     """Create the wake HTTP server without starting its serving loop."""
-    server = ThreadingHTTPServer((host, port), WakeRequestHandler)
-    server.daemon_threads = True
-    return server
+    return WakeHTTPServer(
+        (host, port),
+        wake_activity=wake_activity,
+        lifecycle_lock=lifecycle_lock or threading.RLock(),
+    )
 
 
 def main() -> None:
@@ -285,14 +337,18 @@ def main() -> None:
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
     stop_event = threading.Event()
-    supervisor = IdleSupervisor()
+    lifecycle_lock = threading.RLock()
+    supervisor = IdleSupervisor(lifecycle_lock=lifecycle_lock)
     monitor = threading.Thread(
         target=supervisor.run_forever,
         args=(stop_event,),
         name="streamlit-idle-supervisor",
         daemon=True,
     )
-    server = create_server()
+    server = create_server(
+        wake_activity=supervisor.note_wake_activity,
+        lifecycle_lock=lifecycle_lock,
+    )
     monitor.start()
     LOGGER.info(
         "Wake gateway listening on %s:%d; Streamlit=%s:%d; idle timeout=%ds",
