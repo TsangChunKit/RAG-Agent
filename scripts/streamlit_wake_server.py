@@ -96,7 +96,11 @@ def has_active_clients(
         raise RuntimeError(f"Unable to run Streamlit client inspection: {exc}") from exc
     if result.returncode == 0:
         return bool(result.stdout.strip())
-    if result.returncode == 1 and not result.stdout.strip():
+    if (
+        result.returncode == 1
+        and not result.stdout.strip()
+        and not result.stderr.strip()
+    ):
         return False
 
     detail = result.stderr.strip() or result.stdout.strip() or "unknown error"

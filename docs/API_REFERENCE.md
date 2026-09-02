@@ -418,6 +418,10 @@ WebSocket 属于 established connection，不会误关。客户端探测失败�
 必须重新累积一段完整且可观测的 30 分钟；根页面唤醒请求会通过共享 lifecycle lock 重置观察，
 不会和 supervisor 的 stop 决策竞态。
 
+`web-stop` 发送 SIGTERM 后最多等待 15 秒，直到 launchd job 不再是 `state = running` 才返回成功。
+因此 lifecycle lock 覆盖的是完整停止，而不只是信号发送；后续根请求不会误把正在退出的旧进程
+判断为健康而跳过重启。
+
 ### HTTP 与入口
 
 ```python

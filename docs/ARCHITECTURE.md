@@ -193,6 +193,8 @@ IdleSupervisor（每 30 秒）
 gateway 根请求与 idle supervisor 共享一个 lifecycle `RLock`：根请求先重置 idle 观察，再判断
 是否需要 `web-start`；supervisor 只有在同一把锁内完成客户端探测与 stop。因此不会发生
 「请求刚看见 Streamlit 健康、supervisor 随即关掉、轮询页却再也不触发启动」的竞态。
+`web-stop` 在发送 SIGTERM 后还会等待 launchd job 离开 running 状态（最多 15 秒），所以这把锁
+不会在进程仍处于退出途中时提早释放。
 
 #### 简繁归一化（系统不变量）
 

@@ -89,6 +89,17 @@ def test_has_active_clients_surfaces_lsof_failure() -> None:
         wake.has_active_clients(port=8502, runner=runner)
 
 
+def test_has_active_clients_treats_returncode_one_with_stderr_as_failure() -> None:
+    runner = Mock(
+        return_value=subprocess.CompletedProcess(
+            args=["lsof"], returncode=1, stdout="", stderr="permission denied"
+        )
+    )
+
+    with pytest.raises(RuntimeError, match="permission denied"):
+        wake.has_active_clients(port=8502, runner=runner)
+
+
 def test_has_active_clients_converts_timeout_to_runtime_error() -> None:
     runner = Mock(side_effect=subprocess.TimeoutExpired(cmd=["lsof"], timeout=5))
 

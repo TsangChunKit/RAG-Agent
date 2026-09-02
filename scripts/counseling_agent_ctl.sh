@@ -50,7 +50,19 @@ web_stop() {
     echo "❌ Streamlit 停止失败：$error" >&2
     return 1
   fi
-  echo "🛑 已停止 Streamlit；8501 唤醒入口仍在运行"
+  for _ in {1..30}; do
+    if ! job_state="$(launchctl print "$target" 2>/dev/null)"; then
+      echo "🛑 已停止 Streamlit；8501 唤醒入口仍在运行"
+      return 0
+    fi
+    if ! printf '%s\n' "$job_state" | grep -q "state = running"; then
+      echo "🛑 已停止 Streamlit；8501 唤醒入口仍在运行"
+      return 0
+    fi
+    sleep 0.5
+  done
+  echo "❌ Streamlit 停止超时；进程仍处于 running 状态" >&2
+  return 1
 }
 
 start() {
