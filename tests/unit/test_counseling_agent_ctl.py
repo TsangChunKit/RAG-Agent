@@ -11,6 +11,12 @@ SCRIPT = ROOT / "scripts" / "counseling_agent_ctl.sh"
 TAILSCALE_PLIST = ROOT / "scripts" / "launchd" / "com.andytsang.aitherapist.tailscale.plist"
 STREAMLIT_PLIST = ROOT / "scripts" / "launchd" / "com.andytsang.aitherapist.streamlit.plist"
 WAKE_GATEWAY_PLIST = ROOT / "scripts" / "launchd" / "com.andytsang.aitherapist.wakegateway.plist"
+CHAT_WATCHER_PLIST = (
+    ROOT / "scripts" / "launchd" / "com.andytsang.aitherapist.chatmemorywatcher.plist"
+)
+RAW_WATCHER_PLIST = (
+    ROOT / "scripts" / "launchd" / "com.andytsang.aitherapist.rawingestwatcher.plist"
+)
 APP_SERVICES = {
     "com.andytsang.aitherapist.streamlit",
     "com.andytsang.aitherapist.wakegateway",
@@ -142,3 +148,14 @@ def test_wake_gateway_launchd_job_owns_port_8501_and_uses_30_minute_idle() -> No
     assert config["KeepAlive"] is True
     assert config["EnvironmentVariables"]["RAG_WAKE_PORT"] == "8501"
     assert config["EnvironmentVariables"]["RAG_STREAMLIT_IDLE_SECONDS"] == "1800"
+
+
+def test_llm_launchd_jobs_can_find_homebrew_copilot_cli() -> None:
+    for plist_path in (STREAMLIT_PLIST, CHAT_WATCHER_PLIST, RAW_WATCHER_PLIST):
+        with plist_path.open("rb") as handle:
+            config = plistlib.load(handle)
+
+        path_entries = config["EnvironmentVariables"]["PATH"].split(":")
+        assert "/opt/homebrew/bin" in path_entries, plist_path.name
+        assert "/usr/local/bin" in path_entries, plist_path.name
+        assert "/usr/bin" in path_entries, plist_path.name

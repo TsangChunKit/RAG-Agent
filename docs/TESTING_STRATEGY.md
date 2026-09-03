@@ -92,14 +92,14 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 **当前状态**（2026-09-03 实测 `pytest tests/ --integration --cov=scripts --cov=app`）：
 - 覆盖率：73.70%（已过 hook 的 70% 闸门，目标 ≥ 80%）
 - 单元测试文件：31 个（tests/unit/）
-- 测试结果：905 通过 / 0 失败
+- 测试结果：906 通过 / 0 失败
 
 > `app.py` 仍只有 24%，原因是 autouse 硬隔离（见下方「测试隔离的两道闸门」）令 `import app`
 > 不再顺带执行模块级 UI 代码；这是刻意用覆盖率换取「测试不会污染真实数据、不会打真实 API」。
 
 > ✅ 集成测试（`pytest tests/integration/ --integration`）**73 passed / 0 failed**
 > （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
-> 现为 **905 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+> 现为 **906 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
 
 ### 服务生命周期回归测试
 
@@ -108,6 +108,8 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 - `web-start` / `web-stop` 只管理 Streamlit，不会误停负责唤醒的 gateway
 - Streamlit plist 是 8502、`RunAtLoad=false`、`KeepAlive=false`
 - wake gateway plist 是 8501、默认 idle timeout 为 1800 秒
+- Streamlit 与两个 LLM watcher 的 plist PATH 都包含 Apple Silicon / Intel Homebrew，
+  避免终端可用的 `copilot_cli` 在 launchd 下变成 `FileNotFoundError`
 - `status` 不调用或报告 Tailscale
 - repo 不提供自动连接 Tailscale 的 launchd job
 

@@ -4,7 +4,7 @@
 <dict>
     <key>Label</key>
     <string>com.andytsang.aitherapist.rawingestwatcher</string>
-    <!-- ⚠️ 必须显式传 --workspace：本进程不是 Streamlit，拿不到 UI 的 session_state，
+    <!-- ⚠️ 必须显式传 workspace 参数：本进程不是 Streamlit，拿不到 UI 的 session_state，
          不传就会退到「workspaces/ 下字母序第一个」，将来新建一个名字更靠前的 workspace
          会悄悄改掉扫描目标。 -->
     <key>ProgramArguments</key>
@@ -17,6 +17,12 @@
     </array>
     <key>WorkingDirectory</key>
     <string>/Users/andytsang/Documents/Project/RAG-Agent</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- 新文件摘要会调用当前 LLM provider；launchd 默认 PATH 不含 Homebrew。 -->
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>

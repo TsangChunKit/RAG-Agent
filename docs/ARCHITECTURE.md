@@ -552,6 +552,9 @@ UI 状态存储在 `st.session_state`：
 `copilot -p -s` 调用，并将所有工具/MCP/项目 instructions/remote export 关闭。它不经过 Hermes
 HTTP gateway，也不会在 Hermes 失败时自动触发；这种设计保留用户掌控、让失败来源保持可见。
 CLI 没有稳定 token usage，因此统一响应中的 usage 为 0；结构化输出在本地验证 JSON 语法。
+Streamlit 与两个会生成摘要的 watcher 都可能进入这条通路，所以三份 launchd plist 显式包含
+`/opt/homebrew/bin`（Apple Silicon）与 `/usr/local/bin`（Intel Homebrew）；`.zshrc` 不会被
+launchd 读取。wake gateway 本身不调用 LLM，不需要这项环境变量。
 
 ### 停用 / 恢复某个 Provider
 

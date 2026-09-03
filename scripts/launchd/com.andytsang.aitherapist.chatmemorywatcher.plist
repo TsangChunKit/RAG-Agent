@@ -4,7 +4,7 @@
 <dict>
     <key>Label</key>
     <string>com.andytsang.aitherapist.chatmemorywatcher</string>
-    <!-- ⚠️ 同 rawingestwatcher：非 Streamlit 进程必须显式传 --workspace，别依赖字母序兜底。 -->
+    <!-- ⚠️ 同 rawingestwatcher：非 Streamlit 进程必须显式传 workspace 参数，别依赖字母序兜底。 -->
     <key>ProgramArguments</key>
     <array>
         <string>/Users/andytsang/Documents/Project/RAG-Agent/.venv/bin/python3</string>
@@ -15,6 +15,12 @@
     </array>
     <key>WorkingDirectory</key>
     <string>/Users/andytsang/Documents/Project/RAG-Agent</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- 摘要更新会调用当前 LLM provider；launchd 默认 PATH 不含 Homebrew。 -->
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>

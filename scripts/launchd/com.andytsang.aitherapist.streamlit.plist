@@ -24,6 +24,9 @@
     <dict>
         <key>CURRENT_WORKSPACE</key>
         <string>counseling</string>
+        <!-- launchd 默认 PATH 不含 Homebrew；copilot_cli provider 需要找到本机 copilot。 -->
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
     </dict>
     <key>RunAtLoad</key>
     <false/>

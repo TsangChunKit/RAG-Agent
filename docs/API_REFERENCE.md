@@ -1101,6 +1101,24 @@ from google.genai import types
 print(list(types.ThinkingConfig.model_fields))  # 装的 SDK 到底支持哪些字段
 ```
 
+### 5. 未安装 GitHub Copilot CLI，或 copilot 不在 PATH 中
+
+终端执行 `copilot --version` 成功，但 launchd 启动的 Streamlit / watcher 仍报此错误时，
+通常不是 CLI 未安装，而是 launchd 默认 `PATH=/usr/bin:/bin:/usr/sbin:/sbin`，不读取 `.zshrc`。
+
+项目的三份 LLM job plist 必须包含：
+
+```text
+/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+```
+
+修改源 plist 后要复制到 `~/Library/LaunchAgents/` 并重载；只改 repo 文件不会更新已加载的 job。
+可用以下命令确认生效值：
+
+```bash
+launchctl print "gui/$(id -u)/com.andytsang.aitherapist.streamlit" | grep "PATH =>"
+```
+
 ---
 
 ## 快速参考

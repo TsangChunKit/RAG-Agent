@@ -527,6 +527,9 @@ Hermes base_url，是凭证，已被 `.gitignore` 排除）；索引参数存在
 - **copilot_cli 限制**：需要先完成 `copilot` 登录；单次调用 300 秒超时。CLI 没有等价的 temperature /
   max token 参数，也没有服务端 JSON Schema 约束，因此结构化任务会把 schema 写入 prompt，并在本地
   拒绝无效 JSON。失败会明确返回「未安装／超时／退出码／空响应／无效 JSON」，不会悄悄切换后端。
+  Streamlit、raw watcher 与 chat-memory watcher 的 launchd plist 都显式加入 Apple Silicon
+  Homebrew（`/opt/homebrew/bin`）与 Intel Homebrew（`/usr/local/bin`）；launchd 不读取 `.zshrc`。
+  若终端可执行 `copilot --version`、网页却报「copilot 不在 PATH」，请按 §三重装四份 plist。
 
 #### gemini 为什么停用
 
