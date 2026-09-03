@@ -90,16 +90,20 @@ pytest tests/unit/ -v --cov=scripts --cov-report=term-missing
 ```
 
 **当前状态**（2026-09-03 实测 `pytest tests/ --integration --cov=scripts --cov=app`）：
-- 覆盖率：73.70%（已过 hook 的 70% 闸门，目标 ≥ 80%）
+- 覆盖率：74%（已过 hook 的 70% 闸门，目标 ≥ 80%）
 - 单元测试文件：31 个（tests/unit/）
-- 测试结果：906 通过 / 0 失败
+- 测试结果：909 通过 / 0 失败
 
 > `app.py` 仍只有 24%，原因是 autouse 硬隔离（见下方「测试隔离的两道闸门」）令 `import app`
 > 不再顺带执行模块级 UI 代码；这是刻意用覆盖率换取「测试不会污染真实数据、不会打真实 API」。
 
 > ✅ 集成测试（`pytest tests/integration/ --integration`）**73 passed / 0 failed**
 > （2026-07-26 修完，历程：33 failed → 18 failed → 全绿）。全套 `pytest tests/ --integration`
-> 现为 **906 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+> 现为 **909 passed**。修法与三类根因见 [TESTING_COVERAGE_PLAN.md](./TESTING_COVERAGE_PLAN.md) 任务 14。
+
+`tests/unit/test_ask.py` 还锁定了按日期续聊的真实执行路径：`9月1号`、`九月一號`、`9/1`
+默认补当前年份，完整年份不会被重复解析，无效月日会被忽略；用户原句进入 `answer()` 后必须
+调用 `get_full_day_transcripts(["YYYY-09-01"])`，并把完整逐字稿而非碎片放进 LLM 上下文。
 
 ### 服务生命周期回归测试
 
@@ -260,7 +264,7 @@ python scripts/check_code_patterns.py
 
 ## 测试覆盖率目标
 
-> 数据更新于 2026-07-25 第二次（实测 `pytest tests/unit/ --cov=scripts --cov=app`，
+> 数据更新于 2026-09-03（实测 `pytest tests/ --integration --cov=scripts --cov=app`，
 > 即 pre-commit hook 覆盖率检查用的同一条命令）。2026-07-30 起 pre-commit hook 已从
 > 4 项检查合并为 2 项（静态检查 + 单元测试/覆盖率合一），详见 `CLAUDE.md` 的
 > Pre-commit Hook 章节；命令本身不变，只是不再分开跑三次 pytest。
@@ -269,9 +273,9 @@ python scripts/check_code_patterns.py
 |------|------|------|--------|
 | 静态检查 | ✅ 100% | ✅ 100% | P0 |
 | 导入测试 | ✅ 100% | ✅ 100% | P0 |
-| 单元测试 | 🟡 71%（scripts + app） | ✅ 80% | P1 |
+| 单元测试 | 🟡 74%（scripts + app） | ✅ 80% | P1 |
 | 集成测试 | ✅ 73 passed / 0 failed（2026-07-26 修完腐化，见 TESTING_COVERAGE_PLAN 任务 14） | ✅ 全绿 + 60% | P1 |
-| **整体** | **🟢 71%（≥ hook 的 70% 阈值）** | **✅ 80%** | **P0** |
+| **整体** | **🟢 74%（≥ hook 的 70% 阈值）** | **✅ 80%** | **P0** |
 
 ---
 

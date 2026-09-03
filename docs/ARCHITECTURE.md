@@ -112,6 +112,9 @@ ParsedSession
 
 ```
 用户问题
+    ├─ [ask.py:extract_mentioned_dates()] 具体月日（省略年份时补当前年份）
+    ├─ [session_resolver.py:resolve()] 今天 / 上次 / 第 N 次等会话引用
+    └─ 命中日期 → [parse.py] 从 raw/ 读取当天完整逐字稿
     ↓
 [text_norm.py:to_simplified()] 繁→简归一化（只影响检索，原问题原样进 prompt）
     ↓
@@ -122,10 +125,11 @@ ParsedSession
     ├─ 相关性阈值 (_filter_by_score：< min_score 的丢掉；全不过线才留 min_keep 条保底)
     └─ 窗口扩展（父块，文本取 raw_text = 原文字形）
     ↓
-检索片段 + 长期记忆 + 图谱
+完整逐字稿（命中日期时）+ 检索片段 + 长期记忆 + 图谱
     ↓
 [ask.py:answer()] 组装上下文
     ├─ 加载记忆
+    ├─ 明确日期对应的完整逐字稿优先于同日检索片段
     ├─ GraphRAG（图谱引导检索，question 同样先归一化）
     ├─ 上下文压缩
     └─ 调用 LLM
@@ -134,7 +138,10 @@ ParsedSession
 ```
 
 **关键模块依赖**：
-- `ask.py` → `embedder.py`, `llm.py`, `graph_utils.py`, `reranker.py`, `text_norm.py`, `workspace_manager.py`
+- `ask.py` → `embedder.py`, `llm.py`, `graph_utils.py`, `reranker.py`, `text_norm.py`, `session_resolver.py`, `workspace_manager.py`
+
+省略年份的月日只采用当前年份，不扫描或猜测其他年份。这保持规则简单、可预测；若该日期没有原始
+逐字稿，`answer()` 会把「未找到对应咨询记录」写进上下文，而不是拿普通检索片段伪装成整场记录。
 
 ### 4b. 外部 Agent 檢索（Hermes MCP）
 

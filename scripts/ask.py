@@ -58,7 +58,8 @@ GRAPH_MULTIHOP_MAX_WINDOWS = 8
 # 取几天 / 每天几段 / 片段扩多宽 / 是否附摘要，全部走 index_settings，可在 UI 热调、下次问答即生效。
 
 # 匹配问题里提到的具体日期："2026年7月4日" "2026-07-04" "2026/7/4" "2026年七月4號" 等，
-# 月/日支持阿拉伯数字或中文数字混用；不支持无年份的相对日期（如"7月4日""上周日"），这类留给检索兜底。
+# 月/日支持阿拉伯数字或中文数字混用。省略年份的月日（如"9月1號"）默认使用当前年份；
+# "上周日"等相对日期仍交给 session_resolver 或普通检索兜底。
 _CN_NUM_TO_INT = {
     "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十": 10,
     "十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15, "十六": 16, "十七": 17, "十八": 18, "十九": 19,
@@ -67,6 +68,9 @@ _CN_NUM_TO_INT = {
 }
 _NUM_OR_CN = r"(?:[一二三四五六七八九十]{1,3}|\d{1,2})"
 DATE_MENTION_RE = re.compile(rf"(\d{{4}})[年\-/]({_NUM_OR_CN})[月\-/]({_NUM_OR_CN})[日號号]?")
+YEARLESS_DATE_MENTION_RE = re.compile(
+    rf"(?<![\d年\-/])({_NUM_OR_CN})(?:月|[\-/])({_NUM_OR_CN})[日號号]?"
+)
 
 # 英文月份（缩写或全名，大小写不敏感）——补上 DATE_MENTION_RE 漏掉的 "2026-aug-16" 这类写法
 # （2026-08-16 真实事故：使用者打了英文月份缩写，两条日期解析全部落空，问题退回普通 chunk
@@ -757,8 +761,7 @@ def _format_retrieved(windows: list[dict]) -> str:
 
 
 def extract_mentioned_dates(question: str) -> list[str]:
-    """从问题里提取形如 2026年7月4日 / 2026-07-04 / 2026/7/4 / 2026年七月4號 / 2026-Aug-16
-    （英文月份缩写或全名，大小写不敏感）的具体日期，月/日支持中文数字，返回去重后的 YYYY-MM-DD 列表。"""
+    """提取具体日期；省略年份的月日默认补当前年份，返回去重后的 YYYY-MM-DD 列表。"""
     dates = []
     for y, mo, d in DATE_MENTION_RE.findall(question):
         year, month, day = _to_int(y), _to_int(mo), _to_int(d)
@@ -775,6 +778,14 @@ def extract_mentioned_dates(question: str) -> list[str]:
         if not (1 <= day <= 31):
             continue
         dates.append(f"{year:04d}-{month:02d}-{day:02d}")
+    current_year = datetime.now().year
+    for mo, d in YEARLESS_DATE_MENTION_RE.findall(question):
+        month, day = _to_int(mo), _to_int(d)
+        if month is None or day is None:
+            continue
+        if not (1 <= month <= 12 and 1 <= day <= 31):
+            continue
+        dates.append(f"{current_year:04d}-{month:02d}-{day:02d}")
     seen = set()
     ordered = []
     for d in dates:

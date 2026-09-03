@@ -88,6 +88,37 @@ class TestDateParsing:
         dates = extract_mentioned_dates("最近的工作压力")
         assert dates == []
 
+    def test_extract_mentioned_dates_without_year_uses_current_year(self):
+        """测试省略年份的中文日期默认使用当前年份。"""
+        from scripts.ask import extract_mentioned_dates
+
+        with patch("scripts.ask.datetime") as mock_datetime:
+            mock_datetime.now.return_value.year = 2026
+
+            dates = extract_mentioned_dates("你可以读取9月1号的咨询纪录吗？")
+
+        assert dates == ["2026-09-01"]
+
+    def test_extract_mentioned_dates_without_year_supports_chinese_and_slash(self):
+        """测试省略年份时支持中文数字和斜线格式。"""
+        from scripts.ask import extract_mentioned_dates
+
+        with patch("scripts.ask.datetime") as mock_datetime:
+            mock_datetime.now.return_value.year = 2026
+
+            assert extract_mentioned_dates("九月一號的諮詢") == ["2026-09-01"]
+            assert extract_mentioned_dates("读取 9/1 的咨询记录") == ["2026-09-01"]
+
+    def test_extract_mentioned_dates_without_year_ignores_invalid_or_explicit_dates(self):
+        """测试无效月日不产生日期，完整日期也不会被重复提取。"""
+        from scripts.ask import extract_mentioned_dates
+
+        with patch("scripts.ask.datetime") as mock_datetime:
+            mock_datetime.now.return_value.year = 2026
+
+            assert extract_mentioned_dates("13月40号的咨询") == []
+            assert extract_mentioned_dates("2025年9月1日的咨询") == ["2025-09-01"]
+
     def test_extract_mentioned_dates_no_duplicate_with_numeric(self):
         """测试英文月份正则不会跟数字月份正则重复计数同一个日期"""
         from scripts.ask import extract_mentioned_dates
@@ -1022,8 +1053,8 @@ class TestAnswer:
     @patch("scripts.ask.session_resolver.chat_manifest")
     @patch("scripts.ask.get_cache_name")
     def test_answer_with_mentioned_dates(self, mock_cache, mock_chat_manifest, mock_therapy_manifest,
-                                        mock_resolve, mock_llm, mock_transcripts):
-        """测试提到具体日期的问答"""
+                                         mock_resolve, mock_llm, mock_transcripts):
+        """测试省略年份的日期请求会把完整逐字稿送进问答上下文。"""
         from scripts.ask import answer
 
         mock_therapy_manifest.return_value = "清单"
@@ -1033,7 +1064,7 @@ class TestAnswer:
         # Mock 完整逐字稿（正确的字段名）
         mock_transcripts.return_value = [
             {
-                "session_date": "2026-07-04",  # 正确的字段名
+                "session_date": "2026-09-01",
                 "source_file": "test.txt",
                 "text": "完整的逐字稿内容",
                 "start_ts": "00:00",
@@ -1042,8 +1073,8 @@ class TestAnswer:
             }
         ]
 
-        # Mock resolver（返回提取的日期）
-        mock_resolve.return_value = {"therapy_dates": ["2026-07-04"], "chat_session_ids": [], "overflow": False}
+        # 无年份日期由 extract_mentioned_dates 解析，不依赖相对会话 resolver。
+        mock_resolve.return_value = {"therapy_dates": [], "chat_session_ids": [], "overflow": False}
 
         # Mock LLM response
         mock_response = MagicMock()
@@ -1056,20 +1087,25 @@ class TestAnswer:
         mock_response.usage_metadata.total_token_count = 150
         mock_llm.return_value = mock_response
 
-        with patch("scripts.ask._get_table"), patch("scripts.ask.retrieve", return_value=[]), patch(
+        with patch("scripts.ask.datetime") as mock_datetime, patch("scripts.ask._get_table"), patch(
+            "scripts.ask.retrieve", return_value=[]
+        ), patch(
             "scripts.ask._load_long_term_memory", return_value=""
         ), patch("scripts.ask._load_chat_memory", return_value=""), patch(
             "scripts.ask._load_graph", return_value=None
         ), patch(
             "scripts.ask.load_system_instruction", return_value="System"
         ):
+            mock_datetime.now.return_value.year = 2026
 
-            result = answer("2026年7月4日的咨询内容", k=5)
+            result = answer("你可以读取9月1号的咨询纪录吗？我想继续聊天", k=5)
 
             assert "answer" in result
             assert result["answer"] == "基于完整逐字稿的回答"
-            # 验证完整逐字稿被调用
-            assert mock_transcripts.called
+            mock_transcripts.assert_called_once_with(["2026-09-01"])
+            current_turn = mock_llm.call_args.args[0][-1]["parts"][0]["text"]
+            assert "【使用者提到日期的完整逐字稿】" in current_turn
+            assert "完整的逐字稿内容" in current_turn
 
 
 class TestGraphRAG:

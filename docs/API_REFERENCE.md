@@ -261,7 +261,7 @@ append-only、永久保留，不做清理）。Streamlit「⚙️ System Instruc
 | 函数 | 作用 | 返回类型 |
 |------|------|---------|
 | `sanitize(q: str)` | 清理查询字符串 | `str` |
-| `extract_mentioned_dates(question: str)` | 提取提到的日期（`2026年7月4日` / `2026-07-04` / `2026/7/4` / 中文数字 / 英文月份缩写或全名如 `2026-Aug-16`，大小写不敏感；不支持无年份的相对日期，如「今天」见 `session_resolver.resolve()`） | `list[str]` |
+| `extract_mentioned_dates(question: str)` | 提取提到的日期并返回去重后的 `YYYY-MM-DD`（支持 `2026年7月4日` / `2026-07-04` / `2026/7/4` / `2026-Aug-16`；也支持省略年份的 `9月1号` / `九月一號` / `9/1`，这类默认补当前年份；「今天」等相对日期见 `session_resolver.resolve()`） | `list[str]` |
 | `find_relevant_graph_nodes(question, graph, top_k, workspace_id)` | GraphRAG 节点匹配 | `list[dict]` |
 
 **`find_relevant_graph_nodes()` 的节点向量持久化（2026-07-30）**：GRAPH_ANCHOR_TYPES
